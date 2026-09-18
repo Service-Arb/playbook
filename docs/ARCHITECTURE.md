@@ -11,12 +11,21 @@ Sources are captured raw, then distilled by hand or by agent into topic notes.
 Capture and distillation never happen in the same file.
 
 ```
-  a call, a video, a thread, a chat        scripts/*.rs          a human, or an agent
-  ─────────────────────────────────►  ref/  ─────────────►  structured/suggested/
-                                        │                          │
-                                        │                     the human reads it
-                                        │                          ▼
-                                        └───── every note links back ──── structured/approved/
+   loom · youtube · chatgpt · skool · discord
+                     │
+                     │  scripts/*.rs, social_networks
+                     ▼
+                   ref/                        raw · verbatim · dated
+                     │
+         ┌───────────┴────────────┐
+         │ an agent reads it      │ the human's own notes, re-sourced
+         ▼                        ▼
+ structured/suggested/ ──────► structured/approved/
+                  the human promotes │
+                                     ▼
+                                secondary/     plans, comparisons, decisions
+
+        every bullet on the right links back to a second on the left
 ```
 
 ## Layers
@@ -98,7 +107,7 @@ Anything needing a session — skool posts, the classroom, DMs, discord — live
 ## Invariants
 
 - Nothing enters `structured/` that did not enter `ref/` first.
-- Every claim links to its source and states its date.
+- Every claim carries a link to its source and the date it was said.
 - `ref/` is written by pullers, never by hand.
-- `structured/approved/` is written by the human, never by an agent.
-- A puller never edits a capture it did not create; it writes a new file or does nothing.
+- An agent's own reading goes to `suggested/`, never straight to `approved/`.
+- A puller writes a new capture or does nothing; it never edits one.
