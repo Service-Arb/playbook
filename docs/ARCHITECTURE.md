@@ -40,7 +40,7 @@ ref/
 ├── README.md              # the source list — a link written here is a link the pullers will fetch
 ├── loom/<id>.md           # call recordings, one timestamped line per phrase
 ├── research/<id>.md       # chatgpt shares, one `## user` / `## assistant` section per turn
-├── youtube/<id>.md        # channel videos
+├── youtube/<id>.md        # channel videos, and `<id>/` the frames it cites
 └── skool_gmbpp/course/    # the classroom, via `social_networks`
 ```
 
@@ -97,7 +97,7 @@ would feed on its own output.
 scripts/
 ├── loom-pull.rs       # share page → signed transcript CDN → timestamped lines
 ├── chatgpt-pull.rs    # headless chromium → the DOM's turns
-├── yt-pull.rs         # yt-dlp → captions, in citable blocks
+├── yt-pull.rs         # yt-dlp → captions in citable blocks, chapters, frames, description
 └── skool-pull.rs      # recon classroom → the course, lesson by lesson
 ```
 

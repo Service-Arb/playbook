@@ -8,37 +8,34 @@
 
 ## summary
 
-- Rank service area business profiles on Google without a physical address by outcompeting on four metrics: niche selection, review count, keywords, and profile settings.
-- Target high-ticket niches with under 10 reviews and high search volume (e.g., concrete contractors, HVAC) where competitors are weak, enabling $15k-30k+ monthly income with minimal setup.
-- Gather 10-40 reviews and optimize keywords using Semrush, including service name and city in your profile title to rank above competitors with bad keyword optimization.
-- Optimize Google Business Profile hours, photos, and consistency to outcompete address-based listings; staying open when competitors close captures emergency calls and generates 3-5 daily leads.
+- Rank #1 on Google as a service area business by outcompeting rivals on four metrics: niche selection, review volume, keyword placement, and business profile optimization.
+- Prioritize high-ticket service niches or small cities where competitors have under 10 reviews and high monthly search volume (examples show $15,000–$30,000 monthly revenue potential).
+- Use Semrush to identify keyword gaps in competitor profiles; target high-volume keywords like "plumber" over "plumbing" and include service plus city name in your business profile title.
+- Build 10–40 reviews through structured campaigns, extend business hours beyond competitors (like 24-hour emergency services), add quality photos, and maintain consistent profile updates.
+- Analyze competitor profiles for missing elements—unoptimized keywords, closed hours, AI-generated photos, stale posts—and build your profile to fill those gaps.
 
 ## chapters
 
-- [00:00:00](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=0) ranking sab without address
+- [00:00:00](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=0) introduction and examples
   ![](cXAKQeNQOd8/8.jpg)
-- [00:00:32](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=32) core principle beating competitors
+- [00:00:32](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=32) why address isn't essential
   ![](cXAKQeNQOd8/40.jpg)
-- [00:01:39](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=99) four main ranking metrics
+- [00:01:06](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=66) competing on multiple metrics
+  ![](cXAKQeNQOd8/74.jpg)
+- [00:01:39](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=99) four ranking metrics
   ![](cXAKQeNQOd8/107.jpg)
-- [00:02:12](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=132) remote service business model
-  ![](cXAKQeNQOd8/140.jpg)
-- [00:02:45](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=165) nashville concrete contractor
+- [00:02:45](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=165) niche strategy and high-ticket
   ![](cXAKQeNQOd8/173.jpg)
-- [00:03:18](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=198) reviews as ranking factor
-  ![](cXAKQeNQOd8/206.jpg)
-- [00:03:51](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=231) high-ticket niches strategy
-  ![](cXAKQeNQOd8/239.jpg)
-- [00:04:57](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=297) small cities and suburbs
-  ![](cXAKQeNQOd8/305.jpg)
-- [00:06:02](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=362) keywords critical factor
-  ![](cXAKQeNQOd8/370.jpg)
-- [00:07:09](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=429) semrush keyword research
-  ![](cXAKQeNQOd8/437.jpg)
-- [00:08:15](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=495) google business profile optimization
-  ![](cXAKQeNQOd8/503.jpg)
-- [00:10:23](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=623) summary and services
-  ![](cXAKQeNQOd8/631.jpg)
+- [00:04:23](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=263) review count advantages
+  ![](cXAKQeNQOd8/271.jpg)
+- [00:06:35](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=395) keywords critical to ranking
+  ![](cXAKQeNQOd8/403.jpg)
+- [00:08:46](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=526) google business profile settings
+  ![](cXAKQeNQOd8/534.jpg)
+- [00:10:56](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=656) competitor profile assessment
+  ![](cXAKQeNQOd8/664.jpg)
+- [00:12:02](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=722) conclusion and pitch
+  ![](cXAKQeNQOd8/730.jpg)
 
 ## description
 

@@ -8,35 +8,35 @@
 
 ## summary
 
-- Use Google Business Listings arbitrage with 40% commission fulfillment: earn 3-4x more per lead than $60 pay-per-lead model
-- Choose niche by search volume and average job value: plumbing ($300/job) needs 2-3 listings; detailing needs 10; high-ticket services need 1 listing for $10k/month
-- Reach $10k/month by ranking first for 2,000-3,000 monthly searches, converting 50% of 60 monthly leads, earning $9,000-$10,000 per optimized listing
-- Research market: target low-competition areas, use exact-match keywords, establish physical address to rank above competitors with only reviews or service areas
-- High-ticket services like landscaping or renovation only require one listing since single jobs yield $10k+; prioritize search volume over review accumulation when launching
+- Start with niche research: identify high-search-volume areas (2,000-3,000+ monthly searches) with manageable competition; prioritize high-urgency services like plumbing over low-urgency services like car detailing
+- Set up Google Business Listings and rank them first through keyword matching, address verification, and competitor research (ranking matters more than review count; 19 reviews can outrank 500+)
+- Use commission-based fulfillment (take 40% on plumbing jobs) instead of flat per-lead pricing ($60/lead) to earn 3-4x higher revenue per lead and ~$300 profit per job
+- Convert leads through proper phone answering and contractor management; expect 50% lead-to-job conversion in plumbing, lower rates in detailing, but higher ticket sizes in high-ticket niches
+- Scale by profile count: 2-3 optimized plumbing GBLs, ~10 detailing GBLs, or 1 high-ticket service GBL (landscaping, renovations) to reach $10,000/month profit
 
 ## chapters
 
-- [00:00:00](https://www.youtube.com/watch?v=-0S3VwM75BM&t=0) introduction
+- [00:00:00](https://www.youtube.com/watch?v=-0S3VwM75BM&t=0) how to make 10k per month
   ![](-0S3VwM75BM/8.jpg)
-- [00:00:33](https://www.youtube.com/watch?v=-0S3VwM75BM&t=33) student examples
+- [00:00:33](https://www.youtube.com/watch?v=-0S3VwM75BM&t=33) student income examples
   ![](-0S3VwM75BM/41.jpg)
 - [00:01:06](https://www.youtube.com/watch?v=-0S3VwM75BM&t=66) three key factors
   ![](-0S3VwM75BM/74.jpg)
 - [00:01:38](https://www.youtube.com/watch?v=-0S3VwM75BM&t=98) fulfillment models
   ![](-0S3VwM75BM/106.jpg)
-- [00:02:13](https://www.youtube.com/watch?v=-0S3VwM75BM&t=133) plumbing economics
-  ![](-0S3VwM75BM/141.jpg)
 - [00:03:18](https://www.youtube.com/watch?v=-0S3VwM75BM&t=198) niche selection
   ![](-0S3VwM75BM/206.jpg)
-- [00:04:25](https://www.youtube.com/watch?v=-0S3VwM75BM&t=265) service comparison
+- [00:04:25](https://www.youtube.com/watch?v=-0S3VwM75BM&t=265) plumbing versus detailing
   ![](-0S3VwM75BM/273.jpg)
-- [00:06:01](https://www.youtube.com/watch?v=-0S3VwM75BM&t=361) market research
+- [00:06:01](https://www.youtube.com/watch?v=-0S3VwM75BM&t=361) market research and ranking
   ![](-0S3VwM75BM/369.jpg)
-- [00:09:20](https://www.youtube.com/watch?v=-0S3VwM75BM&t=560) target numbers
+- [00:09:20](https://www.youtube.com/watch?v=-0S3VwM75BM&t=560) the actual numbers
   ![](-0S3VwM75BM/568.jpg)
-- [00:10:28](https://www.youtube.com/watch?v=-0S3VwM75BM&t=628) niche recommendations
+- [00:09:55](https://www.youtube.com/watch?v=-0S3VwM75BM&t=595) plumbing requirements
+  ![](-0S3VwM75BM/603.jpg)
+- [00:10:28](https://www.youtube.com/watch?v=-0S3VwM75BM&t=628) detailing and high-ticket strategies
   ![](-0S3VwM75BM/636.jpg)
-- [00:11:32](https://www.youtube.com/watch?v=-0S3VwM75BM&t=692) conclusion
+- [00:11:32](https://www.youtube.com/watch?v=-0S3VwM75BM&t=692) closing and coaching offer
   ![](-0S3VwM75BM/700.jpg)
 
 ## description

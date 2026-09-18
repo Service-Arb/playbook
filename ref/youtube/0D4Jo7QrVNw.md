@@ -8,38 +8,37 @@
 
 ## summary
 
-- Joseph scaled a pool cleaning business from $4,000/month to $9,000/month in 2 months using Google Business Profiles to generate leads organically.
-- Each profile generated 2–3 calls per day with an 80%+ conversion rate to recurring customers paying $250–300/month; profit margins were 70–75%.
-- He sold the customer contracts through a pool route broker for $100,000 (a 10–12x multiple on monthly recurring revenue), completing the transaction within 5 days of listing.
-- The buyer received only the customer contracts and goodwill; Joseph retained ownership of the Google Business Profile to continue generating leads.
-- He plans to replicate the process to build another business to $400–500K in 6 months.
+- Scaling a pool cleaning service from $4,000 to $9,000/month in two months using organic Google Business Profile lead generation instead of paid Facebook ads
+- Achieving 2–3 qualified calls daily with 80% conversion to $250–$300 recurring monthly customers at 70–75% profit margins
+- Selling the $9,000/month business for $100,000 by transferring customer contracts via pool route brokers while retaining the Google Business Profile
+- Repeating the cycle: the lead-generating profile continues producing new customers for the next sales cycle
 
 ## chapters
 
-- [00:00:00](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=0) joseph sells pool cleaning business
+- [00:00:00](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=0) introduction
   ![](0D4Jo7QrVNw/8.jpg)
-- [00:00:31](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=31) business metrics and results
+- [00:00:31](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=31) joseph's results and timeline
   ![](0D4Jo7QrVNw/39.jpg)
-- [00:01:41](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=101) switching to google strategy
+- [00:01:41](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=101) switching to google profiles
   ![](0D4Jo7QrVNw/109.jpg)
-- [00:02:47](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=167) first results timeline
-  ![](0D4Jo7QrVNw/175.jpg)
-- [00:03:54](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=234) the pool cleaning business
-  ![](0D4Jo7QrVNw/242.jpg)
-- [00:05:32](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=332) recurring revenue structure
+- [00:03:20](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=200) daily performance metrics
+  ![](0D4Jo7QrVNw/208.jpg)
+- [00:04:27](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=267) customer acquisition process
+  ![](0D4Jo7QrVNw/275.jpg)
+- [00:05:32](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=332) setting up recurring revenue
   ![](0D4Jo7QrVNw/340.jpg)
-- [00:06:37](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=397) selling the business
+- [00:06:37](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=397) profit margins and valuation
   ![](0D4Jo7QrVNw/405.jpg)
-- [00:07:44](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=464) pool route brokers
+- [00:07:44](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=464) selling through brokers
   ![](0D4Jo7QrVNw/472.jpg)
-- [00:08:49](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=529) what buyer receives
+- [00:08:49](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=529) what transfers in sale
   ![](0D4Jo7QrVNw/537.jpg)
-- [00:09:57](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=597) repeating the process
+- [00:09:57](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=597) repeat model strategy
   ![](0D4Jo7QrVNw/605.jpg)
-- [00:10:29](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=629) community and mentorship
-  ![](0D4Jo7QrVNw/637.jpg)
-- [00:12:40](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=760) final advice
-  ![](0D4Jo7QrVNw/768.jpg)
+- [00:11:02](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=662) community support benefits
+  ![](0D4Jo7QrVNw/670.jpg)
+- [00:12:07](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=727) advice for potential starters
+  ![](0D4Jo7QrVNw/735.jpg)
 
 ## description
 

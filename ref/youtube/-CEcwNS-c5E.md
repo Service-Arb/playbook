@@ -8,34 +8,24 @@
 
 ## summary
 
-- Drop servicing (service arbitrage) using Google Business listings for in-person services like plumbing, HVAC, and electrical—quote customers $8,000, pay workers $5,000, pocket $3,000 per job
-- Zero-cost startup using free Google Business profiles in high-demand, low-competition areas; creator achieved $80,000 monthly revenue at age 20
-- Marketing strategy relies on five-star reviews (gathered from friends, family, or purchased at $2 each), phone scripts, and targeting areas where older competitors lack marketing skills
-- Process: create Google Business listing → gather reviews → answer customer calls → book appointments → send subcontracted workers → collect payment
-- Scales to multiple cities and business profiles, creating sellable assets; creator claims $10,000/month achievable within two months
+- Service arbitrage involves creating Google Business listings for high-demand local services (plumbing, HVAC, electricians) in low-competition areas and charging premium prices while subcontracting work to cheaper labor.
+- Set up free Google Business listings with minimal requirements: add 5-star reviews (at $2/review or from friends), post photos and edits to rank at the top of local search results.
+- Answer incoming calls with a simple phone script (can use ChatGPT), get a quote from your subcontractor, and invoice the customer at 2-3x the subcontractor's cost.
+- The creator scaled to $80,000/month in revenue using this model, paying subcontractors ~$5,000 per job while charging customers $8,000, netting $3,000 per job.
+- Business profiles built through this method can eventually be sold as going concerns, providing long-term value beyond monthly revenue.
 
 ## chapters
 
-- [00:00:00](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=0) failed businesses
+- [00:00:00](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=0) My journey to success
   ![](-CEcwNS-c5E/8.jpg)
-- [00:00:32](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=32) drop servicing concept
-  ![](-CEcwNS-c5E/40.jpg)
-- [00:01:05](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=65) service arbitrage model
-  ![](-CEcwNS-c5E/73.jpg)
-- [00:01:40](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=100) market opportunity
-  ![](-CEcwNS-c5E/108.jpg)
-- [00:02:45](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=165) plumbing example
-  ![](-CEcwNS-c5E/173.jpg)
-- [00:04:23](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=263) business setup
-  ![](-CEcwNS-c5E/271.jpg)
-- [00:04:55](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=295) google listings strategy
-  ![](-CEcwNS-c5E/303.jpg)
-- [00:06:00](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=360) customer process
-  ![](-CEcwNS-c5E/368.jpg)
-- [00:07:07](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=427) zero cost startup
-  ![](-CEcwNS-c5E/435.jpg)
-- [00:08:12](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=492) final recommendations
-  ![](-CEcwNS-c5E/500.jpg)
+- [00:00:50](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=50) The service arbitrage model
+  ![](-CEcwNS-c5E/58.jpg)
+- [00:02:50](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=170) Why this business model works
+  ![](-CEcwNS-c5E/178.jpg)
+- [00:04:44](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=284) Setting up your Google profile
+  ![](-CEcwNS-c5E/292.jpg)
+- [00:07:09](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=429) Execution and scaling
+  ![](-CEcwNS-c5E/437.jpg)
 
 ## description
 
