@@ -35,10 +35,12 @@ ref/
 └── skool_gmbpp/course/    # the classroom, via `social_networks`
 ```
 
-**`structured/suggested/`** — what an agent distilled. Unreviewed.
-**`structured/approved/`** — what the human has vetted. An agent does not write here.
+**`structured/suggested/`** — an agent's own reading of a source. Unreviewed.
+**`structured/approved/`** — what the human has already vetted.
 
-Promotion is the human moving a bullet from one to the other.
+Promotion is the human moving a bullet from one to the other. An agent may place into
+`approved/` only material the human already wrote — their own call notes, transcribed
+and re-sourced — never its own inference.
 
 **`secondary/`** — conclusions that follow from the notes rather than from a source:
 plans, comparisons, decisions.
