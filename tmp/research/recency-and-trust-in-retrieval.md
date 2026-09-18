@@ -30,7 +30,17 @@ the query-time fix by a wide margin.**
                                                              58%→90%         VersionRAG, Oct 2025
 ```
 
-Four things follow, in order of how much evidence backs them.
+Six things follow, in order of how much evidence backs them.
+
+0. **The best-supported single finding: the decay rate belongs to the *class of claim*, not
+   to the corpus.** Three independent 2026 arrivals. Chronofy fitted per-fact-type β and got
+   values spanning two orders of magnitude *within one corpus*, including **β = 0.0 for
+   stable classes** (clinical diagnoses never decay; lab results decay 50× faster). RoMem
+   learns the same thing as a "Semantic Speed Gate" mapping a relation to a volatility score.
+   ScrubJay-MEM calls it type-conditioned temporal decay. **One global half-life is wrong,
+   and some claims should not decay at all.** For us: "don't compete with people who have
+   200+ reviews" and "the video verification flow accepts a handheld pan" cannot share a
+   decay rate.
 
 1. **Decay must key off the *query's* time focus, not off wall-clock age.** Chronofy's
    Table VI runs both on the same corpus: plain recency reranking drops accuracy 15.3%
@@ -60,13 +70,32 @@ Four things follow, in order of how much evidence backs them.
    trips one *this month*). The strongest confirmation is from the other end of the stack —
    I read Graphiti's retrieval code and **expired edges are never filtered out**; they come
    back with their invalidation dates attached and the caller narrates the change (§4). The
-   state of the art in bitemporal memory keeps the dead fact visible on purpose.
+   state of the art in bitemporal memory keeps the dead fact visible on purpose. It has also
+   been measured both ways: filtering to valid-only lifts LongMemEval knowledge-update R@10
+   to 80% but drops temporal-reasoning from 50% to 37.5% — *"post-filter dilution"*
+   (arXiv:2607.26520, 2026-07-29). We get asked both kinds of question, so we mark rather
+   than filter.
 
-The lazy, evidence-backed design for this repo is therefore: **keep resolving
-contradictions at write time exactly as `ARCHITECTURE.md` already says, add a per-claim
-`kind` tag (tactical / structural), and put a single decay term plus a three-tier
-authority multiplier in the ranker.** Do not build a temporal knowledge graph. The
-papers that build one are solving the case where nobody curates; this repo curates.
+5. **Newest-wins is not always right, and our domain is the exception case.** TANGLE
+   (arXiv:2608.13921, 2026-08-14) names **Behaviour-Oscillation** as a distinct conflict
+   type from supersession. A tactic that works, stops, and works again is not a supersession
+   chain — and newest-wins destroys exactly the pattern that is most valuable to see. The
+   corpus's own line, *"it worked for a month, then last week it just stopped,"* is an
+   oscillation report, not a correction.
+
+The lazy, evidence-backed design for this repo is therefore: **keep resolving contradictions
+at write time exactly as `ARCHITECTURE.md` already says; add a per-claim `kind` tag
+(tactical / structural / pricing) so decay can differ by class; rewrite a demoted line into
+past tense so it stops matching present-tense queries; and only once the corpus outgrows one
+context window, put a decay term and an authority multiplier in a ranker.**
+
+**Do not build a temporal knowledge graph.** The decisive number is Zep's own: on
+LongMemEval's *knowledge-update* category — the only category that tests fact supersession —
+the bitemporal machinery scores **−3.4% on gpt-4o-mini and +6.5% on gpt-4o**. Zep's large
+wins are on preference and temporal-reasoning questions, and its real product is cutting
+115k context tokens to 1.6k. At 148k tokens we do not need that. Two independent 2026 results
+point the same way: Letta hit 74% on LoCoMo with plain filesystem tools, and agent-controlled
+lexical search over *unmodified* chat logs matches structured memory (arXiv:2608.12888).
 
 ---
 
@@ -860,18 +889,48 @@ one weak signal zero out the score. Multiplication with a floor gets both.
 
 ### The vocabulary
 
-Bitemporal modelling is old and settled. **Valid time** = when the fact was true in the
-world. **Transaction time** = when the database learned it. Formalised by Richard
-Snodgrass and colleagues through the 1990s (TSQL2); standardised as system-versioned and
-application-time-period tables in **SQL:2011**; implemented as first-class bitemporality
-in **XTDB** and as `as-of` / `as-at` queries in **Datomic**.
-`[unverified — cited from memory; primary sources not fetched in this pass.]`
+Bitemporal modelling is old and settled. **Two axes, and four sets of names for them:**
 
-The reason it matters here: this corpus has *both* clocks and they diverge. A claim has a
-**said-on** date (when the person said it on the call) and a **valid-until** date (when
-Google changed the rule out from under it) and the second is almost never observed
-directly — it is inferred later, when someone says "it just stopped working last week".
-Every system below models the first clock well and the second poorly.
+| | when it was true in the world | when the store learned it |
+|---|---|---|
+| Snodgrass / temporal-DB literature | valid time | transaction time |
+| SQL:2011 | *application time period* | *system time* (`WITH SYSTEM VERSIONING`) |
+| Fowler (2021-04-07) | **actual history** | **record history** |
+| Graphiti | `valid_at` / `invalid_at` | `created_at` / `expired_at` |
+
+- Snodgrass, *Developing Time-Oriented Database Applications in SQL*, Morgan Kaufmann 1999,
+  free at <https://www2.cs.arizona.edu/~rts/tdbbook.pdf> — the four table types (snapshot /
+  valid-time / transaction-time / bitemporal) come from here. `[verbatim quotes unverified —
+  the PDF resisted text extraction; pull from a local copy before quoting.]`
+- SQL:2011 — Kulkarni & Michels, "Temporal features in SQL:2011", *ACM SIGMOD Record* 41(3),
+  2012, pp. 34–43,
+  <https://sigmodrecord.org/publications/sigmodRecord/1209/pdfs/07.industry.kulkarni.pdf>.
+  Query clauses: **`AS OF SYSTEM TIME`** and **`VERSIONS BETWEEN SYSTEM TIME … AND …`**.
+  `[quotes unverified — same extraction problem.]`
+- **XTDB** (<https://docs.xtdb.com/intro/what-is-xtdb.html>): *"XTDB tracks both the system
+  time when data is inserted … and also the valid time periods that define exactly when a
+  given row/record/document is considered valid/effective in your application."* *"All data
+  is bitemporal without having to think about storing or updating additional columns."*
+- **Correction to a common claim, including one I made earlier in this pass: Datomic is
+  *not* bitemporal.** Its `as-of` / `since` / `history` filters
+  (<https://docs.datomic.com/reference/filters.html>) describe **transaction time only** —
+  `as-of` returns *"a database 'as of' at a particular point in time, ignoring any
+  transactions after that point"*. Datomic is uni-temporal and immutable; valid time must be
+  modelled by hand as ordinary attributes.
+- **Fowler, "Bitemporal History"**, 2021-04-07,
+  <https://martinfowler.com/articles/bitemporal-history.html> — *actual history* is *"what
+  history should be given perfect transmission of information"*; *record history* *"captures
+  how our knowledge of history changes."* His framing of the danger is exactly ours:
+  retroactive backdated corrections, where *"retroactive changes are a problem when actions
+  are based on a past state that's retroactively changed."*
+
+**Why it matters here, and where our corpus breaks the model.** A claim has a **said-on**
+date (when someone said it on the call) and a **stopped-working** date (when Google changed
+the rule) and the second is almost never observed. It is inferred weeks later, when somebody
+says *"it worked for a month, then last week it just stopped."* So in our corpus the
+transaction time is exact and the valid-time *end* is a late, fuzzy, second-hand estimate —
+which is the opposite of the clean case these systems are built for, and the reason a
+`valid_at`/`invalid_at` schema would mostly be storing guesses.
 
 ### Zep / Graphiti
 
@@ -981,36 +1040,293 @@ narrate the change. Graphiti did not build a "hide the old fact" mechanism; it b
 "carry the old fact's death certificate" mechanism. Our `ARCHITECTURE.md` demotion rule is
 the same design in markdown.
 
-Reranking options include RRF, MMR, node-distance and a cross-encoder. Reported benchmark
-numbers on DMR and LongMemEval `[unverified — not fetched]`.
+Reranking options, from `search_config.py`: `EdgeReranker`/`NodeReranker` ∈
+{`reciprocal_rank_fusion`, `node_distance`, `episode_mentions`, `mmr`, `cross_encoder`},
+default `rrf`, `SearchConfig.limit = 10`. There are 16 named recipes in
+`search_config_recipes.py` and **not one of them sets a temporal filter.**
+
+### The number that should deflate the whole "build a temporal KG" idea
+
+Zep's paper reports its headline as "up to 18.5% improvement" on LongMemEval. But
+LongMemEval has a **knowledge-update** category — the one that actually tests whether a new
+fact correctly supersedes an old one — and that is where a bitemporal store should shine.
+From the paper's own per-category table:
+
+| LongMemEval category | gpt-4o-mini: baseline → Zep | gpt-4o: baseline → Zep |
+|---|---|---|
+| single-session-preference | 30.0 → 53.3 (**+77.7%**) | 20.0 → 56.7 (**+184%**) |
+| temporal-reasoning | 36.5 → 54.1 (+48.2%) | 45.1 → 62.4 (+38.4%) |
+| multi-session | 40.6 → 47.4 (+16.7%) | 44.3 → 57.9 (+30.7%) |
+| single-session-user | 81.4 → 92.9 (+14.1%) | 81.4 → 92.9 (+14.1%) |
+| **knowledge-update** | **76.9 → 74.4 (−3.36%)** | **78.2 → 83.3 (+6.52%)** |
+| single-session-assistant | 81.8 → 75.0 (**−9.06%**) | 94.6 → 80.4 (**−17.7%**) |
+
+**On the one category that tests fact supersession, the bitemporal machinery is worth −3.4%
+on one model and +6.5% on the other.** The win comes from preference and temporal-reasoning
+questions — from having a good retriever over an organised graph, not from the four
+timestamps. Overall: LongMemEval 55.4% → 63.8% (gpt-4o-mini), 60.2% → 71.2% (gpt-4o), with
+latency 28.9 s → 2.58 s and context **115k → 1.6k tokens**. DMR: 94.4% → 94.8%
+(gpt-4-turbo), 98.0% → 98.2% (gpt-4o-mini) — essentially nothing.
+
+The honest reading: **Zep's real product is token reduction and latency, not correctness on
+updated facts.** At 148k tokens our corpus does not need token reduction. The strongest
+published temporal-KG system does not sell us the thing we actually want.
+
+### The one trick from Graphiti worth copying directly
+
+From the Zep engineering blog (<https://blog.getzep.com/beyond-static-knowledge-graphs/>,
+2024-10-02): when an edge is invalidated, Graphiti **regenerates the edge's `fact` string
+into past tense** — *"Maria used to work as a junior manager, until her promotion…"* Since
+`fact` is the field that gets embedded and BM25-indexed, **the rewritten past-tense text is
+what remains retrievable.** The claim is still findable; it just no longer reads as current.
+
+Pure text convention, no infrastructure, works identically in markdown. It is a strictly
+better version of this repo's demotion rule, because a demoted line currently keeps its
+original present-tense phrasing and therefore still matches a present-tense query exactly as
+strongly as the live claim sitting above it.
+
+Zep's own documented guidance puts the burden on the *prompt*, not the retriever
+(<https://help.getzep.com/advanced-context-block-construction>):
+
+> *"Include each fact's `valid_at` and `invalid_at` dates, and clearly mark any fact with a
+> non-null `invalid_at` as no longer valid."*
+>
+> *"Facts ending in 'present' are currently valid … Facts with a past end date used to be
+> valid but are NOT CURRENTLY VALID."*
+
+**Documentation warning:** the page at `mintlify.wiki/getzep/graphiti/concepts/temporal-model`
+claims *"Without temporal filters, search returns current facts."* **That is false against
+the source** (three independent checks above). The 2024 blog is the honest one: search *"does
+not yet filter by these temporal markers."* Opt-in datetime filtering landed in Zep v3
+(2025-08-07). Cite the code, not the docs page.
 
 ### Mem0
 
 "Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory"
-(arXiv:2504.19413, 2025-04, <https://arxiv.org/abs/2504.19413>). An LLM decides per
-incoming fact among **ADD / UPDATE / DELETE / NOOP** against retrieved similar memories;
-`Mem0^g` adds a graph variant. Evaluated on LOCOMO. `[unverified — not fetched.]`
+(arXiv:2504.19413, 2025-04, <https://arxiv.org/html/2504.19413v1>). An LLM picks one of
+**ADD / UPDATE / DELETE / NOOP** per incoming fact; *"Rather than using a separate
+classifier, the LLM directly selects the appropriate operation."* DELETE is defined as
+*"removal of memories contradicted by new information."*
 
-The structural difference from Graphiti matters for us: **Mem0's UPDATE overwrites, so
-the old value is gone.** Graphiti's `expired_at` keeps it. Our `ARCHITECTURE.md` says
-*"Nothing is deleted for being wrong — only demoted, with its date still on it"*, which is
-Graphiti's semantics, not Mem0's. Any tool we adopt has to preserve the demoted line.
+The actual prompt, `mem0/configs/prompts.py` → `DEFAULT_UPDATE_MEMORY_PROMPT`, verbatim:
 
-LOCOMO numbers from memory-system papers have attracted methodology criticism
-`[unverified — I did not locate a specific critique in this pass]`.
+> *"**Delete**: If the retrieved facts contain information that contradicts the information
+> present in the memory, then you have to delete it."*
+
+UPDATE is reserved for enriching the *same* attribute ("Loves cheese pizza" + "Loves chicken
+pizza" → "Loves cheese and chicken pizza", *"you have to keep the same ID"*). Contradiction
+routes to DELETE.
+
+**And DELETE is a hard delete.** `mem0/memory/main.py` calls
+`self.vector_store.delete(vector_id=memory_id)` and writes an audit row into a SQLite
+`history` table (`old_memory, new_memory, event, created_at, updated_at, is_deleted, …`).
+`get_history` is keyed on `memory_id` — **an inspection API, not on the search path.**
+
+So Mem0's contract is the exact inverse of Graphiti's: **the contradicted fact is gone from
+retrieval permanently, and you cannot ask "what did we believe in May".** There is no
+valid-time axis at all — `created_at`/`updated_at` are transaction time only.
+
+Our `ARCHITECTURE.md` says *"Nothing is deleted for being wrong — only demoted, with its
+date still on it."* That is Graphiti's semantics and the opposite of Mem0's. **Any tool
+adopted here has to preserve the demoted line; Mem0 structurally cannot.**
+
+`Mem0^g`, the graph variant, is claimed in the paper to mark conflicting relationships
+*"as invalid rather than physically removing them to enable temporal reasoning"* — **but
+this could not be verified against shipping code**: `mem0/graphs/tools.py`,
+`mem0/graphs/utils.py` and `mem0/memory/graph_memory.py` all 404 on `main` as of 2026-09-18.
+`[unverified — the only genuinely bitemporal claim in the Mem0 paper is the one that cannot
+be checked.]`
+
+### The LoCoMo numbers are not usable, and this is well documented
+
+Anyone quoting a LoCoMo score at you in 2026 is quoting a number from a fight. The record:
+
+- **Mem0's paper** reports overall LLM-judge 66.88 (Mem0) vs 65.99 (Zep); latency p95 1.440 s
+  vs full-context 17.117 s, ~7k memory tokens vs 26,031 — which is where the "91% lower p95
+  latency" and "90% token savings" claims come from.
+- **Zep's rebuttal** — "Is Mem0 Really SOTA in Agent Memory?", Chalef & Rasmussen,
+  <https://blog.getzep.com/lies-damn-lies-statistics-is-mem0-really-sota-in-agent-memory/>,
+  published 2025-05-06, updated 2026-06-03. Alleges three harness errors (both speakers
+  assigned the `user` role; timestamps pasted into message text instead of the `created_at`
+  field, *"disrupting temporal reasoning"*; sequential rather than parallel search inflating
+  latency). Their corrected re-run: **75.14% ± 0.17.** They also attack the benchmark itself:
+  conversations are only **16,000–26,000 tokens** — they fit in a modern context window, so
+  they do not stress memory at all — and there are **no knowledge-update questions**, *"a
+  critical function for agent memory where information changes over time."*
+- **Mem0's counter** — getzep/zep-papers issue #5, Deshraj Yadav (Mem0 CTO), 2025-05-08,
+  <https://github.com/getzep/zep-papers/issues/5>: claims Zep is actually **58.44% ± 0.20**,
+  a 25.56 pp inflation, from including an excluded adversarial category and a modified system
+  prompt. Closed with no visible maintainer rebuttal.
+- **Third-party audit** — Penfield Labs, 2026-04-09,
+  <https://penfieldlabs.substack.com/p/proposal-a-new-benchmark-for-long>: **6.4% of the
+  LoCoMo answer key is wrong** (99 errors / 1,540 questions); the LLM judge **accepts 63% of
+  intentionally wrong answers**; **56% of per-category system comparisons are statistically
+  indistinguishable from noise**; category 5 has 446 questions with no ground truth.
+- **Letta's datapoint** — <https://www.letta.com/blog/benchmarking-ai-agent-memory>,
+  2025-08-12: **74.0% on LoCoMo with gpt-4o-mini and plain filesystem tools**, above Mem0's
+  reported 68.5% for its graph variant. Their conclusion, which is the one to carry:
+  *"The quality of an agent's memory often depends more on the underlying agentic system's
+  ability to manage context and call tools than on the memory tools themselves."*
+
+**Use LongMemEval instead** (arXiv:2410.10813, Wu et al., v1 2024-10-14, ICLR 2025): 500
+curated questions across *"information extraction, multi-session reasoning, temporal
+reasoning, knowledge updates, and abstention"*. It is the only widely-used benchmark with a
+knowledge-update category, which is the only category that tests our problem. **BEAM**
+(arXiv:2510.27246, v1 2025-10-31, v2 2026-02-21) — 100 conversations, 2,000 validated
+questions, up to 10M tokens — is the 2026 successor for scale.
 
 ### Letta / MemGPT, Cognee, A-MEM and the rest
 
-- **Letta / MemGPT** — memory blocks, core vs archival memory, sleep-time compute. I found
-  **no explicit temporal invalidation mechanism**; supersession happens only if the
-  rewriting agent happens to rewrite the block. `[unverified]`
-- **A-MEM** (arXiv:2502.12110, Feb 2025) — Zettelkasten-style agentic memory with linked
-  notes and memory evolution. `[unverified]`
-- **Cognee**, **Memary**, **MemoryOS**, **MIRIX**, **Memobase**, **LangMem** — listed as
-  the 2025 cohort; none confirmed in this pass to have valid-time/transaction-time
-  separation. `[unverified]`
-
+- **Letta / MemGPT** (MemGPT: arXiv:2310.08560, Oct 2023) — **no temporal model at all,
+  verified against the docs.** Memory blocks
+  (<https://docs.letta.com/guides/agents/memory-blocks>) have exactly `label`,
+  `description`, `value`, `limit`, optional `read_only`. **No timestamp, no version, no
+  validity field.** Archival memory exposes `archival_memory_insert` /
+  `archival_memory_search`, also untimestamped, and *"Agents cannot easily modify or delete
+  archival memories."* Sleep-time compute (arXiv:2504.13171, 2025-04-17; ~5× less test-time
+  compute for equal accuracy) rewrites blocks into *"clean, concise, and detailed
+  memories"* but documents **no reconciliation of contradicting or stale info**. Net: a new
+  fact supersedes an old one by an **LLM destructively overwriting a text string**, with no
+  audit trail. Archival passages are worse — a superseded passage just sits there competing
+  on cosine similarity with **no marker at all**, which is arguably below Graphiti, since
+  Graphiti at least attaches `invalid_at` so the prompt can disclaim it.
+- **Anthropic's memory tool** (type string `memory_20250818`,
+  <https://platform.claude.com/docs/en/agents-and-tools/tool-use/memory-tool>) — commands
+  are `view`, `create`, `str_replace`, `insert`, `delete`, `rename`, files under
+  `/memories`, storage entirely client-side. **Zero temporal, versioning or invalidation
+  concept.** Superseding a fact is `str_replace` over the old string. The docs' only nod to
+  staleness is operational: *"Periodically delete memory files that haven't been accessed in
+  a long time"*, and a suggested prompt *"always try to keep its content up-to-date, coherent
+  and organized."* This is the Letta model with even less structure — and it is worth naming
+  plainly, because it is the memory primitive an agent built on this repo would most likely
+  reach for by default.
+- **A-MEM** (arXiv:2502.12110, v1 2025-02-17) — Zettelkasten-style notes with link
+  generation and *"memory evolution"*: *"as new memories are integrated, they can trigger
+  updates to the contextual representations and attributes of existing historical
+  memories."* That is **attribute refinement, not invalidation** — no validity interval, no
+  supersession chain.
+- **MemoryOS** (arXiv:2506.06326, 2025-05-30) — short/mid/long tiers, dialogue-chain FIFO
+  and segmented page organisation. **Eviction by heat and recency, not by contradiction. No
+  valid time.**
+- **MIRIX** (arXiv:2507.07957, 2025-07-10) — six memory types (Core, Episodic, Semantic,
+  Procedural, Resource, Knowledge Vault); ScreenshotVQA +35% accuracy / −99.9% storage. No
+  temporal invalidation mechanism in the abstract.
+- **HippoRAG 2** (arXiv:2502.14802, 2025-02-20) — PPR + deeper passage integration, +7% on
+  associative memory. **Nothing about contradiction or updates** — a retrieval-quality
+  paper, not a memory-lifecycle one.
+- **LangMem** (<https://langchain-ai.github.io/langmem/>) — `create_manage_memory_tool`,
+  `create_search_memory_tool`, hot-path vs background extraction. **The docs contain no
+  conflict handling, no timestamps, no validity windows.**
+- **Cognee** (<https://github.com/topoteretes/cognee>) — ops are `remember / recall / improve
+  / forget`. **The README has no mention of temporal awareness, fact invalidation or
+  contradiction handling**, and `docs.cognee.ai/core-concepts/temporal-awareness` 404s.
+  `[unverified below README level.]`
+- **Memobase, Memary, ByteRover, ZeroMemory, OpenAI memory, Google memory** — not
+  investigated `[unverified]`. One suggestive datapoint: OpenAI's memory scores **21.71 on
+  the LoCoMo temporal category** in Mem0's table, by far the worst in it.
 ### The 2026 successors, which are the interesting ones
+
+2026 turned bitemporal agent memory from one vendor's feature into a research subgenre. The
+five below are the ones that answer questions this document actually asked.
+
+**The measurement of "should invalidated facts be filtered out" — and the answer is "it
+depends, badly".** "A Graph-Native Bitemporal Memory Store for Conversational AI Agents"
+(Niksarli & Baheti, arXiv:2607.26520, 2026-07-29). Immutable identity node → versioned
+content nodes, each carrying **two closed-open intervals** (valid time, transaction time);
+point-in-time semantic retrieval without overwriting. On LongMemEval, 60 sampled questions:
+
+| path | knowledge-update R@10 | temporal-reasoning |
+|---|---|---|
+| current-state (filtered to valid) | **80%** | — |
+| overall current-state | 46.7% | — |
+| time-travel path | 80% | **50% → 37.5%** |
+
+They attribute the temporal-reasoning drop to **"post-filter dilution"**. So: **filtering by
+validity buys a lot on "what is true now" and costs real accuracy on "how did this change
+over time".** Both are questions this repo will be asked. That measurement is the direct
+argument for Graphiti's default (return it, mark it) over NuggetIndex's (filter before
+ranking) — for *our* mixed query load, not universally.
+
+**The third option nobody else offers: down-rank geometrically.** "Time is Not a Label:
+Continuous Phase Rotation for Temporal Knowledge Graphs and Agentic Memory" — RoMem (Li,
+Zhang, Yang, Ma, Guo, arXiv:2604.11544v2, 2026-04-13). Its critique of the field is the
+cleanest statement of our problem I found anywhere, verbatim: existing approaches *"model
+time as discrete metadata, either sorting by recency (burying old-yet-permanent knowledge),
+simply overwriting outdated facts, or requiring an expensive LLM call at every ingestion
+step, leaving them unable to distinguish persistent facts from evolving ones."*
+
+Their mechanism is the interesting part. A pretrained **Semantic Speed Gate** maps a
+relation's text embedding to a *volatility score* — "president of" rotates fast, "born in"
+stays stable — and continuous phase rotation produces **"geometric shadowing": obsolete
+facts are rotated out of phase in complex vector space, so temporally correct facts
+naturally outrank contradictions without deletion.** SOTA on ICEWS05-15 (72.6 MRR); 2–3× MRR
+on MultiTQ; *"zero degradation on DMR-MSC"*.
+
+**The Semantic Speed Gate is the learned version of the `kind` tag proposed in the scoring
+section below.** Same insight — decay rate is a property of the *relation*, not the corpus —
+independently arrived at by Chronofy (per-fact-type β) and RoMem (learned volatility). Two
+papers, two methods, same finding. That is the best-supported claim in this entire document.
+
+**The as-of filter Graphiti leaves opt-in, shipped by default.** "Less Context, More
+Accuracy: A Bi-Temporal Memory Engine for LLM Agents" — Engram (Liuyin Wang,
+arXiv:2606.09900, 2026-06-05). Lossless episode append with no LLM on the critical path;
+async extraction of atomic (subject, predicate, object) facts into a bitemporal graph that
+*"resolves contradictions without an LLM call per fact — invalidating, never deleting, so
+every fact keeps provenance and a supersession chain."* Read path fuses dense + lexical +
+graph + recency/salience, applies a **point-in-time ("as-of") filter**, and assembles
+provenance-tagged context. **LongMemEval_S, full 500 questions, official judge: 83.6% vs
+73.2% full-context (+10.4 pts, McNemar p < 10⁻⁶) at ~8× fewer tokens (9.6k vs 79k).** It
+also indicts the field: *"benchmark numbers are reported on inconsistent, non-reproducible
+harnesses, so one system appears at wildly different scores across sources"*, and ships a
+neutral harness with the official judge and a full-context baseline in every table.
+
+**Belief-state queries as a first-class operation.** TGMS, "An Agent-Native Bi-Temporal
+Graph Management System" (Xiaofei Zhang, arXiv:2607.10265v2, 2026-07-11). Thirteen verified
+temporal operators exposed as agent tools, *"typed, deterministic, bounded, cost-guarded,
+and bi-temporal by default."* Its framing:
+
+> *"TGMS separates valid time from transaction time. It can therefore answer belief-state
+> questions such as 'as of transaction time T, what did the system believe?' Standard
+> latest-state snapshots and retrieval pipelines do not preserve enough information to
+> answer such questions."*
+
+With a 14B open model: **0.409 EM** vs 0.045–0.182 for vector-RAG / static-graph RAG /
+text-to-Cypher, and **0.67 EM on correction probes where all three 14B baselines score
+zero.** Apache-2.0.
+
+**The paper that says newest-wins is sometimes just wrong.** TANGLE, "When Personal Memory
+Has No Single Answer" (Yang, Xu, Li, Yang, Huang, arXiv:2608.13921, 2026-08-14). 541
+instances, 40 personas, **three conflict types: Context-Partitioned, Behavior-Oscillation,
+Source-Contradiction**, evaluated on conflict perception, causal reasoning, confidence
+calibration, clarification seeking and memory faithfulness. Its finding about pipelines:
+*"With end-to-end pipeline memory, extraction fails to preserve conflict-bearing relations
+needed for downstream reasoning."* And its reframing of the target — *recognising
+underdetermination, retaining conflicting evidence, and acting without forcing a definitive
+answer* — **directly contradicts the premise that a new fact should always kill an old
+one.** Behaviour-Oscillation in particular is our case: a tactic that works, stops, and works
+again is not a supersession chain, it is oscillation, and newest-wins destroys the pattern.
+
+**The contrarian result, and it agrees with Letta's.** "When Your Agent Opens the Chat App:
+Agent-Controlled Search over Raw Chat Logs Rivals Structured Memory" (arXiv:2608.12888v2,
+2026-08-16): lexical indexing plus temporal narrowing over **unmodified archives** matches
+elaborate structured memory. Same shape as Letta's 74%-with-filesystem-tools result. **Two
+independent 2026 results say the machinery is not where the win is.**
+
+Also from 2026, one line each `[abstract-level, unverified]`: **Quipu** (arXiv:2608.16813,
+governed bitemporal KG store; opens by naming the four bad defaults — *"accept writes now and
+clean later, keep one time axis or none, treat every writer's facts as equally trustworthy,
+and leave governance to dashboards"*; 50/50 verdicts re-derive faithfully as-of their instant
+*"while all 50 would be misreported under a latest-only rule set"*); **post-graph-rag**
+(arXiv:2608.24921); **Governed Persistent Memory** (arXiv:2608.12476); **Memanto**
+(arXiv:2604.22085, *"conflict resolution and temporal versioning without complex graph
+maintenance"*); **WorldDB** (arXiv:2604.18478, *"edge handlers manage fact supersession and
+contradiction preservation"*); **LifeFuse-Mem** (arXiv:2609.12436, transient vs durable
+knowledge, preventing temporary info overwriting persistent state — the same structural /
+tactical split proposed below); **ScrubJay-MEM** (arXiv:2608.04746, **type-conditioned
+temporal decay** — a third independent arrival at per-class decay); **MemGuard**
+(arXiv:2608.21867); **MemRiskBench** (arXiv:2609.14976).
+
+### The older, deterministic end of the 2026 cohort
 
 **MemStrata** — "Temporal Validity in Retrieval Memory: Eliminating Stale-Fact Errors for
 AI Agents over Evolving Knowledge" (Neeraj Yadav, arXiv:2606.26511, 2026-06-25,
@@ -1211,8 +1527,19 @@ nobody owns the content — is absent when the owner is the only reader.
 - **`k = 60` in RRF is an untuned constant from a two-page 2009 poster** that became an
   industry default by imitation. Qdrant shipping k = 2 is the live proof it was never
   load-bearing.
-- **What Graphiti's search layer does with expired edges** — the single most useful
-  implementation detail for us, unconfirmed in this pass.
+- **No measurement of whether "mark it past-tense" beats "filter it out" on a mixed query
+  load.** arXiv:2607.26520 measured filter-vs-not (knowledge-update 80% R@10, but
+  temporal-reasoning 50%→37.5%). Nobody has measured Graphiti's actual shipped behaviour —
+  return the invalidated fact with its dates and let the prompt disclaim it — against either.
+- **LoCoMo is discredited and its replacement is young.** 6.4% of the answer key is wrong,
+  the LLM judge accepts 63% of intentionally wrong answers, and 56% of per-category
+  comparisons are noise (Penfield Labs, 2026-04-09). Any memory-system number sourced from
+  LoCoMo after 2025 should be treated as unusable. LongMemEval's knowledge-update category
+  and BEAM are the replacements.
+- **The Mem0^g "mark invalid rather than delete" claim cannot be verified** — the graph
+  module is 404 on OSS `main` as of 2026-09-18.
+- **Snodgrass and Kulkarni/Michels could not be quoted verbatim** — both PDFs resisted text
+  extraction. The two-axis vocabulary is certainly right; the exact wording is not sourced.
 
 ---
 
@@ -1272,6 +1599,12 @@ So the one piece of schema to add is a per-bullet kind:
   kind: tactical     →  H = 90d                  ← what to do this month
   kind: pricing      →  H = 180d                 ← rates, margins, what subs charge
 ```
+
+Three independent 2026 systems converge on this being the right axis: Chronofy fits β per
+fact type (diagnoses 0.0, labs 0.05 — a 50× spread inside one corpus); RoMem learns it as a
+"Semantic Speed Gate" over relation embeddings; ScrubJay-MEM calls it type-conditioned
+temporal decay. **This is the best-supported design claim in the document, and it is also
+the cheapest — one word per bullet.**
 
 Where H = 90d comes from. The two vendors who ship a default both centre on ~3 months,
 though neither is a half-life and they disagree with each other:
@@ -1407,24 +1740,41 @@ demoted underneath with its date. So:
 6. Classify the query first: *"about now"* vs *"about a past state"*. Apply `R` only in the
    first case. This one branch is what separates Chronofy's +66.3% from its −15.3%.
 
-**One phrasing rule falls out of Graphiti's interval test and is worth adopting in the
-notes themselves.** Graphiti treats two claims as contradictory only when their validity
-intervals *overlap*; non-overlapping claims are a timeline, not a conflict. Our bullets are
-written as open-ended present tense ("the video verification flow accepts a handheld pan"),
-which means every old bullet's interval runs to infinity and therefore overlaps every new
-one — every update looks like a contradiction. A bullet written as *"as of 2026-01, …"*
-closes its own interval and reads as history instead. **The cheapest single improvement to
-the corpus is scoping tactical bullets to when they were observed**, which is one word at
-write time and removes a whole class of false conflicts at read time.
+**Two phrasing rules fall out of §4, and both are free.**
+
+*First, demote into past tense, not just downward.* When Graphiti invalidates an edge it
+**regenerates the edge's `fact` string into past tense** — *"Maria used to work as a junior
+manager, until her promotion…"* — and `fact` is the field that gets embedded and BM25-indexed
+(<https://blog.getzep.com/beyond-static-knowledge-graphs/>, 2024-10-02). Right now this
+repo's demoted line keeps its original present-tense wording, so it **matches a present-tense
+query exactly as strongly as the live claim above it**, and the only thing separating them is
+indentation the retriever cannot see. Rewriting the demoted line — *"until 2026-06, X"* —
+costs one edit at demotion time and makes the lexical signal agree with the semantics.
+
+*Second, scope tactical bullets to when they were observed.* Graphiti treats two claims as
+contradictory only when their validity intervals *overlap*; non-overlapping claims are a
+timeline, not a conflict. Our bullets are open-ended present tense, so every old bullet's
+interval runs to infinity and overlaps every new one — every update looks like a
+contradiction. *"As of 2026-01, …"* closes its own interval and reads as history.
+
+**And one thing not to do: don't collapse oscillation into supersession.** TANGLE
+(arXiv:2608.13921, 2026-08-14) separates Behaviour-Oscillation from Source-Contradiction
+precisely because they need different handling. A tactic that worked in January, stopped in
+March and worked again in July is not three corrections — it is a pattern, and it is probably
+the most valuable thing the corpus can tell anyone. Newest-wins applied blindly deletes it.
+When the same claim flips back, the right note is one bullet with three dated observations
+under it, not three rounds of demotion.
 
 ### What I would not build
 
-- A temporal knowledge graph. Graphiti/Zep's machinery exists to *infer* supersession that
-  nobody recorded. This repo records it. Building the graph would re-derive, at 55%
-  localisation accuracy, information already written down at 100%. Worth noting that
-  Graphiti's *output* semantics — return the expired edge with its dates, let the caller
-  narrate — is exactly what we want, and it is three lines of markdown convention here
-  rather than a graph database.
+- A temporal knowledge graph. Two reasons, and the second is the stronger one. (a) Its
+  machinery exists to *infer* supersession that nobody recorded; this repo records it, so
+  building the graph would re-derive at 55% localisation accuracy what is already written
+  down at 100%. (b) **Zep's own LongMemEval breakdown shows the bitemporal machinery is
+  worth −3.4%/+6.5% on the knowledge-update category** — the win is elsewhere, and the real
+  product is 115k→1.6k token compression we do not need at 148k. Graphiti's *output*
+  semantics (return the expired edge with its dates, let the caller narrate) is exactly what
+  we want, and it is a markdown convention here, not a graph database.
 - A learned reranker. Mokrii et al. (arXiv:2103.03335, SIGIR'21) measured the threshold:
   beating BM25 with a trained ranker needs **>100 annotated queries on the easiest dataset
   and 1–8K on realistic ones**, at roughly an hour of judgement per query, and below that
@@ -1464,6 +1814,15 @@ Fetched and verified in this pass:
 - Elasticsearch function_score decay functions — <https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-function-score-query.html>
 - Graphiti, read from source on `main` 2026-09-18 — search layer <https://raw.githubusercontent.com/getzep/graphiti/main/graphiti_core/search/search_utils.py>, filters <https://raw.githubusercontent.com/getzep/graphiti/main/graphiti_core/search/search_filters.py>, invalidation <https://raw.githubusercontent.com/getzep/graphiti/main/graphiti_core/utils/maintenance/edge_operations.py>, contradiction prompt <https://raw.githubusercontent.com/getzep/graphiti/main/graphiti_core/prompts/dedupe_edges.py>
 - Vespa `freshness.maxAge` default (`3*30*24*60*60`, "about 3 months") and `halfResponse` default (`7*24*60*60`) — <https://docs.vespa.ai/en/reference/rank-feature-configuration.html>
+- Zep paper, per-category LongMemEval table — arXiv:2501.13956, 2025-01-20 — <https://arxiv.org/html/2501.13956v1>; repo <https://github.com/getzep/graphiti>
+- Zep, "Beyond Static Knowledge Graphs" (past-tense fact rewriting on invalidation) — 2024-10-02 — <https://blog.getzep.com/beyond-static-knowledge-graphs/>
+- Zep, context block construction guidance (mark non-null `invalid_at` in the prompt) — <https://help.getzep.com/advanced-context-block-construction>
+- Mem0 — arXiv:2504.19413, 2025-04 — <https://arxiv.org/html/2504.19413v1>; `DEFAULT_UPDATE_MEMORY_PROMPT` in `mem0/configs/prompts.py`, hard delete in `mem0/memory/main.py`, history schema in `mem0/memory/storage.py`
+- The LoCoMo dispute — Zep rebuttal 2025-05-06/2026-06-03 <https://blog.getzep.com/lies-damn-lies-statistics-is-mem0-really-sota-in-agent-memory/>; Mem0 counter 2025-05-08 <https://github.com/getzep/zep-papers/issues/5>; Penfield Labs audit 2026-04-09 <https://penfieldlabs.substack.com/p/proposal-a-new-benchmark-for-long>; Letta 2025-08-12 <https://www.letta.com/blog/benchmarking-ai-agent-memory>
+- Letta memory blocks and archival memory — <https://docs.letta.com/guides/agents/memory-blocks>, <https://docs.letta.com/guides/agents/archival-memory>
+- Anthropic memory tool (`memory_20250818`) — <https://platform.claude.com/docs/en/agents-and-tools/tool-use/memory-tool>
+- XTDB bitemporality — <https://docs.xtdb.com/intro/what-is-xtdb.html>; Datomic filters (transaction time only) — <https://docs.datomic.com/reference/filters.html>; Fowler, "Bitemporal History" 2021-04-07 — <https://martinfowler.com/articles/bitemporal-history.html>
+- Snodgrass, *Developing Time-Oriented Database Applications in SQL*, 1999 — <https://www2.cs.arizona.edu/~rts/tdbbook.pdf>; Kulkarni & Michels, "Temporal features in SQL:2011", SIGMOD Record 41(3) 2012 — <https://sigmodrecord.org/publications/sigmodRecord/1209/pdfs/07.industry.kulkarni.pdf> (both: verbatim quotes unverified, PDFs resisted extraction)
 - LangChain TimeWeightedVectorStoreRetriever — <https://python.langchain.com/v0.2/docs/how_to/time_weighted_vectorstore/>
 - RAG knowledge base freshness / index rot — 2026-04-20 — <https://tianpan.co/blog/2026-04-20-rag-knowledge-base-freshness-index-rot>
 - Source-Aware Reranking for RAG: A Reliability Prior Approach — arXiv:2607.22584 (listing says 2026-06-08 against a 2607 prefix; discrepancy unresolved) — <https://arxiv.org/abs/2607.22584>
@@ -1498,9 +1857,19 @@ Named from search results, abstract-level or `[unverified]`:
 - GRAB-RAG / Prompt-Based Abstention Fails Under Misleading Context — arXiv:2608.22228, 2026-08 — <https://arxiv.org/abs/2608.22228>
 - Trust or Abstain? A Self-Aware RAG Approach — arXiv:2605.18792, 2026 — <https://arxiv.org/abs/2605.18792>
 - When Evidence Conflicts (biomedical order effects) — arXiv:2605.14115, 2026 — <https://arxiv.org/abs/2605.14115>
-- Zep: A Temporal Knowledge Graph Architecture for Agent Memory — arXiv:2501.13956, 2025-01 — <https://arxiv.org/abs/2501.13956>; <https://github.com/getzep/graphiti>
-- Mem0 — arXiv:2504.19413, 2025-04 — <https://arxiv.org/abs/2504.19413>
 - A-MEM — arXiv:2502.12110, 2025-02 — <https://arxiv.org/abs/2502.12110>
+- Engram / bi-temporal memory engine — arXiv:2606.09900, 2026-06-05 — <https://arxiv.org/abs/2606.09900>
+- TGMS / agent-native bi-temporal graph management — arXiv:2607.10265, 2026-07-11 — <https://arxiv.org/abs/2607.10265>
+- Graph-native bitemporal memory store (post-filter dilution measurement) — arXiv:2607.26520, 2026-07-29 — <https://arxiv.org/abs/2607.26520>
+- RoMem / Time is Not a Label — arXiv:2604.11544, 2026-04-13 — <https://arxiv.org/abs/2604.11544>
+- TANGLE / When Personal Memory Has No Single Answer — arXiv:2608.13921, 2026-08-14 — <https://arxiv.org/abs/2608.13921>
+- Quipu / governed bitemporal KG store — arXiv:2608.16813, 2026-08-17 — <https://arxiv.org/abs/2608.16813>
+- Agent-controlled search over raw chat logs rivals structured memory — arXiv:2608.12888, 2026-08-16 — <https://arxiv.org/abs/2608.12888>
+- LongMemEval — arXiv:2410.10813, 2024-10-14, ICLR 2025 — <https://arxiv.org/abs/2410.10813>
+- BEAM / Beyond a Million Tokens — arXiv:2510.27246, 2025-10-31, v2 2026-02-21 — <https://arxiv.org/abs/2510.27246>
+- MemGPT — arXiv:2310.08560, 2023-10; Letta sleep-time compute arXiv:2504.13171, 2025-04-17
+- MemoryOS arXiv:2506.06326 (2025-05-30); MIRIX arXiv:2507.07957 (2025-07-10); HippoRAG 2 arXiv:2502.14802 (2025-02-20)
+- 2026 cohort, abstract-level: post-graph-rag arXiv:2608.24921; Governed Persistent Memory arXiv:2608.12476; Memanto arXiv:2604.22085; WorldDB arXiv:2604.18478; LifeFuse-Mem arXiv:2609.12436; ScrubJay-MEM arXiv:2608.04746; MemGuard arXiv:2608.21867; MemRiskBench arXiv:2609.14976
 - CERN ALICE-FIT support assistant (expert-assigned validity intervals) — arXiv:2511.17154
 - Evidence Sufficiency Benchmark (L1–L5 abstention calibration) — <https://www.techscience.com/cmc/v89n1/68467/html>
 - Don't Build That RAG Knowledge Base — <https://dev.to/chen115y/dont-build-that-rag-knowledge-base-seven-reasons-it-will-fail-and-what-to-build-instead-2c3g>
