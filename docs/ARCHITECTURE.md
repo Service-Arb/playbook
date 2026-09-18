@@ -97,12 +97,17 @@ would feed on its own output.
 scripts/
 ├── loom-pull.rs       # share page → signed transcript CDN → timestamped lines
 ├── chatgpt-pull.rs    # headless chromium → the DOM's turns
-└── yt-pull.rs         # channel feed → transcripts
+├── yt-pull.rs         # yt-dlp → captions, in citable blocks
+└── skool-pull.rs      # recon classroom → the course, lesson by lesson
 ```
 
-Anything needing a session — skool posts, the classroom, DMs, discord — lives in
-[`social_networks`](https://github.com/valeratrades/social_networks) and lands in
-`ref/` the same way.
+Anything needing a session lives in
+[`social_networks`](https://github.com/valeratrades/social_networks), and a puller shells
+out to it rather than linking it — that crate's tree only resolves against its own lock.
+It knows how to read a platform; the puller here decides how a capture is filed.
+
+Skool *conversations* are already `recon posts skool:<slug>`, which writes them into the
+rolodex's `venues/` tree; nothing here duplicates that.
 
 ## Invariants
 
