@@ -1,6 +1,6 @@
 - Gabe Jacobs knows android spoofing
   1. root
-  2. majistic
+  2. `Magisk` // transcribed as "Majestic"; its module store is the app interface he describes
   3. YT + cgpt for how to
   [2026-09-18](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=273)
 
