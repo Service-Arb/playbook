@@ -35,7 +35,4 @@ Observed from how the notes get written by hand. Follow it when persisting anyth
   - not wise to compete with people with 200+ reviews
     [2026-09-18](SOURCE-URL-AT-THE-SECOND-IT-WAS-SAID)
   ```
-  > a real link, not a placeholder. `scripts/*.rs` treat any link in this tree as a source to fetch,
-  > so an example URL here would get pulled
-
-## Style
+  > a real link, not a placeholder — an example URL under `## Sources` would get pulled
