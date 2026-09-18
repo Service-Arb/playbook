@@ -6,6 +6,52 @@
 - duration: 00:12:29
 - pulled by: `scripts/yt-pull.rs`
 
+## summary
+
+- Use Google Business Listings arbitrage with 40% commission fulfillment: earn 3-4x more per lead than $60 pay-per-lead model
+- Choose niche by search volume and average job value: plumbing ($300/job) needs 2-3 listings; detailing needs 10; high-ticket services need 1 listing for $10k/month
+- Reach $10k/month by ranking first for 2,000-3,000 monthly searches, converting 50% of 60 monthly leads, earning $9,000-$10,000 per optimized listing
+- Research market: target low-competition areas, use exact-match keywords, establish physical address to rank above competitors with only reviews or service areas
+- High-ticket services like landscaping or renovation only require one listing since single jobs yield $10k+; prioritize search volume over review accumulation when launching
+
+## chapters
+
+- [00:00:00](https://www.youtube.com/watch?v=-0S3VwM75BM&t=0) introduction
+  ![](-0S3VwM75BM/8.jpg)
+- [00:00:33](https://www.youtube.com/watch?v=-0S3VwM75BM&t=33) student examples
+  ![](-0S3VwM75BM/41.jpg)
+- [00:01:06](https://www.youtube.com/watch?v=-0S3VwM75BM&t=66) three key factors
+  ![](-0S3VwM75BM/74.jpg)
+- [00:01:38](https://www.youtube.com/watch?v=-0S3VwM75BM&t=98) fulfillment models
+  ![](-0S3VwM75BM/106.jpg)
+- [00:02:13](https://www.youtube.com/watch?v=-0S3VwM75BM&t=133) plumbing economics
+  ![](-0S3VwM75BM/141.jpg)
+- [00:03:18](https://www.youtube.com/watch?v=-0S3VwM75BM&t=198) niche selection
+  ![](-0S3VwM75BM/206.jpg)
+- [00:04:25](https://www.youtube.com/watch?v=-0S3VwM75BM&t=265) service comparison
+  ![](-0S3VwM75BM/273.jpg)
+- [00:06:01](https://www.youtube.com/watch?v=-0S3VwM75BM&t=361) market research
+  ![](-0S3VwM75BM/369.jpg)
+- [00:09:20](https://www.youtube.com/watch?v=-0S3VwM75BM&t=560) target numbers
+  ![](-0S3VwM75BM/568.jpg)
+- [00:10:28](https://www.youtube.com/watch?v=-0S3VwM75BM&t=628) niche recommendations
+  ![](-0S3VwM75BM/636.jpg)
+- [00:11:32](https://www.youtube.com/watch?v=-0S3VwM75BM&t=692) conclusion
+  ![](-0S3VwM75BM/700.jpg)
+
+## description
+
+```
+work with me 1 on 1 to hit $20k/mo in 60 days: https://calendly.com/velcheric/discovery-call-with-eric-calendar
+
+if you want to get started for dirt cheap: https://www.skool.com/20kmodropservicingblueprint/about
+```
+
+- <https://calendly.com/velcheric/discovery-call-with-eric-calendar>
+- <https://www.skool.com/20kmodropservicingblueprint/about>
+
+## transcript
+
 [00:00:00](https://www.youtube.com/watch?v=-0S3VwM75BM&t=0) So, what does it actually take to make $10,000 a month with your remote service business? I'm going to be giving you guys all the numbers and I'm actually going to give you like the tangible things to aim for so you know what inputs to do. I'm not just going to sit here and tell you theoretically this and this it depends on this and that. I am going to tell you that, but I'm also going to give you the actual numbers and things that you should try to hit so you have the right expectation and you know if you do this, this, and in this much quantity, you will get to that goal of $10,000 a month. So, over here I kind of just have a couple screenshots of a few of my students doing over $10,000 a
 
 [00:00:33](https://www.youtube.com/watch?v=-0S3VwM75BM&t=33) month in various different industries and niches and running this in different ways. So, you can see over here, right? This is Luka over here. You can see $2,400 in a single day. Um, but as you can also see this is seven payments, right? And as you can see over here this is a $15,000 month from from Austin the last 30 days and this is again another one of my students where you can see every single invoice is a lot bigger, right? These are bigger jobs. So, it depends on a couple different factors as you can see. These are all very different service businesses that all make over $10,000 a month in profit. They just have their differences. So, the main three things

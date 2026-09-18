@@ -6,6 +6,53 @@
 - duration: 00:09:08
 - pulled by: `scripts/yt-pull.rs`
 
+## summary
+
+- Drop servicing (service arbitrage) using Google Business listings for in-person services like plumbing, HVAC, and electrical—quote customers $8,000, pay workers $5,000, pocket $3,000 per job
+- Zero-cost startup using free Google Business profiles in high-demand, low-competition areas; creator achieved $80,000 monthly revenue at age 20
+- Marketing strategy relies on five-star reviews (gathered from friends, family, or purchased at $2 each), phone scripts, and targeting areas where older competitors lack marketing skills
+- Process: create Google Business listing → gather reviews → answer customer calls → book appointments → send subcontracted workers → collect payment
+- Scales to multiple cities and business profiles, creating sellable assets; creator claims $10,000/month achievable within two months
+
+## chapters
+
+- [00:00:00](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=0) failed businesses
+  ![](-CEcwNS-c5E/8.jpg)
+- [00:00:32](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=32) drop servicing concept
+  ![](-CEcwNS-c5E/40.jpg)
+- [00:01:05](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=65) service arbitrage model
+  ![](-CEcwNS-c5E/73.jpg)
+- [00:01:40](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=100) market opportunity
+  ![](-CEcwNS-c5E/108.jpg)
+- [00:02:45](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=165) plumbing example
+  ![](-CEcwNS-c5E/173.jpg)
+- [00:04:23](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=263) business setup
+  ![](-CEcwNS-c5E/271.jpg)
+- [00:04:55](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=295) google listings strategy
+  ![](-CEcwNS-c5E/303.jpg)
+- [00:06:00](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=360) customer process
+  ![](-CEcwNS-c5E/368.jpg)
+- [00:07:07](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=427) zero cost startup
+  ![](-CEcwNS-c5E/435.jpg)
+- [00:08:12](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=492) final recommendations
+  ![](-CEcwNS-c5E/500.jpg)
+
+## description
+
+```
+follow along setup/step by step course: https://youtu.be/D-ahf91TjCM?si=ekG2PhA7Drg8Eo_F
+
+work with me 1 on 1 to hit 20k/mo in 60 days: https://calendly.com/velcheric/discovery-call-with-eric-calendar
+
+get started for dirt cheap: https://www.skool.com/20kmodropservicingblueprint/about
+```
+
+- <https://calendly.com/velcheric/discovery-call-with-eric-calendar>
+- <https://www.skool.com/20kmodropservicingblueprint/about>
+- <https://youtu.be/D-ahf91TjCM?si=ekG2PhA7Drg8Eo_F>
+
+## transcript
+
 [00:00:00](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=0) I don't think there's a single person on this planet who has failed more businesses than I did. I started trying to make money online 4 years ago when I was 16 years old. I'm 20 years old now. In the last 4 years, I have tried quite literally everything you can imagine from the conventional business models that everybody tries like drop shipping, SMMA, day trading to the ones that you wouldn't even ever I [ __ ] you not at at one point me and my friend were going to start a dog breeding business. I'm not even joking like genuinely that was a thought in my mind. Um we never followed through with it, but there was a ton of
 
 [00:00:32](https://www.youtube.com/watch?v=-CEcwNS-c5E&t=32) others in the mix. I started my own in-person businesses like window cleaning, pressure washing, car detailing. I did it all. I failed a bunch of them. Made a little bit of money on some of them. But the first thing that really took off, the first thing that I did to hit 30K a month from my mom's basement was pretty much what I'm going to explain in this video. And I'm sure you guys have all heard of drop shipping, okay? This is nothing like drop shipping, but it follows the same kind of scheme where it's pretty much something that is not yours that you are selling and you're pretty much making a profit off of it, okay? So instead of

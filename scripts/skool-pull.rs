@@ -74,7 +74,7 @@ fn main() {
 				text("permalink"),
 				text("module"),
 				at.split('T').next().expect("split yields at least once"),
-				video.unwrap_or("none — this lesson is text"),
+				video.map(stable).as_deref().unwrap_or("none — this lesson is text"),
 				text("body"),
 			),
 		)
@@ -93,11 +93,23 @@ fn main() {
 	}
 }
 
+/// What is still true tomorrow. A mux URL is signed, expires within the hour and is served only
+/// under skool's own `Referer`, so writing it down whole records a dead link and a page of token —
+/// the playback id is the part a re-read can act on. Anything else is somebody's pasted link.
+fn stable(video: &str) -> String {
+	match video.strip_prefix("https://stream.mux.com/") {
+		Some(rest) => format!("mux:{}", rest.split(['.', '?']).next().expect("split yields at least once")),
+		None => video.to_string(),
+	}
+}
+
 /// `recon` prints the lessons as json on stdout and everything else on stderr, so stdout is the
 /// whole answer and a failure to parse it is a failure to read the classroom.
 fn classroom() -> Vec<serde_json::Value> {
+	// `cargo run`, never the `r` alias: that one is `lrun`, which reads `cargo metadata` from the
+	// working directory and so cannot be called from outside its own workspace
 	let out = Command::new("cargo")
-		.args(["r", "-q", "--manifest-path", RECON, "--bin", "recon", "--", "classroom", &format!("skool:{SLUG}")])
+		.args(["run", "-q", "--manifest-path", RECON, "--bin", "recon", "--", "classroom", &format!("skool:{SLUG}")])
 		.output()
 		.unwrap_or_else(|e| panic!("cargo: {e}"));
 	if !out.status.success() {

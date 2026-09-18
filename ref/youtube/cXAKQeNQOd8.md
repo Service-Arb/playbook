@@ -6,6 +6,53 @@
 - duration: 00:13:08
 - pulled by: `scripts/yt-pull.rs`
 
+## summary
+
+- Rank service area business profiles on Google without a physical address by outcompeting on four metrics: niche selection, review count, keywords, and profile settings.
+- Target high-ticket niches with under 10 reviews and high search volume (e.g., concrete contractors, HVAC) where competitors are weak, enabling $15k-30k+ monthly income with minimal setup.
+- Gather 10-40 reviews and optimize keywords using Semrush, including service name and city in your profile title to rank above competitors with bad keyword optimization.
+- Optimize Google Business Profile hours, photos, and consistency to outcompete address-based listings; staying open when competitors close captures emergency calls and generates 3-5 daily leads.
+
+## chapters
+
+- [00:00:00](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=0) ranking sab without address
+  ![](cXAKQeNQOd8/8.jpg)
+- [00:00:32](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=32) core principle beating competitors
+  ![](cXAKQeNQOd8/40.jpg)
+- [00:01:39](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=99) four main ranking metrics
+  ![](cXAKQeNQOd8/107.jpg)
+- [00:02:12](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=132) remote service business model
+  ![](cXAKQeNQOd8/140.jpg)
+- [00:02:45](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=165) nashville concrete contractor
+  ![](cXAKQeNQOd8/173.jpg)
+- [00:03:18](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=198) reviews as ranking factor
+  ![](cXAKQeNQOd8/206.jpg)
+- [00:03:51](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=231) high-ticket niches strategy
+  ![](cXAKQeNQOd8/239.jpg)
+- [00:04:57](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=297) small cities and suburbs
+  ![](cXAKQeNQOd8/305.jpg)
+- [00:06:02](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=362) keywords critical factor
+  ![](cXAKQeNQOd8/370.jpg)
+- [00:07:09](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=429) semrush keyword research
+  ![](cXAKQeNQOd8/437.jpg)
+- [00:08:15](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=495) google business profile optimization
+  ![](cXAKQeNQOd8/503.jpg)
+- [00:10:23](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=623) summary and services
+  ![](cXAKQeNQOd8/631.jpg)
+
+## description
+
+```
+work with me 1 on 1 to hit 20k/mo in 60 days: https://calendly.com/velcheric/discovery-call-with-eric-calendar
+
+How i hit my first $20,000 month doing this: https://www.skool.com/20kmodropservicingblueprint/about
+```
+
+- <https://calendly.com/velcheric/discovery-call-with-eric-calendar>
+- <https://www.skool.com/20kmodropservicingblueprint/about>
+
+## transcript
+
 [00:00:00](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=0) What's going on everybody? In this video, I'm going to be showing you guys how you can basically guaranteed rank number one on Google even if you have a service area business profile that does not have an address. I pulled up a couple examples here from some of my students. This is Henry who's ranking first in multiple cities as a service area business. He's making over $30,000 a month with his remote plumbing business. I actually pulled up another example over here. Uh seven reviews, very competitive area, Jersey City, as well as a very competitive niche of HVAC. Another one of my students ranking second here. So, I'm basically going to break down exactly how you can do this.
 
 [00:00:32](https://www.youtube.com/watch?v=cXAKQeNQOd8&t=32) Now, I personally do not have any service area business profiles just because I'm able to verify any profile on any address, but if for whatever reason you do have a service area business and you need help ranking and getting more leads, this is exactly what it comes down to. And again, a lot of people do think that you do need an address that it's like the number one most important thing. Of course, it's going to help. That's again why all of my profiles are on addresses, but if you aren't able to get any address profile listed anywhere you want and you do have to opt for a service area, it's still very, very much so possible. I have a video on my channel of quite literally a

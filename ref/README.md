@@ -8,6 +8,14 @@ re-running the puller — anything already on disk is left alone.
 - [calls](https://www.skool.com/gmp-passive-profits-5347?c=bea7ab0d976f43dd953abd67d8987d0e&s=newest-cm&fl=)
 - discord groups: Service Arb, DropHub, Lockedin GMB
 - personal DMs: (all people marked as `ServiceArb` in rolodex)
+- course recordings, as `skool-pull.rs` finds them in the classroom:
+  - [2026-09-18](https://www.loom.com/share/1f32c7640a514b198adc997ca319238b)
+  - [2026-09-18](https://www.loom.com/share/b497e683ff08477fba2f382082b9aca0)
+  - [2026-09-18](https://www.loom.com/share/fc804298836c4ba282d8002dee239c58)
+  - [2026-09-18](https://www.loom.com/share/9a2d3dc6b2c34d07a5fe4c667a01c0a3)
+  - [2026-09-18](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d)
+  - [2026-09-18](https://www.loom.com/share/044f7bdb93d14d329947ed50f9391dd4)
+  - [2026-09-18](https://www.loom.com/share/088937bc44854962b7145d022e98184a)
 - group calls, as they get shared:
   - [2026-09-18](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5)
 - research:

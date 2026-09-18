@@ -6,6 +6,57 @@
 - duration: 00:15:30
 - pulled by: `scripts/yt-pull.rs`
 
+## summary
+
+- Joseph scaled a pool cleaning business from $4,000/month to $9,000/month in 2 months using Google Business Profiles to generate leads organically.
+- Each profile generated 2–3 calls per day with an 80%+ conversion rate to recurring customers paying $250–300/month; profit margins were 70–75%.
+- He sold the customer contracts through a pool route broker for $100,000 (a 10–12x multiple on monthly recurring revenue), completing the transaction within 5 days of listing.
+- The buyer received only the customer contracts and goodwill; Joseph retained ownership of the Google Business Profile to continue generating leads.
+- He plans to replicate the process to build another business to $400–500K in 6 months.
+
+## chapters
+
+- [00:00:00](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=0) joseph sells pool cleaning business
+  ![](0D4Jo7QrVNw/8.jpg)
+- [00:00:31](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=31) business metrics and results
+  ![](0D4Jo7QrVNw/39.jpg)
+- [00:01:41](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=101) switching to google strategy
+  ![](0D4Jo7QrVNw/109.jpg)
+- [00:02:47](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=167) first results timeline
+  ![](0D4Jo7QrVNw/175.jpg)
+- [00:03:54](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=234) the pool cleaning business
+  ![](0D4Jo7QrVNw/242.jpg)
+- [00:05:32](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=332) recurring revenue structure
+  ![](0D4Jo7QrVNw/340.jpg)
+- [00:06:37](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=397) selling the business
+  ![](0D4Jo7QrVNw/405.jpg)
+- [00:07:44](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=464) pool route brokers
+  ![](0D4Jo7QrVNw/472.jpg)
+- [00:08:49](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=529) what buyer receives
+  ![](0D4Jo7QrVNw/537.jpg)
+- [00:09:57](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=597) repeating the process
+  ![](0D4Jo7QrVNw/605.jpg)
+- [00:10:29](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=629) community and mentorship
+  ![](0D4Jo7QrVNw/637.jpg)
+- [00:12:40](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=760) final advice
+  ![](0D4Jo7QrVNw/768.jpg)
+
+## description
+
+```
+work with me 1 on 1: https://calendly.com/velcheric/discovery-call-with-eric-calendar
+
+learn more about what i do: https://youtu.be/D-ahf91TjCM?si=r8xJlFtICMZwJwkp
+
+start for dirt cheap: https://www.skool.com/20kmodropservicingblueprint/about
+```
+
+- <https://calendly.com/velcheric/discovery-call-with-eric-calendar>
+- <https://www.skool.com/20kmodropservicingblueprint/about>
+- <https://youtu.be/D-ahf91TjCM?si=r8xJlFtICMZwJwkp>
+
+## transcript
+
 [00:00:00](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=0) What's going on everybody? Another student interview for you guys. Today we have Joseph. He just sold his pool cleaning business for over $100,000. We literally started working together just over 2 months ago. He scaled this business up to $9,000 per month and is now getting rid of it for $100,000. Literally within the span of 2 months, starting completely organic all through GMBB profiles. So, we're going to be talking to him today. He's going to be going over exactly how he did this, answering some questions that you might have, and giving you all some tips if you wanted to do the exact same thing
 
 [00:00:31](https://www.youtube.com/watch?v=0D4Jo7QrVNw&t=31) for yourself. All right, everybody. We've got Joseph here. Joseph, if you can introduce yourself briefly and tell everybody uh how much money your business was actually making before you sold it and also how much you sold it for. >> Okay. Yeah, Joseph, I doing a pool cleaning business and it was doing 9,000 a month. and I'm selling it for like right over 100,000. Um, originally whenever I first joined it was doing like 4,000 a month and so
