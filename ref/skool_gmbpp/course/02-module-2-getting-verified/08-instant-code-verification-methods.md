@@ -1,0 +1,10 @@
+# Instant + Code Verification methods
+
+- source: <https://www.skool.com/gmp-passive-profits-5347/classroom/ca84165f?md=b6e0d1c901fc4825b4475aa6bb60c42c>
+- id: b6e0d1c901fc4825b4475aa6bb60c42c
+- module: Module 2 - Getting Verified
+- updated: 2026-08-29
+- video: https://www.loom.com/share/044f7bdb93d14d329947ed50f9391dd4
+- pulled by: `scripts/skool-pull.rs`
+
+Phone code is same as email, just get a temporary number from textverified.com (http://textverified.com) and change it out after it goes through. these ive found suspend easiest so again not recommended

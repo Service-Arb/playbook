@@ -1,0 +1,10 @@
+# Full GMB optimization (Follow Along)
+
+- source: <https://www.skool.com/gmp-passive-profits-5347/classroom/82c99526?md=3ebd44195d1047d087d57d09f4649489>
+- id: 3ebd44195d1047d087d57d09f4649489
+- module: Module 3 — GMB SEO + Ranking System
+- updated: 2025-12-13
+- video: mux:015xnszP5kuaGQ5IxWvoW6BLrmAzoDIUSL3iFq8qoFmI
+- pulled by: `scripts/skool-pull.rs`
+
+

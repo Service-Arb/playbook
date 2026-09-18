@@ -1,0 +1,10 @@
+# Products and Services
+
+- source: <https://www.skool.com/gmp-passive-profits-5347/classroom/82c99526?md=9c171be4a37641ca9e90dde822907c9a>
+- id: 9c171be4a37641ca9e90dde822907c9a
+- module: Module 3 — GMB SEO + Ranking System
+- updated: 2025-12-13
+- video: mux:01RHrQkHUTX1MK7whnzr8lbyJ3LIHuJHzTG4TOx02YtQs
+- pulled by: `scripts/skool-pull.rs`
+
+

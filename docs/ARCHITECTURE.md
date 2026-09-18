@@ -30,19 +30,32 @@ Capture and distillation never happen in the same file.
 
 ## Layers
 
-**`ref/`** — raw, verbatim, never hand-edited. One file per source, named by the
-source's own id. Every file states where it came from and when it was recorded.
-Re-running a puller over an existing file is a no-op; a stale capture is re-pulled
-by deleting it.
+**`ref/`** — raw, verbatim, never hand-edited. One file per source, stating its own
+source id, where it came from and when it was recorded. A capture is identified by
+that id and not by its path, so a file is free to be named and placed after what it
+*says* — and a source that reorders or renames upstream is moved, not pulled twice.
+Re-running a puller over an existing capture is a no-op; a stale one is re-pulled by
+deleting it.
 
 ```
 ref/
-├── README.md              # the source list — a link written here is a link the pullers will fetch
-├── loom/<id>.md           # call recordings, one timestamped line per phrase
-├── research/<id>.md       # chatgpt shares, one `## user` / `## assistant` section per turn
-├── youtube/<id>.md        # channel videos, and `<id>/` the frames it cites
-└── skool_gmbpp/course/    # the classroom, via `social_networks`
+├── README.md                     # the source list — every source, and which of them a puller reaches
+├── loom/<date>-<title>.md        # call recordings: loom's summary, its chapters, then one line per phrase
+├── research/<id>.md              # chatgpt shares, one `## user` / `## assistant` section per turn
+├── youtube/<id>.md               # channel videos, and `<id>/` the frames it cites
+└── skool_gmbpp/                  # the classroom, via `social_networks`
+    ├── README.md                 # what upstream holds, and the day it was last compared to this
+    └── course/<NN-module>/       # a directory per module, a file per lesson, both in upstream's order
 ```
+
+Two things a capture cannot state about itself are written beside it instead, since a
+capture is never edited: **how far behind upstream it is**, in `skool_gmbpp/README.md`,
+rewritten every run with the day of the run; and **what a source says that this tree
+has no capture of**, printed by the puller for `ref/README.md` to be told about by hand.
+
+The one reading an agent may put in `ref/` is what the source's own platform would have:
+a loom recording loom never summarised gets a summary from `/loom-digest`, which says so
+in the capture's `read by:` line. Nothing else.
 
 **`structured/suggested/`** — an agent's own reading of a source. Unreviewed.
 **`structured/approved/`** — what the human has already vetted.
@@ -91,14 +104,16 @@ from disk. So adding a source is pasting its link into `ref/README.md` and re-ru
 
 `ref/README.md` is the only registry. A capture quotes its own source URL and a
 transcript quotes every link that was said out loud, so a puller that scanned the tree
-would feed on its own output.
+would feed on its own output. A puller that *finds* a link — one lesson pointing at
+another platform's recording — prints it rather than following it, and the registry
+grows by hand.
 
 ```
 scripts/
-├── loom-pull.rs       # share page → signed transcript CDN → timestamped lines
+├── loom-pull.rs       # share page → its summary and chapters, and the signed transcript CDN
 ├── chatgpt-pull.rs    # headless chromium → the DOM's turns
 ├── yt-pull.rs         # yt-dlp → captions in citable blocks, chapters, frames, description
-└── skool-pull.rs      # recon classroom → the course, lesson by lesson
+└── skool-pull.rs      # recon classroom → the course tree, module by module and lesson by lesson
 ```
 
 Anything needing a session lives in
@@ -113,6 +128,6 @@ rolodex's `venues/` tree; nothing here duplicates that.
 
 - Nothing enters `structured/` that did not enter `ref/` first.
 - Every claim carries a link to its source and the date it was said.
-- `ref/` is written by pullers, never by hand.
+- `ref/` is written by pullers, never by hand — bar what `/loom-digest` fills in, which says so.
 - An agent's own reading goes to `suggested/`, never straight to `approved/`.
-- A puller writes a new capture or does nothing; it never edits one.
+- A puller writes a new capture, moves one, or does nothing; it never edits what one says.

@@ -4,11 +4,12 @@
 edition = "2024"
 
 [dependencies]
+jiff = "0.2"
 serde_json = "1"
 ---
 
-//! `./scripts/skool-pull.rs` — write `ref/skool_gmbpp/course/<lesson>.md` for every classroom lesson
-//! we do not have yet.
+//! `./scripts/skool-pull.rs` — mirror the classroom under `ref/skool_gmbpp/course/`, one directory
+//! per module and one file per lesson, both numbered in the order skool serves them.
 //!
 //! Skool is the one source here that needs a session, so the reading lives in `social_networks` and
 //! this shells out to it, the way the other pullers shell out to yt-dlp and chromium. Depending on
@@ -21,76 +22,264 @@ serde_json = "1"
 //! The group's *conversations* are not this script's — `recon posts skool:<slug>` already writes
 //! those to the rolodex's `venues/` tree.
 //!
-//! A lesson skool hosts itself carries a mux URL that is signed and dies within the hour, so it is
-//! written down but is not a link anything can follow later. A lesson whose video is somebody's
-//! pasted loom link is the useful case, and those are printed at the end to go into `ref/README.md`.
+//! A capture is identified by the id it states and not by where it sits, so a lesson
+//! upstream renames or reorders is moved rather than pulled twice. What it says is never edited:
+//! `ref/skool_gmbpp/README.md` is rewritten every run with the day of the run and with every lesson
+//! skool has touched since we captured it, and re-pulling one is deleting its file.
+//!
+//! Every link the classroom says out loud — the lesson's video, the links in its body, whatever sits
+//! in its resources — is collected, and the ones missing from `ref/README.md` are printed at the end
+//! to go into it. A lesson skool hosts itself carries a mux URL that is signed and dies within the
+//! hour, so it is written down but is not a link anything can follow later.
 
-use std::{path::PathBuf, process::Command};
+use std::{
+	collections::{BTreeMap, BTreeSet},
+	path::{Path, PathBuf},
+	process::Command,
+};
 
 // one group, and the directory it was given by hand
 const SLUG: &str = "gmp-passive-profits-5347";
-const OUT: &str = "ref/skool_gmbpp/course";
+const OUT: &str = "ref/skool_gmbpp";
 const RECON: &str = "/home/v/s/social_networks/Cargo.toml";
 
 fn main() {
 	let root = repo_root();
-	let out_dir = root.join(OUT);
+	let out_dir = root.join(OUT).join("course");
 	std::fs::create_dir_all(&out_dir).expect("the course dir is ours to create");
 
-	let lessons = classroom();
-	eprintln!("{} lessons in `{SLUG}`", lessons.len());
+	let today = jiff::Zoned::now().date();
+	let courses = classroom();
+	let have = captured(&out_dir);
 
-	let mut looms = Vec::new();
+	let mut index = format!(
+		"# The classroom, as skool serves it\n\
+		 \n\
+		 - source: <https://www.skool.com/{SLUG}/classroom>\n\
+		 - checked: {today}\n\
+		 - written by: `scripts/skool-pull.rs`, every run\n\
+		 \n\
+		 A lesson skool has touched since we captured it is marked `stale` — delete its file and run\n\
+		 this again to re-pull it.\n"
+	);
+	let mut links: BTreeSet<String> = BTreeSet::new();
 	let mut written = 0usize;
-	for lesson in &lessons {
-		let id = lesson["id"].as_str().expect("a lesson carries an id");
-		let video = lesson["video"].as_str();
-		if let Some(video) = video
-			&& video.contains("loom.com/share/")
-		{
-			looms.push(video.to_string());
-		}
+	let mut stale = 0usize;
 
-		let out = out_dir.join(format!("{id}.md"));
-		if out.exists() {
-			continue;
-		}
-		let text = |key: &str| lesson[key].as_str().unwrap_or_else(|| panic!("lesson {id} carries no `{key}`")).to_string();
-		// skool states the day it last changed; the time of day says nothing a re-read asks
-		let at = text("at");
-		std::fs::write(
-			&out,
-			format!(
+	for (m, course) in courses.iter().enumerate() {
+		let module_dir = out_dir.join(format!("{:02}-{}", m + 1, slug(text(course, "title"))));
+		std::fs::create_dir_all(&module_dir).expect("a module dir is ours to create");
+		index.push_str(&format!("\n## {}\n\n", text(course, "title")));
+
+		written += place(
+			&module_dir.join("README.md"),
+			&have,
+			text(course, "id"),
+			&format!(
 				"# {}\n\
 				 \n\
 				 - source: <{}>\n\
+				 - id: {}\n\
+				 - updated: {}\n\
+				 - pulled by: `scripts/skool-pull.rs`\n\
+				 \n\
+				 {}\n",
+				text(course, "title"),
+				text(course, "permalink"),
+				text(course, "id"),
+				day(text(course, "at")),
+				text(course, "body"),
+			),
+		) as usize;
+
+		let lessons = course["lessons"].as_array().expect("a course carries its lessons");
+		for (l, lesson) in lessons.iter().enumerate() {
+			let id = text(lesson, "id");
+			let video = lesson["video"].as_str();
+			let resources = lesson["resources"].as_str();
+			links.extend(urls_in(text(lesson, "body")));
+			if let Some(resources) = resources {
+				links.extend(urls_in(resources));
+			}
+			// a mux URL is skool's own player and not a source anything else can be pointed at
+			if let Some(video) = video.filter(|v| !v.starts_with("https://stream.mux.com/")) {
+				links.insert(video.to_string());
+			}
+
+			let at = day(text(lesson, "at"));
+			let doc = format!(
+				"# {}\n\
+				 \n\
+				 - source: <{}>\n\
+				 - id: {}\n\
 				 - module: {}\n\
 				 - updated: {}\n\
 				 - video: {}\n\
 				 - pulled by: `scripts/skool-pull.rs`\n\
 				 \n\
-				 {}\n",
-				text("title"),
-				text("permalink"),
-				text("module"),
-				at.split('T').next().expect("split yields at least once"),
+				 {}\n{}",
+				text(lesson, "title"),
+				text(lesson, "permalink"),
+				id,
+				text(lesson, "module"),
+				at,
 				video.map(stable).as_deref().unwrap_or("none — this lesson is text"),
-				text("body"),
-			),
-		)
-		.expect("the course dir is ours to write");
-		println!("{}", out.display());
-		written += 1;
-	}
-	eprintln!("{written} new, {} already had", lessons.len() - written);
+				text(lesson, "body"),
+				resources.map(|r| format!("\n## resources\n\n```json\n{r}\n```\n")).unwrap_or_default(),
+			);
+			// a capture is never edited, so what skool changed under one is said in the index instead —
+			// read before the capture is placed, since placing it is what moves it
+			let behind = have.get(id).is_some_and(|had| captured_at(had) != at);
+			stale += behind as usize;
 
-	if !looms.is_empty() {
-		// the registry is written by hand on purpose, so this stops at saying what to put in it
-		eprintln!("\nloom recordings in the classroom — paste under `## Sources` in ref/README.md, then run loom-pull.rs:");
-		for loom in &looms {
-			eprintln!("  {loom}");
+			let out = module_dir.join(format!("{:02}-{}.md", l + 1, slug(text(lesson, "title"))));
+			written += place(&out, &have, id, &doc) as usize;
+			index.push_str(&format!(
+				"- [{}]({}){}\n",
+				text(lesson, "title"),
+				relative(&root.join(OUT), &out),
+				match behind {
+					true => format!(" — **stale**: skool says {at}"),
+					false => String::new(),
+				}
+			));
 		}
 	}
+
+	prune(&out_dir);
+	std::fs::write(root.join(OUT).join("README.md"), index).expect("the index is ours to write");
+	eprintln!("{written} new, {stale} stale — see {OUT}/README.md");
+
+	let registry = std::fs::read_to_string(root.join("ref/README.md")).expect("ref/README.md is the registry");
+	let missing: Vec<&String> = links.iter().filter(|link| !registry.contains(link.as_str())).collect();
+	if !missing.is_empty() {
+		// the registry is written by hand on purpose, so this stops at saying what to put in it
+		eprintln!("\nlinks the classroom says and `ref/README.md` does not — paste them under `## Sources`, then re-run the puller of their platform:");
+		for link in missing {
+			eprintln!("  {link}");
+		}
+	}
+}
+
+/// Write `doc` where it belongs, moving a capture of the same lesson that sits somewhere else — a
+/// rename or a reorder upstream changes the path and nothing about what was captured.
+fn place(out: &Path, have: &BTreeMap<String, PathBuf>, id: &str, doc: &str) -> bool {
+	match have.get(id) {
+		Some(had) if had == out => false,
+		Some(had) => {
+			assert!(
+				!out.exists(),
+				"{} belongs at {}, and another capture is already there — delete `ref/skool_gmbpp/course/` and run this again",
+				had.display(),
+				out.display()
+			);
+			std::fs::rename(had, out).unwrap_or_else(|e| panic!("moving {} to {}: {e}", had.display(), out.display()));
+			eprintln!("moved {} → {}", had.display(), out.display());
+			false
+		}
+		None => {
+			std::fs::write(out, doc).expect("the course dir is ours to write");
+			println!("{}", out.display());
+			true
+		}
+	}
+}
+
+/// Every capture already on disk, by the id it states. Reading the tree rather than trusting its
+/// shape is what lets the shape change without re-pulling the whole classroom.
+fn captured(dir: &Path) -> BTreeMap<String, PathBuf> {
+	let mut found = BTreeMap::new();
+	//LOOP: bounded by the number of files in a finite tree
+	for entry in walk(dir) {
+		let text = std::fs::read_to_string(&entry).unwrap_or_else(|e| panic!("reading {}: {e}", entry.display()));
+		let id = line(&text, "- id: ").unwrap_or_else(|| panic!("{} states no id — it was not written by this script", entry.display()));
+		if let Some(clash) = found.insert(id.to_string(), entry.clone()) {
+			panic!("{} and {} both claim {id}", clash.display(), entry.display());
+		}
+	}
+	found
+}
+
+/// A module skool renamed leaves the directory it used to be, and an empty one says a lesson is
+/// missing when nothing is.
+fn prune(dir: &Path) {
+	//LOOP: bounded by the number of entries in a finite tree
+	for entry in std::fs::read_dir(dir).unwrap_or_else(|e| panic!("reading {}: {e}", dir.display())) {
+		let path = entry.expect("a directory entry is readable").path();
+		if path.is_dir() && std::fs::read_dir(&path).expect("a directory we just listed is readable").next().is_none() {
+			std::fs::remove_dir(&path).unwrap_or_else(|e| panic!("removing {}: {e}", path.display()));
+		}
+	}
+}
+
+fn walk(dir: &Path) -> Vec<PathBuf> {
+	let mut out = Vec::new();
+	//LOOP: bounded by the number of entries in a finite tree
+	for entry in std::fs::read_dir(dir).unwrap_or_else(|e| panic!("reading {}: {e}", dir.display())) {
+		let path = entry.expect("a directory entry is readable").path();
+		match path.is_dir() {
+			true => out.extend(walk(&path)),
+			false => out.push(path),
+		}
+	}
+	out
+}
+
+fn line<'a>(text: &'a str, key: &str) -> Option<&'a str> {
+	text.lines().find_map(|l| l.strip_prefix(key)).map(str::trim)
+}
+
+fn captured_at(path: &Path) -> String {
+	let text = std::fs::read_to_string(path).unwrap_or_else(|e| panic!("reading {}: {e}", path.display()));
+	line(&text, "- updated: ")
+		.unwrap_or_else(|| panic!("{} states no updated date — it was not written by this script", path.display()))
+		.to_string()
+}
+
+fn relative(base: &Path, path: &Path) -> String {
+	path.strip_prefix(base).expect("every capture sits under the course dir").display().to_string()
+}
+
+fn text<'a>(node: &'a serde_json::Value, key: &str) -> &'a str {
+	node[key].as_str().unwrap_or_else(|| panic!("a classroom node carries no `{key}`: {node}"))
+}
+
+/// skool states the day it last changed; the time of day says nothing a re-read asks
+fn day(at: &str) -> String {
+	at.split('T').next().expect("split yields at least once").to_string()
+}
+
+/// A filename that says what the thing is. The id stays in the file, so this one is free to read
+/// like the title it came from.
+fn slug(title: &str) -> String {
+	let mut out = String::new();
+	for c in title.chars() {
+		match c {
+			c if c.is_ascii_alphanumeric() => out.push(c.to_ascii_lowercase()),
+			_ if out.ends_with('-') => (),
+			_ => out.push('-'),
+		}
+	}
+	out.trim_matches('-').to_string()
+}
+
+/// Every `http(s)://` run in a blob of text. A lesson's links are the half of it that outlives the
+/// lesson, and they are the reason `ref/README.md` grows.
+fn urls_in(text: &str) -> Vec<String> {
+	let mut found = Vec::new();
+	//LOOP: bounded by the number of occurrences in a finite string
+	for (at, _) in text.match_indices("http") {
+		let rest = &text[at..];
+		if !rest.starts_with("http://") && !rest.starts_with("https://") {
+			continue;
+		}
+		let link = rest.split_whitespace().next().expect("split yields at least once");
+		let link = link.trim_end_matches([')', ']', ',', '.', '"', '\'', '`', '>', '\\']);
+		if !link.is_empty() {
+			found.push(link.to_string());
+		}
+	}
+	found
 }
 
 /// What is still true tomorrow. A mux URL is signed, expires within the hour and is served only
@@ -103,7 +292,7 @@ fn stable(video: &str) -> String {
 	}
 }
 
-/// `recon` prints the lessons as json on stdout and everything else on stderr, so stdout is the
+/// `recon` prints the classroom as json on stdout and everything else on stderr, so stdout is the
 /// whole answer and a failure to parse it is a failure to read the classroom.
 fn classroom() -> Vec<serde_json::Value> {
 	// `cargo run`, never the `r` alias: that one is `lrun`, which reads `cargo metadata` from the
@@ -116,7 +305,7 @@ fn classroom() -> Vec<serde_json::Value> {
 		panic!("recon classroom failed:\n{}", String::from_utf8_lossy(&out.stderr));
 	}
 	let stdout = String::from_utf8(out.stdout).expect("recon prints utf-8");
-	serde_json::from_str(&stdout).unwrap_or_else(|e| panic!("recon's stdout is not a list of lessons: {e}\n{}", &stdout[..stdout.len().min(400)]))
+	serde_json::from_str(&stdout).unwrap_or_else(|e| panic!("recon's stdout is not a list of courses: {e}\n{}", &stdout[..stdout.len().min(400)]))
 }
 
 fn repo_root() -> PathBuf {

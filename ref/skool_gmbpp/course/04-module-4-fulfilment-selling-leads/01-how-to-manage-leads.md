@@ -1,0 +1,10 @@
+# How to Manage Leads
+
+- source: <https://www.skool.com/gmp-passive-profits-5347/classroom/4bcd9eb7?md=b5eea36d34e84a4aa19e154f3365ffc0>
+- id: b5eea36d34e84a4aa19e154f3365ffc0
+- module: Module 4 - Fulfilment + Selling Leads
+- updated: 2025-12-14
+- video: mux:00JE7Wd58hZ9MezCnuErvckVvXYBAOsfyE02U6eE3ClYI
+- pulled by: `scripts/skool-pull.rs`
+
+Text template for payment:

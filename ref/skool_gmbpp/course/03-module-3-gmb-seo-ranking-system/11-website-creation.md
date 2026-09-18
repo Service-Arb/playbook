@@ -1,0 +1,10 @@
+# Website Creation
+
+- source: <https://www.skool.com/gmp-passive-profits-5347/classroom/82c99526?md=8e195c24bd3540ffb45f89425fd4fc5a>
+- id: 8e195c24bd3540ffb45f89425fd4fc5a
+- module: Module 3 — GMB SEO + Ranking System
+- updated: 2025-12-22
+- video: mux:5bCE8V00nPPOdAHT2Ld7HOVKVAJn02Nm9EyH7ykpdxaoM
+- pulled by: `scripts/skool-pull.rs`
+
+

@@ -1,0 +1,10 @@
+# Editing Reinstatement Docs
+
+- source: <https://www.skool.com/gmp-passive-profits-5347/classroom/5775eb5e?md=21f825d89959420eb4c3438a0812c1b0>
+- id: 21f825d89959420eb4c3438a0812c1b0
+- module: Module 5 — Troubleshooting + Advanced Tactics
+- updated: 2026-09-03
+- video: mux:yEdXsEgFiAbqaSDY0202VQYKx5ukOSO2XxDIxmD7wUEaM
+- pulled by: `scripts/skool-pull.rs`
+
+
