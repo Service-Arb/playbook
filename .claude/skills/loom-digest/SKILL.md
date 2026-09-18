@@ -32,24 +32,39 @@ Three sections, in this order, between the header and `## transcript`. Write onl
 
 ### `## summary`
 
-One paragraph, first person, as the person recording speaks — loom's own summaries are written from
-inside the recording (`In this video, I walk you through…`), and matching that is what keeps the
-corpus uniform. Name what was actually done and what it was for. No preamble, no "this video
-covers".
+A paragraph, then a `### <name> <stamp>` section per topic with bullets under it. Read the captures
+loom did write before you write one — `ref/loom/2026-08-20-setupcall-with-derek.md` is the shape.
+
+```md
+## summary
+
+Eric explains a process for creating short verification videos from home to verify multiple local
+business profiles by showing signage, tools, and a consistent sequence. …
+
+### How to record verification videos 0:00
+
+- Start the video at a local street sign or relevant exterior location even if recording from home.
+- Videos can all be recorded from home and reused across profiles by showing different signage.
+```
+
+A one-recorder video gets a first-person paragraph (`In this video, I walk you through…`); a call
+gets it in the third person, named (`Eric explains…`, `Aidan reports…`). Say what was decided and
+what is meant to happen next. No preamble, no "this video covers".
+
+The stamp on a `###` heading drops the leading zero — `0:00`, `3:34`, `1:02:27`.
 
 ### `## chapters`
 
-One line per topic shift, `[MM:SS](<source>?t=<seconds>) Title Case Name`. The stamp is the second
-the shift happens, and the link is the capture's own `source:` URL with `?t=` on it. Loom writes
-about one chapter every two to four minutes and always opens at `00:00`; a two-hour call gets tens
-of them, not five.
+The same headings again, as links: `[MM:SS](<source>?t=<seconds>) Name`, minutes padded. The link is
+the capture's own `source:` URL.
 
 ```md
 - [00:00](https://www.loom.com/share/<id>?t=0) Introduction to Money Making Model
 - [02:02](https://www.loom.com/share/<id>?t=122) Address Pages vs Service Areas
 ```
 
-The seconds in the link and the stamp must agree. Check a few by hand.
+The seconds in the link and the stamp must agree. Check a few by hand. Loom writes a chapter every
+two to four minutes; a two-hour call gets tens of them, not five.
 
 ### `## transcript`
 
@@ -76,7 +91,7 @@ Stamps are `HH:MM:SS`; `?t=` is that in seconds. Never paraphrase here — a tra
 - read by: `/loom-digest`, <today's date>
 ```
 
-State what you wrote if it was not all of it: `- read by: `/loom-digest`, 2026-09-18 — chapters only`.
+State what you wrote if it was not all of it: ``- read by: `/loom-digest`, 2026-09-18 — chapters only``.
 
 ## What not to do
 

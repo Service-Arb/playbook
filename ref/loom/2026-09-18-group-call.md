@@ -3,9 +3,256 @@
 - source: <https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5>
 - recorded: 2026-09-18T00:00:41.718Z
 - duration: 01:55:48
-- read by: nothing yet — loom wrote no summary and no chapters, and `/loom-digest` writes them here
+- read by: `/loom-digest`, 2026-09-18
 - pulled by: `scripts/loom-pull.rs`
 
+## summary
+
+Eric runs the weekly group call. The room reports the week — Ryan pulled over 200 reviews off four review tables, Sam booked seven jobs in two weeks mostly through the websites — and then works through the two things everyone is stuck on: getting a profile verified, and getting reviews to stay. On verification: a real video injected into the flow passes where a fully AI one does not, signage is what the physical check actually fails on, and shooting three videos for three profiles in one visit beats shooting one well. On reviews: one a day off aged gmails, no matter what tooling is behind it, and local people gathered at a table for everything above that rate. Ilya, thirteen years into a remote house-cleaning business, contradicts the local-proximity rule from the other side — reviews bought in the Philippines stick and even rank his profiles, because those profiles are five to ten years old. The back half of the call is operations: what to hand a VA, paying contractors hourly for 50-55% margins, filing a DBA to hold a keyword-stuffed name, and selling the calls you cannot fulfil.
+
+### Wins from the week 0:00
+
+- Ryan set up three or four review tables this week and pulled over 200 reviews, best of them outside a college campus.
+- Sam has booked seven jobs in two weeks, five of them straight off the websites without a call.
+- Greg is a couple thousand up since the start of september.
+
+### Spoofing location on an android 3:34
+
+- Eric's answer is to root the phone first, then install Magisk — the rooting is the hard part, and YouTube plus ChatGPT is how he got through it.
+- Once Magisk is on, any of the location spoofers in its store works; `GPS Locator` is the one named.
+- Valeriy's objection: the ordinary apps all go through the mock-location API, which is visible as spoofed.
+- Without rooting, plugging the phone into a computer and spoofing from there also works, and is a pain.
+
+### Injecting a real video into the verification flow 6:33
+
+- A real-life video injected into the verification flow drew none of the AI-detection errors — Google catches the AI *video*, not the injection.
+- Eric paid people on Fiverr to edit the words and signs in the video; his went through on service-area profiles but he expects a storefront to hold up better.
+- One pre-recorded video passed around the whole group is the obvious failure mode, and was raised as one.
+- Valeriy offered to put the verification-video system on github with a database of recordings behind it.
+
+### Hiring a VA, and what to hand them 8:45
+
+- Route the CallRail number to an OpenPhone/Quo number; the VA logs into the Quo account from their computer and takes calls and texts there.
+- Eric's CRM is a google sheet and a google calendar. He tried GoHighLevel and found it made the process harder for everyone.
+- Give them written procedures and a call script. Eric has templates for both and offered them.
+- $3–4/hour is what Artham is paying a Filipino VA, and Eric's take is that a VA converts about as well as you do.
+- Hire as soon as there is call volume, and at the latest once the business cash-flows — training them before the volume arrives is the point.
+- 8am–3pm cover comes out under a grand a month; expect around 50% call-to-booked in plumbing.
+
+### Paying a contractor hourly instead of per job 12:44
+
+- Vlad in the group pays his plumbers hourly — about $40/hour plus a 15% discount — and holds 50-55% margins doing it.
+- He also hired a Canadian assistant to do the quoting, rather than a VA.
+- Eric never did fulfilment this way; he pushed it out of his head and stayed on lead gen.
+- Quebec law is why one member will not take the payments himself — his sites are technically illegal as advertising without an NEQ.
+
+### What a physical address verification fails on 24:39
+
+- Signage is what nearly everyone fails on. Photograph the sign before recording and ask ChatGPT whether it reads as permanent — Donovan's trick, and it has helped a lot of people.
+- Show yourself at the location, show the CRM on a device, show yourself unlocking the door. A staff-only sticker may help.
+- Approval is partly luck: the same video passes once and fails once. Set up three profiles while you are already there and shoot three videos.
+- The same phone number across them is fine; the business name has to differ at least slightly.
+
+### Running the review stand 26:56
+
+- Ryan does it himself rather than paying someone — easier that way. Outside the campus, not inside it, and a bus stop near the entrance is the best spot.
+- Tuesday to Thursday, between 12 and 5. High schools work too, at 2:20-2:25 when they let out, table placed between the school and the bus stop.
+- Two sheets of paper saying free drinks, Gatorade on the table, and talk to the guys — the women mostly walk past.
+- One kid started working the queue for him unprompted.
+
+### Reviews off aged gmails, and the rate they stick 29:17
+
+- Donovan reports somebody claiming 100+ reviews a day through a VPN with 80% sticking. Eric expects those to be deleted; only a week has passed.
+- Eric's own number: aged gmails only held up at one review a day, and then about 80% stuck indefinitely.
+- Reviews take a week to two weeks to disappear, so a result read earlier than that is not a result.
+- 300 in a day did get a profile suspended. Under that, only the reviews drop.
+- (!) Getting a one-star first and building on top of it seems to slow the deletions — Eric's anecdote, seen twice, too early to lean on.
+
+### Getting strangers to create the profile 31:23
+
+- Cleaning profiles instant-verify off a good gmail, every time.
+- Out of friends to ask: post on facebook marketplace, $25 for a two-minute job, and whoever takes it brings friends and family for more.
+- Ryan got a hundred-plus detailing profiles by walking up to people in a mall and asking. Only works for the instant-verified ones.
+- Three to five profiles per gmail at most when other people are creating them and adding you as owner.
+
+### Appealing a suspended profile, and a banned gmail 33:35
+
+- A profile that is suspended but still ranking and still taking calls is one Eric would appeal anyway — appealing does not hurt.
+- (!) It can: one member's appeal took the entire gmail down. He won that appeal back in two days, and then had to re-appeal every profile on it individually.
+- The way out of a dead gmail is to transfer the profiles to a new account, appeal from there, and re-verify.
+- A chatgpt-written appeal reason got auto-rejected.
+
+### One website per profile, or one for all of them 41:30
+
+- The split is by who you are: everyone running these for lead gen says keep them off one domain, and everyone running a real company puts them all on one.
+- Eric's read is that the brand name can repeat — two unrelated Amazing Plumbings in different cities cannot both be suspended for that — but the domain is the thing that links them.
+- He is explicit that this is not a certain answer; separate domains are the safer side.
+- Duplicating the site and buying a new domain for each is what two members actually do.
+
+### Where to put the table 44:22
+
+- Some universities have free spaces where unaffiliated organisations may set a table — worth reading the policy first.
+- Worst case they ask you to move. Play the fool when security comes.
+- Outside a mall door or by a metro entrance works; inside the mall is too much.
+- Flea markets are the weekend answer — $15 a day, you are allowed to be there, and the foot traffic is real. A state fair was tried and people were hesitant.
+
+### One review a day, said again 50:26
+
+- William lost around thirty reviews in four or five days off bought aged emails, and his real customers' reviews started getting flagged too.
+- Eric: one a day at most, or they get deleted and the profile gets more sensitive. Four to seven a day is already a lot.
+- Local people are the exception — volume there does not suspend anything.
+- The sequence he recommends: grind local reviews at the start, then upkeep slowly with aged gmails.
+
+### Which listings stay up 51:30
+
+- Everything video-verified has stuck for Eric, storage unit or otherwise, unless the whole account took a suspension.
+- There is no point waiting three weeks before a live video — fail a video and go straight to the live one.
+- A suspended *account* leaves the listings up and taking calls, but you cannot edit or optimise them until it is back.
+
+### What the live video agent asks for 54:43
+
+- The agent wants permanent signage outside. Told the building holds several businesses, he asked for a landlord's letter saying exterior signage is not allowed.
+- He also wants the vehicles and the signage on them, and signage inside.
+- A logo in a bolted picture frame failed — they said the paper could be slipped out.
+- Eric has seen terrible videos pass, so submit a couple of live tickets and use whichever one lands.
+
+### Eating a contractor's bad job 59:13
+
+- A contractor demanded payment the night of the job, got it, and the work turned out bad. The client is now refusing to pay.
+- At $550, Eric's answer is to eat it. Sending a second contractor puts you negative anyway.
+- Customers normally do pay on site; this one was a property manager, and the job was picked on lowest price.
+
+### Screenshotting every review, to appeal the ones that vanish 1:02:27
+
+- The idea: screenshot every review on every profile, and once a month diff against what is live and appeal the missing ones.
+- Playwright hit what looks like bot detection while scrolling the page.
+- Valeriy's read is that a headless browser is right and an API is not, and that the fix depends on what specifically is being detected.
+
+### Getting a model past its guardrails 1:04:34
+
+- Start the conversation on a weaker model that will help, then switch to the strong one — it is more likely to keep going.
+- Frame it as understanding what the bad guys do, or as reconstructing your own lost app. Works about 80% of the time.
+- Running an open-weight model locally is the wrong trade: inference you buy is subsidised to roughly a tenth of what your own hardware costs.
+
+### Where the coaching call transcripts already live 1:06:51
+
+- The skool community's own coaching-calls tab already holds each loom, and each loom already has its transcript and timestamps on the right-hand side.
+- Reading the transcript and jumping to the interesting second is how one member found several of the methods he uses.
+- Valeriy will point a model at all of them, weighting the recent calls higher, and keep it private to the group.
+
+### Reviews from the philippines, on profiles old enough to take it 1:10:56
+
+- Ilya has paid brand ambassadors to walk a mall in the Philippines with a printed QR code, offering entry into a raffle for a review.
+- This is against Eric's rule that reviews must come from within an hour of the GMB, and it works for him.
+- (!) It also *ranks* the profiles, which surprised him.
+- The catch: his profiles are five to ten years old. Google gates the reviews after twenty or thirty in a short window, and about 10-15% were removed in the last sweep.
+- Eric's qualifier: on a new profile, do not try this.
+
+### Expired domains, local guide accounts, warming a gmail 1:12:37
+
+- Expired domains whose GMB is still listed can be bought, and may come with access to the profile.
+- Category leveling: start on an easy category, add the one you want as secondary, and swap them later. Sometimes it goes through.
+- 360 videos taken while logged into the account are the fastest way to raise a local guide score.
+- So is leaving reviews anywhere at all — location does not matter for the local guide level.
+- Email warmup tools are not the same thing: Google wants activity in Maps, a bought domain, upgraded storage. Cheapest Workspace plan per email, paid with a Privacy.com card so the billing details differ.
+
+### Getting reviews when you do not live there 1:17:33
+
+- What works is local people in a physical space, and the problem is finding someone willing to run the stand — table, chair, drinks, and no car.
+- A craigslist post in Dallas got ten replies and nobody who showed up.
+- The idea floated: get into an existing group with a common interest — a school group chat, a car club, a facebook group — and ask there. Churches and church groups were named as working well.
+
+### Verifying by volume 1:20:37
+
+- Elliot used to rent real office space in the US from South East Asia, take the lease, hire craigslist photographers to put logos up and shoot the video. Twelve verified, down to five after suspensions.
+- The member in the UK does it purely on volume: submit enough and something goes through.
+
+### The cleaning niche, from thirteen years in it 1:23:39
+
+- Ilya has run a house-cleaning business for thirteen years, seven of them remote, and has not spoken to a cleaner or a customer in five.
+- Google LSA is over for it: $20 a call and half signing up has become $60-70 a call and one in ten recurring.
+- The upside is recurring revenue — about eleven months at ~$300 every two weeks — where plumbing is one-off.
+- Payroll should be 40-50%; industry standard is 55, and he has met owners paying 80-90%.
+- It is operations-heavy: complaints, callouts, ~$500/month in contractor insurance, workers' comp, broken and stolen items, a flooded apartment and a lawsuit.
+- Starting from nothing he would pick something higher-ticket — HVAC or plumbing — for the same GMB setup cost.
+
+### Generating the brief documents 1:27:07
+
+- Valeriy has a repo and a code skill that takes an address and a company name and generates the brief documents — branding, business cards, neighbouring-business filler.
+- They are not valid, they look valid, and nobody checks.
+- Send him documents that are known to work and he will add them.
+
+### Filing a DBA to hold a keyword-stuffed name 1:29:46
+
+- Nobody in the group files one. A DBA registered with the exact keyword-stuffed name is how the profiles ranking with absurd names get away with it.
+- It also helps with reinstatements.
+- Stripe Atlas gives you a US LLC from abroad, and the DBA hangs off that.
+- The counter-argument, from the volume camp: search console, a domain, a built site and an indexed page made no difference to verification. Ilya's answer is that a DBA protects an asset — a profile with 400-500 reviews — rather than getting one verified.
+
+### Octobrowser, proxies, and going slow 1:35:51
+
+- OctoBrowser makes the phone look like a different device, is free right now, and gives about a hundred profiles.
+- Aged gmails come with cookies you load into the browser so the session reads as a real person's.
+- A bad proxy is worse than a VPN: there are many reasons to have a VPN and only one to have a burnt proxy. Residential, from a small seller, not widely circulated.
+- Two or three reviews a week is what one member is doing by hand while he watches what sticks.
+
+### A fully AI video against an edited real one 1:39:45
+
+- Fully AI is out — the detection is on the noise AI video carries, the same signal YouTube uses.
+- An edited real video is the open path, and one member's stopped working last week after a month of going through.
+- The failure message names the video as pre-recorded when it catches it.
+
+### Facebook marketplace to find the people 1:42:18
+
+- A marketplace post asking for help verifying GMBs triggered a phone verification, and Google Voice VOIP numbers are refused.
+- TextVerified would work but risks the facebook account, so post from a bought account rather than your personal one.
+- Post under miscellaneous — $25-30/hour, a picture, a line about it being for students. One member in Canada had thirty people calling him.
+- Facebook business managers are bought the same way; Jordan has a supplier, Accounts Market is the fallback.
+
+### Which niche to pick 1:46:05
+
+- One member is spread across concrete, plumbers, drywall and landscaping to see which takes off, and is blocked on new plumbing GMBs until the video problem is solved.
+- Eric's advice to Valeriy was plumbing, plus one or two cleaning profiles in his own city to work out remote reviews and pricing.
+- Cleaning is recurring and operations-heavy; plumbing and HVAC are one-off and higher ticket for the same setup work.
+
+### Selling the calls you cannot fulfil 1:51:41
+
+- Calls for services you do not offer — carpet cleaning off a house-cleaning profile — can be sold rather than fulfilled.
+- Ilya routes them to a tracking number with an affiliate network, `leadsmartinc.com`, at $5-10 a call.
+
+## chapters
+
+- [00:00](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=0) Wins from the week
+- [03:34](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=214) Spoofing location on an android
+- [06:33](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=393) Injecting a real video into the verification flow
+- [08:45](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=525) Hiring a VA, and what to hand them
+- [12:44](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=764) Paying a contractor hourly instead of per job
+- [24:39](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=1479) What a physical address verification fails on
+- [26:56](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=1616) Running the review stand
+- [29:17](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=1757) Reviews off aged gmails, and the rate they stick
+- [31:23](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=1883) Getting strangers to create the profile
+- [33:35](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=2015) Appealing a suspended profile, and a banned gmail
+- [41:30](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=2490) One website per profile, or one for all of them
+- [44:22](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=2662) Where to put the table
+- [50:26](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=3026) One review a day, said again
+- [51:30](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=3090) Which listings stay up
+- [54:43](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=3283) What the live video agent asks for
+- [59:13](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=3553) Eating a contractor's bad job
+- [1:02:27](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=3747) Screenshotting every review, to appeal the ones that vanish
+- [1:04:34](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=3874) Getting a model past its guardrails
+- [1:06:51](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=4011) Where the coaching call transcripts already live
+- [1:10:56](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=4256) Reviews from the philippines, on profiles old enough to take it
+- [1:12:37](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=4357) Expired domains, local guide accounts, warming a gmail
+- [1:17:33](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=4653) Getting reviews when you do not live there
+- [1:20:37](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=4837) Verifying by volume
+- [1:23:39](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=5019) The cleaning niche, from thirteen years in it
+- [1:27:07](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=5227) Generating the brief documents
+- [1:29:46](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=5386) Filing a DBA to hold a keyword-stuffed name
+- [1:35:51](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=5751) Octobrowser, proxies, and going slow
+- [1:39:45](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=5985) A fully AI video against an edited real one
+- [1:42:18](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=6138) Facebook marketplace to find the people
+- [1:46:05](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=6365) Which niche to pick
+- [1:51:41](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=6701) Selling the calls you cannot fulfil
 ## transcript
 
 [00:00:00](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=0) Okay, no one has their mics unmuted. Why? Yo. There you No one's got cameras. Come on. What's up, Eric? What's going on, Grisha?
