@@ -174,6 +174,7 @@ fn captured(root: &Path) -> BTreeMap<Rec, PathBuf> {
 			let path = entry.expect("a directory entry is readable").path();
 			let text = std::fs::read_to_string(&path).unwrap_or_else(|e| panic!("reading {}: {e}", path.display()));
 			let rec = check(&path.display().to_string(), &text);
+			verbatim(root, &path, &text);
 			assert_eq!(rec.0, platform, "{} is a {} capture filed under {}", path.display(), rec.0.name(), platform.dir());
 			if let Some(clash) = found.insert(rec.clone(), path.clone()) {
 				panic!("{} and {} both claim {}", clash.display(), path.display(), rec.1);
@@ -181,6 +182,32 @@ fn captured(root: &Path) -> BTreeMap<Rec, PathBuf> {
 		}
 	}
 	found
+}
+
+/// A digest only moves headers, so its prose has to be the prose of the capture it was run on — the
+/// committed one. An uncommitted pull has nothing to be held to, which is why pulls are committed first.
+fn verbatim(root: &Path, path: &Path, text: &str) {
+	let prose = |t: &str| -> Vec<String> {
+		let body = t.split_once("\n## transcript\n").expect("checked to have one").1;
+		body.lines().filter(|l| !l.trim().is_empty() && !l.starts_with("### ")).map(str::to_string).collect()
+	};
+	if !text.lines().any(|l| l.starts_with("- read by: `/")) {
+		return; // a fresh pull is the platform's text by construction; a re-pull may differ from the last one
+	}
+	let rel = path.strip_prefix(root).expect("captures live under the root");
+	let out = Command::new("git").arg("-C").arg(root).arg("show").arg(format!("HEAD:{}", rel.display())).output().expect("git runs");
+	if !out.status.success() {
+		return; // not committed yet, so nothing to hold it to
+	}
+	let committed = String::from_utf8(out.stdout).expect("captures are utf-8");
+	if !committed.contains("\n## transcript\n") {
+		return; // committed in a shape before this one, and re-pulled since
+	}
+	let (now, then) = (prose(text), prose(&committed));
+	if let Some((i, (a, b))) = now.iter().zip(&then).enumerate().find(|(_, (a, b))| a != b) {
+		panic!("{}: paragraph {} of the transcript is not what was committed —\n  now: {a}\n  was: {b}", path.display(), i + 1);
+	}
+	assert_eq!(now.len(), then.len(), "{}: the transcript has {} paragraphs, and {} were committed", path.display(), now.len(), then.len());
 }
 
 /// Hold a capture to `docs/ARCHITECTURE.md`'s "Call captures", returning the recording it states.

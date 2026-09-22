@@ -81,6 +81,8 @@ plain prose, in paragraphs, no stamps in it
   only timestamp — a citation links the chapter a claim sits in
 - nothing sits above the first header
 - paragraphs and headers are a blank line apart
+- a digest's prose is the prose of the committed pull it ran on, so a pull is committed before it is
+  digested
 - a digested summary has a `### <topic> <stamp>` per chapter, same names and times; a platform's own
   summary is verbatim and held to nothing
 - speaker turns, where the platform names speakers, are paragraphs opening `**<speaker>**:`
