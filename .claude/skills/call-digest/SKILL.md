@@ -43,7 +43,11 @@ An unchaptered capture has an untitled header over every paragraph:
 ### [03:34](https://www.loom.com/share/<id>?t=214)
 ```
 
-Choose the ones where a topic starts and give them a title. Delete every other untitled header. The
+Choose the ones where a topic starts and give them a title:
+
+```md
+### [03:34](https://www.loom.com/share/<id>?t=214) Spoofing location on an android
+``` Delete every other untitled header. The
 paragraphs underneath stay exactly as they are. Loom writes a chapter every two to four minutes, so
 a two-hour call gets tens of them, not five. The first header stays, so nothing sits above it.
 
