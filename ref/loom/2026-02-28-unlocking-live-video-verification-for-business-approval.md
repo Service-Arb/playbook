@@ -3,6 +3,7 @@
 - source: <https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d>
 - recorded: 2026-02-28T03:11:28.023Z
 - duration: 00:04:40
+- transcribed by: loom
 - read by: loom
 - pulled by: `scripts/loom-pull.rs`
 
@@ -10,68 +11,32 @@
 
 In this video, I’m sharing a super effective tool for getting your business video approved through live video verification if it gets rejected. First, you’ll need to submit a help ticket via the Google Business Support Form to request a live agent. I recommend doing this earlier in the day for better chances of a lenient agent. Be prepared with your business documents and signage, as they might ask for those during the verification. If you follow these steps, you’ll have a much smoother experience getting your profile verified.
 
-## chapters
-
-- [00:00](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=0) Introduction to Live Verification
-- [01:07](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=67) Requesting Live Verification
-- [02:39](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=159) Location Spoofing Strategy
-- [03:35](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=215) Preparing for Future Verifications
-
 ## transcript
 
-[00:00:00](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=0) Alright guys, live video verifications. This is a really good tool if your business video does not get approved and most people don't even know that this actually exists.
+### [00:00](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=0) Introduction to Live Verification
 
-[00:00:09](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=9) So I'm gonna break down how you can actually do this. If your video doesn't get approved, and almost always, if your video doesn't get approved and you're able to do this, you will 100% like, like literally you're gonna get approved.
+Alright guys, live video verifications. This is a really good tool if your business video does not get approved and most people don't even know that this actually exists. So I'm gonna break down how you can actually do this. If your video doesn't get approved, and almost always, if your video doesn't get approved and you're able to do this, you will 100% like, like literally you're gonna get approved. Like, this is, this is super easy. It's way easier than the video, uhm, it's just you don't you do have to get rejected by the video first in order to get here and obviously like if the video doesn't get rejected then that's even better.
 
-[00:00:20](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=20) Like, this is, this is super easy. It's way easier than the video, uhm, it's just you don't you do have to get rejected by the video first in order to get here and obviously like if the video doesn't get rejected then that's even better.
+But let's say your video does get rejected, here's what you wanna do. Essentially this is pretty much the same thing. You're actually just recording, you're kinda doing the same thing, but it's gonna be with a live agent on the phone. So typically it's gonna be an AI that's checking the video that you submit. This is going to be a live video verification person. It's just gonna be somebody, uhm, who's, who's gonna actually like a live person and you're gonna be talking to them and they're gonna ask you to do a couple things and you're gonna be able to verify your business through that.
 
-[00:00:30](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=30) But let's say your video does get rejected, here's what you wanna do. Essentially this is pretty much the same thing.
+So first of all, how do you actually get to this live video verification agent? First, you go to Google Business Support Form, just search this up in your browser, like literally just search up Google Business Support Form, uhm, and then submit a help ticket.
 
-[00:00:34](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=34) You're actually just recording, you're kinda doing the same thing, but it's gonna be with a live agent on the phone.
+### [01:07](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=67) Requesting Live Verification
 
-[00:00:39](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=39) So typically it's gonna be an AI that's checking the video that you submit. This is going to be a live video verification person.
+Like literally just, just screenshot this. This is all you gotta do. Uh, there's, there's really no point of me to read it out, like this is straight up, this is what you gotta do, just pause the video and go, go back and forth if you need to do this. But pretty much you're just gonna request a live video verification agent and what's gonna happen is after, uhm, after they, they approve that and they say, okay, yes, we can do that, you're gonna get a little option when you go to Maker Profile where it usually has just the video or code verification options. It's gonna say live video verification and you're gonna be put into a queue, uhm, and then you're gonna be able to talk to a live video verification agent.
 
-[00:00:45](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=45) It's just gonna be somebody, uhm, who's, who's gonna actually like a live person and you're gonna be talking to them and they're gonna ask you to do a couple things and you're gonna be able to verify your business through that.
+So a couple quick tips. Number one, uhm, try to do this in the earlier part of the day, uhm, like Eastern, Eastern time, like before around noon. Uh, at that point or even I'd say around like 1pm. Sorry, yeah, so before 1pm Eastern, I have heard from other people. A lot of people who have tried this, that it's usually gonna be somebody who's like, like, just like an Indian guy, and they're, they're a lot more lenient, they don't ask for too much.
 
-[00:00:55](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=55) So first of all, how do you actually get to this live video verification agent? First, you go to Google Business Support Form, just search this up in your browser, like literally just search up Google Business Support Form, uhm, and then submit a help ticket.
+If you go later in the day, it's like some strict white dude and he's gonna be on your ass. So, that's just, that's, again, that's kind of just like conspiracy, I don't, I don't even know if that's real. But from, from what a couple of people have told me, uhm, that's, that's typically the best odds is to do it in the earlier part of the day. So that's the first step. Number two step. You can easily fake your location for this. So if you do the location spoofing, as I went into in the, the previous video, uhm, they, they usually will ask, instead of you to show the street signs, what they're, what they're gonna ask you is to screen share
 
-[00:01:07](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=67) Like literally just, just screenshot this. This is all you gotta do. Uh, there's, there's really no point of me to read it out, like this is straight up, this is what you gotta do, just pause the video and go, go back and forth if you need to do this.
+### [02:39](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=159) Location Spoofing Strategy
 
-[00:01:19](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=79) But pretty much you're just gonna request a live video verification agent and what's gonna happen is after, uhm, after they, they approve that and they say, okay, yes, we can do that, you're gonna get a little option when you go to Maker Profile where it usually has just the video or code verification
+yourself on Google Maps and press directions to go to that address. So if you can actually just spoof your location there, then you're gonna get away with this, you're gonna be totally fine. Uhm, so highly, highly recommend that you do that, uhm, sometimes they don't even ask for the video, but they do have your location settings turned on, so they'll probably be able to see it, so I do, I do recommend, uhm, having that prepared, and the thing too is, let's say multiple of your profiles didn't get approved and you're doing the live video verification, once you, uh, sort of get the hang of it, like, once you do your first one, you'll know what to expect on the next one.
 
-[00:01:34](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=94) options. It's gonna say live video verification and you're gonna be put into a queue, uhm, and then you're gonna be able to talk to a live video verification agent.
+The first one might catch you off guard, so I recommend having everything prepared and everything legit, but then going forward, you'll kind of have a good understanding of what you might actually have to, you know, use, and what they might ask for, so in that case, you'll be able to sort of see, okay , well, they only asked me for this, I can easily fake this, I can maybe even record this on a completely different address, and I'll be 100% fine, and we'll be good to go.
 
-[00:01:41](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=101) So a couple quick tips. Number one, uhm, try to do this in the earlier part of the day, uhm, like Eastern, Eastern time, like before around noon.
+### [03:35](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=215) Preparing for Future Verifications
 
-[00:01:50](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=110) Uh, at that point or even I'd say around like 1pm. Sorry, yeah, so before 1pm Eastern, I have heard from other people.
+But typically, Please. They're gonna ask you for something like an invoice, a business card, a dashboard, so, like, literally, uhm, like, if you open up, like, your Stripe or whatever, you can inspect all of a minute, they're not gonna check, they're not gonna make you do anything, fake business card , of course, would work, fake invoice, of course, would work, uhm, signage they'll wanna see, so just a very simple signage, they might ask you to, like, tug on it, so just have it, like, you know, somewhat firm, but again, you don't have to, like, grab it and rip it, you can just, like, just, you know , be, be very, sort of, brief with it, and you'll be fine, they're not strict at all, uhm, you just do wanna know what to expect, so for your first one, have everything set up, so you know exactly what's kind of, you know, gonna, gonna go down, and what you need to provide, but then going forward for all of the ones after that is just gonna be super straightforward, and this way you're gonna be able to verify any profile that might have not got accepted in the first place, See ya.
 
-[00:02:00](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=120) A lot of people who have tried this, that it's usually gonna be somebody who's like, like, just like an Indian guy, and they're, they're a lot more lenient, they don't ask for too much.
-
-[00:02:08](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=128) If you go later in the day, it's like some strict white dude and he's gonna be on your ass. So, that's just, that's, again, that's kind of just like conspiracy, I don't, I don't even know if that's real.
-
-[00:02:16](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=136) But from, from what a couple of people have told me, uhm, that's, that's typically the best odds is to do it in the earlier part of the day.
-
-[00:02:22](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=142) So that's the first step. Number two step. You can easily fake your location for this. So if you do the location spoofing, as I went into in the, the previous video, uhm, they, they usually will ask, instead of you to show the street signs, what they're, what they're gonna ask you is to screen share 
-
-[00:02:39](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=159) yourself on Google Maps and press directions to go to that address. So if you can actually just spoof your location there, then you're gonna get away with this, you're gonna be totally fine.
-
-[00:02:48](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=168) Uhm, so highly, highly recommend that you do that, uhm, sometimes they don't even ask for the video, but they do have your location settings turned on, so they'll probably be able to see it, so I do, I do recommend, uhm, having that prepared, and the thing too is, let's say multiple of your profiles 
-
-[00:03:04](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=184) didn't get approved and you're doing the live video verification, once you, uh, sort of get the hang of it, like, once you do your first one, you'll know what to expect on the next one.
-
-[00:03:12](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=192) The first one might catch you off guard, so I recommend having everything prepared and everything legit, but then going forward, you'll kind of have a good understanding of what you might actually have to, you know, use, and what they might ask for, so in that case, you'll be able to sort of see, okay
-
-[00:03:27](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=207) , well, they only asked me for this, I can easily fake this, I can maybe even record this on a completely different address, and I'll be 100% fine, and we'll be good to go.
-
-[00:03:35](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=215) But typically, Please. They're gonna ask you for something like an invoice, a business card, a dashboard, so, like, literally, uhm, like, if you open up, like, your Stripe or whatever, you can inspect all of a minute, they're not gonna check, they're not gonna make you do anything, fake business card
-
-[00:03:48](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=228) , of course, would work, fake invoice, of course, would work, uhm, signage they'll wanna see, so just a very simple signage, they might ask you to, like, tug on it, so just have it, like, you know, somewhat firm, but again, you don't have to, like, grab it and rip it, you can just, like, just, you know
-
-[00:04:01](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=241) , be, be very, sort of, brief with it, and you'll be fine, they're not strict at all, uhm, you just do wanna know what to expect, so for your first one, have everything set up, so you know exactly what's kind of, you know, gonna, gonna go down, and what you need to provide, but then going forward for
-
-[00:04:16](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=256) all of the ones after that is just gonna be super straightforward, and this way you're gonna be able to verify any profile that might have not got accepted in the first place, See ya.
-
-[00:04:24](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=264) Now this specifically, by the way, was for address businesses, service area, exact same idea, uhm, they're super lenient, you just literally show everything you would've otherwise, and almost every single time, they will just say, like, hey, yes, your business profile is approved, and then you're gonna
-
-[00:04:39](https://www.loom.com/share/622cc9f153ef4cf2b023ec6e8a21aa8d?t=279) be listed on Google.
-
+Now this specifically, by the way, was for address businesses, service area, exact same idea, uhm, they're super lenient, you just literally show everything you would've otherwise, and almost every single time, they will just say, like, hey, yes, your business profile is approved, and then you're gonna be listed on Google.
