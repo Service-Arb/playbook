@@ -352,17 +352,20 @@ fn render(id: &str, page: &str) -> (String, String, bool) {
 	let title = between(page, "<title>", '<', "the recording's title");
 	let title = title.strip_suffix(" | Loom").unwrap_or(&title);
 	let recorded = between(page, r#""uploadDate": ""#, '"', "the recording's date");
-	let duration: f64 = between(page, r#""durationMs":"#, ',', "the recording's duration")
-		.parse::<f64>()
-		.expect("loom states durationMs as a number")
-		/ 1000.;
+	// `durationMs` is the raw upload; this is what is left after trimming in loom's editor, and all anyone can play
+	let duration: f64 = between(page, r#""duration": "PT"#, 'S', "the recording's published duration")
+		.parse()
+		.expect("loom states an ISO duration in seconds");
 	let (phrases, transcribed_by, loom_read_it) = match loom_phrases(page, id) {
 		Some(p) if p.last().is_some_and(|(ts, _)| *ts >= duration * COVERED) => (p, "loom".to_string(), true),
 		short => {
 			let reach = short.as_ref().and_then(|p| p.last()).map_or("nothing".to_string(), |(ts, _)| format!("up to {}", hms(*ts)));
 			eprintln!("  loom transcribed {reach} of {}", hms(duration));
 			let model = Path::new(WHISPER_MODEL).file_stem().expect("the model is a file").to_string_lossy().into_owned();
-			(whisper_phrases(id), format!("whisper-cpp `{model}` — loom transcribed {reach} of {}", hms(duration)), false)
+			let whispered = whisper_phrases(id);
+			let end = whispered.last().map_or(0., |(ts, _)| *ts);
+			assert!(end >= duration * COVERED, "{id}: whisper got only up to {} of {} — the audio loom serves is short too", hms(end), hms(duration));
+			(whispered, format!("whisper-cpp `{model}` — loom transcribed {reach} of {}", hms(duration)), false)
 		}
 	};
 	// what loom's AI wrote is a reading of loom's transcript, so it stops where that stopped

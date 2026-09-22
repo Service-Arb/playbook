@@ -2,7 +2,7 @@
 
 - source: <https://www.loom.com/share/1f32c7640a514b198adc997ca319238b>
 - recorded: 2025-12-07T21:25:39.686Z
-- duration: 00:05:33
+- duration: 00:05:32
 - transcribed by: loom
 - read by: loom
 - pulled by: `scripts/loom-pull.rs`
