@@ -41,6 +41,7 @@ deleting it.
 ref/
 ├── README.md                     # the source list — every source, and which of them a puller reaches
 ├── loom/<date>-<title>.md        # call recordings: summary, then the transcript under its chapters
+├── fathom/<date>-<title>.md      # the same, for calls recorded on fathom
 ├── research/<id>.md              # chatgpt shares, one `## user` / `## assistant` section per turn
 ├── youtube/<id>.md               # channel videos, and `<id>/` the frames it cites
 └── skool_gmbpp/                  # the classroom, via `social_networks`
@@ -53,17 +54,17 @@ capture is never edited: **how far behind upstream it is**, in `skool_gmbpp/READ
 rewritten every run with the day of the run; and **what a source says that this tree
 has no capture of**, printed by the puller for `ref/README.md` to be told about by hand.
 
-### Loom captures
+### Call captures
 
 ```md
 # <title>
 
-- source: <https://www.loom.com/share/<id>>
+- source: <https://www.loom.com/share/<id>>        # or https://fathom.video/share/<id>
 - recorded: · duration: · transcribed by: · read by: · pulled by:
 
 ## summary
 
-<loom's, verbatim>
+<the platform's, verbatim>
 
 ## transcript
 
@@ -72,20 +73,21 @@ has no capture of**, printed by the puller for `ref/README.md` to be told about 
 plain prose, in paragraphs, no stamps in it
 ```
 
-- the transcript covers the whole recording. Loom's is taken when it reaches the end; otherwise
-  the puller transcribes the audio itself, and `transcribed by:` says which, and how far loom got
-  — and loom's summary and chapters go with its transcript, since they only read as far as it did
+- the transcript covers the whole recording. The platform's is taken unless it stops more than ten minutes short; then
+  the puller transcribes the audio itself, and `transcribed by:` says which, and how far the platform got
+  — and its summary and chapters go with its transcript, since they only read as far as it did
 - chapters are `###` headers inside `## transcript`, never a list of their own. The header is the
   only timestamp — a citation links the chapter a claim sits in
 - nothing sits above the first header
-- a recording loom never chaptered gets an untitled header per paragraph instead — the times
-  `/loom-digest` needs to place chapters. It titles the ones that open a chapter and deletes the rest
+- speaker turns, where the platform names speakers, are paragraphs opening `**<speaker>**:`
+- a recording nobody chaptered gets an untitled header per paragraph instead — the times
+  `/call-digest` needs to place chapters. It titles the ones that open a chapter and deletes the rest
 
-`scripts/loom-pull.rs` checks every capture on disk against this on each run, and `--check` runs only
-that; a hook runs it after any agent edit under `ref/loom/`.
+`scripts/call-pull.rs` checks every capture on disk against this on each run, and `--check` runs only
+that; a hook runs it after any agent edit under `ref/loom/` or `ref/fathom/`.
 
 The one reading an agent may put in `ref/` is what the source's own platform would have:
-a loom recording loom never summarised gets a summary from `/loom-digest`, which says so
+a recording its platform never summarised gets a summary from `/call-digest`, which says so
 in the capture's `read by:` line. Nothing else.
 
 **`structured/suggested/`** — an agent's own reading of a source. Unreviewed.
@@ -141,7 +143,7 @@ grows by hand.
 
 ```
 scripts/
-├── loom-pull.rs       # share page → summary, chapters, and loom's transcript, or whisper's where loom's stops short
+├── call-pull.rs       # loom / fathom share page → summary, chapters, and the platform's transcript, or whisper's where it stops short
 ├── chatgpt-pull.rs    # headless chromium → the DOM's turns
 ├── yt-pull.rs         # yt-dlp → captions in citable blocks, chapters, frames, description
 └── skool-pull.rs      # recon classroom → the course tree, module by module and lesson by lesson
@@ -159,6 +161,6 @@ rolodex's `venues/` tree; nothing here duplicates that.
 
 - Nothing enters `structured/` that did not enter `ref/` first.
 - Every claim carries a link to its source and the date it was said.
-- `ref/` is written by pullers, never by hand — bar what `/loom-digest` fills in, which says so.
+- `ref/` is written by pullers, never by hand — bar what `/call-digest` fills in, which says so.
 - An agent's own reading goes to `suggested/`, never straight to `approved/`.
 - A puller writes a new capture, moves one, or does nothing; it never edits what one says.

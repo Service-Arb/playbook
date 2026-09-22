@@ -23,7 +23,27 @@ this list does not.
   - [2026-09-18](https://www.loom.com/share/35e5f66432cc47e284303e545af0c0aa)
   - [2026-09-18](https://www.loom.com/share/64ca328cf63e498a972764993ec3892a)
   - [2026-09-18](https://www.loom.com/share/aa27220453994fcb8edb32b4d024817a)
+- eric's answers to the group's questions:
+  - [2025-12-13](https://www.loom.com/share/aca8832433c24193ac67c2fbfc6c5724)
+  - [2025-12-17](https://www.loom.com/share/30cdea04146a4486b4f38eb62544a428)
+- coaching calls and audits:
+  - [2026-01-14](https://www.loom.com/share/c115aafcfb8d45758f67546f05a73bdf)
+  - [2026-01-18](https://www.loom.com/share/9d32ace40bed4abaa6c6c540d82159dc)
+  - [2026-04-03](https://fathom.video/share/Y1jPUhCBxGNW8KjsrwE4P29LC4gbkPYR) — Art Khan's call, posted by Eric
 - group calls, as they get shared:
+  - [2026-05-30](https://www.loom.com/share/13aaeeeff8ef4abeacd0b7fc522a0bb5)
+  - [2026-06-14](https://www.loom.com/share/c1c8b4ffd7d74343ab7b13e52c0a278b)
+  - [2026-06-19](https://www.loom.com/share/509ccf71fddf4334b481462d4ff0c5ca)
+  - [2026-07-03](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada)
+  - [2026-07-10](https://www.loom.com/share/10b557e877b64a068910514c41dd0416)
+  - [2026-07-17](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277)
+  - [2026-07-24](https://www.loom.com/share/fc2ebac87db2407ab54bf7aef15b7ea2)
+  - [2026-07-31](https://www.loom.com/share/fa108a766a924ad9b543fe11ce41a569)
+  - [2026-08-07](https://www.loom.com/share/143a77b218e54f3eb570ba1e47f8285a)
+  - [2026-08-14](https://www.loom.com/share/4bfeea4c00494b5cafc2604256cb41d5)
+  - [2026-08-28](https://www.loom.com/share/6512424c5abc43148b1803ba7dbb664e)
+  - [2026-09-04](https://www.loom.com/share/f48dd474eecf4f5090515a8c360ff59c)
+  - [2026-09-11](https://www.loom.com/share/1eae977e2bc84cbd8b80a3b38506fe9f)
   - [2026-09-18](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5)
 - research:
   - [2026-09-18](https://chatgpt.com/share/6aacb045-ac9c-83eb-a97d-8624c616a763)
