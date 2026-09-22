@@ -48,8 +48,8 @@ Choose the ones where a topic starts and give them a title:
 ```md
 ### [03:34](https://www.loom.com/share/<id>?t=214) Spoofing location on an android
 ``` Delete every other untitled header. The
-paragraphs underneath stay exactly as they are. Loom writes a chapter every two to four minutes, so
-a two-hour call gets tens of them, not five. The first header stays, so nothing sits above it.
+paragraphs underneath stay exactly as they are. A chapter is a topic, so a
+two-hour call gets tens of them, not five. The first header stays, so nothing sits above it.
 
 The summary's `###` topics and the chapters are the same list, with the same names and times.
 
