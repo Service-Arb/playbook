@@ -20,9 +20,7 @@ ureq = "3"
 //! loom page carries a *signed* URL for its transcript CDN; the signature expires, which is why it is
 //! read out of the page on every run rather than kept.
 //!
-//! A platform's transcript is taken only when it covers the recording; one that stopped mid-call is
-//! transcribed here with whisper instead, since a capture silently missing forty minutes is worse
-//! than one that took a while to pull.
+//! A recording its platform never transcribed is transcribed here with whisper.
 
 use std::{
 	collections::{BTreeMap, BTreeSet},
@@ -33,8 +31,7 @@ use std::{
 const UA: &str = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
 const LOOM_TRANSCRIPT_CDN: &str = "https://cdn.loom.com/mediametadata/transcription/";
 const WHISPER_MODEL: &str = ".local/share/whisper-cpp/models/ggml-base.en.bin";
-/// A transcript whose last phrase starts further than this from the end is taken to have stopped.
-// ponytail: a call can go quiet for minutes before it ends, so this only catches a transcript that died mid-call
+/// Chapters whose last starts further than this before the last words are taken to have stopped.
 const TAIL_SECS: f64 = 600.;
 /// A paragraph is closed at the first sentence end past this many words.
 const PARAGRAPH_WORDS: usize = 80;
@@ -424,7 +421,7 @@ fn whisper_phrases(url: &str, id: &str) -> Vec<(f64, String)> {
 			.arg(url));
 	}
 	eprintln!("  transcribing {id} with whisper — minutes per hour of audio");
-	run(Command::new("whisper-cli").arg("-m").arg(&model).arg("-f").arg(&wav).args(["-np", "-oj", "-of"]).arg(&base));
+	run(Command::new("whisper-cli").arg("-m").arg(&model).arg("-f").arg(&wav).args(["-np", "-sns", "-oj", "-of"]).arg(&base));
 	let json = std::fs::read_to_string(base.with_extension("json")).expect("whisper-cli -oj writes <of>.json");
 	let parsed: serde_json::Value = serde_json::from_str(&json).expect("whisper-cli writes json");
 	let segments = parsed["transcription"].as_array().expect("whisper json carries `transcription`");
@@ -434,7 +431,8 @@ fn whisper_phrases(url: &str, id: &str) -> Vec<(f64, String)> {
 			let ms = s["offsets"]["from"].as_f64().expect("a whisper segment carries its offset");
 			(ms / 1000., s["text"].as_str().expect("a whisper segment carries text").trim().to_string())
 		})
-		.filter(|(_, t)| !t.is_empty())
+		// `[BLANK_AUDIO]` and the like are whisper narrating silence, not anyone speaking
+		.filter(|(_, t): &(f64, String)| !t.is_empty() && !(t.starts_with('[') && t.ends_with(']')))
 		.collect();
 	std::fs::remove_dir_all(&dir).expect("the temp dir is ours");
 	phrases
@@ -499,24 +497,22 @@ fn paragraphs(phrases: &[(f64, String)], turns: bool) -> Vec<(f64, String)> {
 /// The capture, its filename, and whether it needs `/call-digest`.
 fn render(platform: Platform, id: &str, mut r: Recording) -> (String, String, bool) {
 	let share = platform.share();
-	let reach = r.phrases.last().map(|(ts, _)| *ts);
-	if !reach.is_some_and(|ts| ts >= r.duration - TAIL_SECS) {
-		let reach = reach.map_or("nothing".to_string(), |ts| format!("up to {}", hms(ts)));
-		eprintln!("  {} transcribed {reach} of {}", platform.name(), hms(r.duration));
-		let whispered = whisper_phrases(&format!("{share}{id}"), id);
-		let end = whispered.last().map_or(0., |(ts, _)| *ts);
-		assert!(end >= r.duration - TAIL_SECS, "{id}: whisper got only up to {} of {} — the audio served is short too", hms(end), hms(r.duration));
+	if r.phrases.is_empty() {
+		eprintln!("  {} transcribed nothing", platform.name());
 		let model = Path::new(WHISPER_MODEL).file_stem().expect("the model is a file").to_string_lossy().into_owned();
-		r.transcribed_by = format!("whisper-cpp `{model}` — {} transcribed {reach} of {}", platform.name(), hms(r.duration));
-		r.phrases = whispered;
+		r.transcribed_by = format!("whisper-cpp `{model}` — {} transcribed nothing", platform.name());
+		r.phrases = whisper_phrases(&format!("{share}{id}"), id);
+		assert!(!r.phrases.is_empty(), "{id}: whisper heard nothing either");
 		r.turns = false;
-		// the platform's reading is a reading of its transcript, so it stops where that stopped
+		// the platform's reading, if any, is of a transcript it never produced
 		r.summary = None;
 		r.chapters = None;
 	}
 
-	// loom chapters a long call's first hour or so and stops; a reading that stops short is no reading
-	if r.chapters.as_ref().is_some_and(|c| c.last().is_none_or(|(t, _)| (*t as f64) < r.duration - TAIL_SECS)) {
+	// loom chapters a long call's first hour or so and stops; a reading that stops short is no reading.
+	// measured against the last words rather than the recording, since calls are left running after everyone's gone
+	let spoken = r.phrases.last().expect("checked above").0;
+	if r.chapters.as_ref().is_some_and(|c| c.last().is_none_or(|(t, _)| (*t as f64) < spoken - TAIL_SECS)) {
 		eprintln!("  {}'s chapters stop short of the end — leaving its reading to `/call-digest`", platform.name());
 		r.summary = None;
 		r.chapters = None;

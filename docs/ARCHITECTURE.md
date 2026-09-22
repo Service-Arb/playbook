@@ -73,11 +73,10 @@ has no capture of**, printed by the puller for `ref/README.md` to be told about 
 plain prose, in paragraphs, no stamps in it
 ```
 
-- the transcript covers the whole recording. The platform's is taken unless it stops more than ten minutes short; then
-  the puller transcribes the audio itself, and `transcribed by:` says which, and how far the platform got
-  — and its summary and chapters go with its transcript, since they only read as far as it did
-- the platform's summary and chapters are dropped too when its chapters stop more than ten minutes
-  short of the end
+- the transcript is the platform's; where it has none, the puller transcribes the audio itself, and
+  `transcribed by:` says so
+- the platform's summary and chapters are dropped when its chapters stop more than ten minutes short
+  of the last words said
 - chapters are `###` headers inside `## transcript`, never a list of their own. The header is the
   only timestamp — a citation links the chapter a claim sits in
 - nothing sits above the first header
