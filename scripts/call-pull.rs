@@ -196,14 +196,21 @@ fn check(name: &str, text: &str) -> Rec {
 	let (platform, id) = rec_of(field("source").trim_start_matches('<').trim_end_matches('>'));
 	let duration = secs(field("duration"));
 	field("transcribed by");
-	let unchaptered = field("read by").contains("no chapters");
+	let read_by = field("read by");
+	let unchaptered = read_by.contains("no chapters");
 
 	let sections: Vec<&str> = text.lines().filter(|l| l.starts_with("## ")).collect();
 	assert_eq!(sections.last(), Some(&"## transcript"), "{name}: `## transcript` has to be its last section");
 	assert!(!sections.contains(&"## chapters"), "{name}: chapters are `###` headers inside `## transcript`, not a section");
 	let transcript = text.split_once("\n## transcript\n").expect("found as a section above").1;
 
+	let lines: Vec<&str> = transcript.lines().collect();
+	if let Some(w) = lines.windows(2).find(|w| !w[0].trim().is_empty() && !w[1].trim().is_empty()) {
+		panic!("{name}: `{}` runs straight into the next line — paragraphs and headers are a blank line apart", w[0]);
+	}
+
 	let link = format!("]({}{id}?t=", platform.share());
+	let mut chapters = Vec::new();
 	let mut last = None;
 	let mut first = true;
 	//LOOP: bounded by the lines of a finite file
@@ -222,8 +229,24 @@ fn check(name: &str, text: &str) -> Rec {
 		assert!(last < Some(t), "{name}: `{line}` does not come after the chapter before it");
 		assert!(unchaptered || !title.trim().is_empty(), "{name}: `{line}` has no title, and the capture says it is chaptered");
 		last = Some(t);
+		chapters.push((t, title.trim().to_string()));
 	}
 	assert!(!first, "{name}: the transcript is empty");
+
+	// a platform's own summary is verbatim and need not agree with its chapters; ours has to
+	if read_by.starts_with("`/") {
+		let summary = text.split_once("\n## summary\n").unwrap_or_else(|| panic!("{name}: digested, and no `## summary`")).1;
+		let summary = summary.split_once("\n## ").expect("`## transcript` follows").0;
+		let topics: Vec<(u64, String)> = summary
+			.lines()
+			.filter_map(|l| l.strip_prefix("### "))
+			.map(|l| {
+				let (topic, at) = l.trim().rsplit_once(' ').unwrap_or_else(|| panic!("{name}: `### {l}` is not `### <topic> <stamp>`"));
+				(secs(at), topic.to_string())
+			})
+			.collect();
+		assert_eq!(topics, chapters, "{name}: the summary's topics and the transcript's chapters differ");
+	}
 	(platform, id)
 }
 

@@ -128,11 +128,11 @@ This is the group's weekly Thursday call on running local-service lead-gen busin
 
 ## transcript
 
-### [00:00](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=0) daily earnings check-in
+### [00:00](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=0) Daily earnings check-in
 
 How much money did everyone make today? Like $1200? Nice. Funny. I just made $150, but it wasn't off of my GMV. What was that from? It was from, uh, it was from, uh, just somebody I reached out to. Organic, organic content. Money is money. I I just had a car detailer. That's it. I made like $0 two days ago, so. You know, I've, uh, yeah, I know. We got two jobs tomorrow. Nice. Have you been, uh, loading up the new GMBs, Kareem?
 
-### [01:01](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=61) signage trick for verification
+### [01:01](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=61) Signage trick for verification
 
 So today, because remember how I told you, like, I did, uh, um, like, I failed, like, the four that I tried to do in one day, after doing the three in one day, and I succeeded. So today I did those four again, and two of them, uh, verified. One of them within 29 minutes, which was wild. Like, while I was on my way to the next one. So, yeah, it was definitely the signs. Wait, let me show you. Let show you what I got for the signs now.
 
@@ -142,13 +142,13 @@ So, you can just have one sign. And dash whatever, like, the city is, and the na
 
 Just on the same size that you have. And I just put in the GMB name that I want. And the AI does not, it doesn't tell if it's, like, a paper attached to the signage or not. Does that make sense? Yeah, yeah, it does. I'm just saying, like, from my personal experience, um, I've done, so I have five right now, wait, no, seven. Seven GMBs now, as of today, that verified, and I've never had, like, the city name, like, attached to the sign, and it verifies even though the city name is in the GMB name.
 
-### [02:56](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=176) state-by-state verification difficulty
+### [02:56](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=176) State-by-state verification difficulty
 
 So, I don't think that it matters. Karim, remind me, you, are you in Michigan, or am I bugging? No, you're, I'm in Michigan, yeah. Okay, good. I'm just curious, I wonder if state to state, it's different, because I feel like LA is harder. I feel like there's so much GMB spam in LA. It makes it harder. What do you mean, it's harder, like, service area, No, it's just harder to get approved. Like, I had a guy, I think he quit, to be honest. I was trying to check in with him, like, yo, what's going on?
 
 Uhm, but he, he did a pretty good verification video. And, and it got rejected, like, three times. So, I wonder, and it was, he was in LA. So, I do wonder, uhm, like, why. Was that the address? Yeah. I would have to see. I don't know, maybe I'd have to see. I don't know. Because, like, what I, what I do is I, like, make the tables. Super messy, with, like, a bunch of props. So, it looks like, like, I, like, live there, almost. Like, like, I don't know. Like, I got gum, candy, like, a bunch of dollar bills on it.
 
-### [03:56](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=236) subcontracting vs. lead selling, and handling complaints
+### [03:56](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=236) Subcontracting vs. lead selling, and handling complaints
 
 Yeah, I mean, anything works, right? Yeah, yeah. Good. See you. Was there anyone else waiting to be let in? No, that's everyone right now. No one likes to group calls. Yeah. Does anyone have any questions? I do. So I had a question to James and to Eric, of course. Um, so about the cleaning business or any business action, like, because I don't do subcontracting. What I do is I sell leads and thus I just get paid for the leads. Now you guys do subcontracting for the customer service.
 
@@ -156,7 +156,7 @@ You know, if, if the client who called our GMB complains or they have an issue, 
 
 And then if there are anything, then I just tell her to do it. Like on the spot and then, uh, if it's too late, like if she leaves and later the client's like, Hey, we have an issue here. Like she didn't finish this and stuff. Then I normally just like have her go back. And if it's something big that I pay her like for another hour, no problem. It's like, yeah. $25, not much. So, and, uh, yeah, if it's anything small and she's like close to the area, then she just goes back and does it for free.
 
-### [05:46](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=346) missing-place google maps verification method
+### [05:46](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=346) Missing-place Google Maps verification method
 
 Okay. Guys, I'm gonna, um, I'll, um, I'll give you guys like a little. Sort of method, um, for verification. Um, I'll just share my screen and show you, I don't know how good it would work for like spamming your industries, but if you see this profile over here, Lux Clean House Cleaning Services, Toronto. What you could do, if you have a Google, uh, account that's like local guide level 4 or higher, you basically go into Google, find a random address, and say that there's like a missing place on it.
 
@@ -172,7 +172,7 @@ Does it have to be a level 4 guide, because, uhm, like, when it does the, the ve
 
 Would, would work, would work easy for detailing too. Karim, what, what were you gonna say? I was saying that was good, I never thought of the ad missing place. Yeah, yeah, I had a, I had a guy share it with me, like another, like, GMB guy, uhm, does, does that as, like, one of his methods, and he, he does it for, like, flooring profiles and stuff like that too, so. I think for everything but plumbing, it would work. Plumbing is just really spammy, but everything except for plumbing, I think that would work.
 
-### [09:30](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=570) reserving leads and selling leads to businesses
+### [09:30](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=570) Reserving leads and selling leads to businesses
 
 Yeah. I had a question. Yep. It was kinda weird, Uh, so Ryan is kind of had to do with what Ryan is doing, so I'm sure like everybody probably gets those calls out there with like people trying to sell you leads, or not necessarily even trying to sell you leads. Have you ever gotten like, uh, the calls of like people just trying to say, hey we'll reserve an area, or we'll reserve whatever for leads, or we'll just work with you?
 
@@ -188,7 +188,7 @@ Like, we take all of the risk off of their plate, in a sense. Like, we tell them
 
 That's it. So, there is, there is no risk on their end. They don't have to pay, they don't need to do anything. So, if someone calls you like that, they are giving you leads for free. Wait, so, do you sell your leads, like, per lead, like, let's say it's like, um, 200 bucks per lead, or do you do, like, once they close, you take, like, a commission? Neither. We do a flat fee. We do a monthly fee. No, you just, okay. I know, like, some people do, like, I think they, like, reserve an area for, like, maybe, like, a dollar, then they'll try to give you a lead for, like, whatever the amount is, or whatever, and that's how they do it.
 
-### [12:37](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=757) niche picks: paving, roofing, masonry
+### [12:37](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=757) Niche picks: paving, roofing, masonry
 
 I've seen different ways of how it's done. That's what I was kind of getting at, like, is it, like, can you tell if somebody's just trying to, like, you know what I mean, if it's professional or unprofessional in that sense? You can't sell now. I don't think you can. You just gotta try them. Wait, Ryan, what, uh, what niche are you in? We are in concrete, towing, I'm getting into decks, uhm, I'm getting into plumbing, and, And we have one in landscape design.
 
@@ -200,7 +200,7 @@ So, really good industry, and, uh, uh, roofers pay a lot too. Roofers pay a lot.
 
 Yeah. Roofing is a bit competitive. Yeah. We have a competition. But I gotta search that up. Paving, that, I didn't even think about that one. That actually makes a lot of sense for specific states, if you know what I mean. I mean, like, I mean, for the asphalt and, like, the roads and everything, I was just thinking more so just landscaping entirely. Yeah, it's a good one, for sure. Um, masonry is a good one, too. I also, I know a guy who runs, like, a rank and rank agency that does, like, 50 grand a month, and most of his are asphalt paving, masonry, uhm.
 
-### [15:16](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=916) elliot's fencing lead progress
+### [15:16](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=916) Elliot's fencing lead progress
 
 Stonewalls, I think, was another one. We, we have, I have one in, uh, Blockwall. Yeah, Blockwall, that's what it is, yeah. Yeah, we have one in Blockwall. Yeah. That's decent, yeah. Elliot. Do you have any updates on, uhm, how everything's going? Yeah, uhm, yeah, so I've got in, uhm, like, 70, or, yeah, 71 leads in the last month, uhm, and, like, I've got, uhm, like, my contractors just send me, like, all, like, the details, like, every couple days, when I tell them, like, the updates on, like, the quotes.
 
@@ -210,7 +210,7 @@ And so it just takes a while. But, yeah. No, they, yeah, they do. But they only,
 
 Uhm, because, like, like, they want me to talk with the lawyer to make sure I'm doing everything legally. So, it's kind of frustrating. That's I'm sure you can make more than a 3k in profit. Yeah. 71 leads, I would say, like, to rent out a fencing site for 71 leads is like, 1000 to 1500 bucks. That's across, that's across 6, or sorry, that's across 5 GMBs, by the way. Fencing, on average, like the job for, if it's like an installation or a replacement, it's usually like, it goes like, it depends on how many feet, but like, minimum 3000, and it can go up to 20.
 
-### [17:54](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=1074) hiring and pricing cleaners
+### [17:54](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=1074) Hiring and pricing cleaners
 
 If it's, debts can even go way, way higher than that. They can. I had a question. I had a question just for anyone who does, like, the cleaning. Like, how do you guys go about hiring? I know some of you go on Facebook. Someone mentioned, James mentioned, he does indeed. Like, can you guys go through, like, the process of hiring? Uhm, is it, like, fully remote? Did you meet them in person? Uhm, is it just one or two cleaners? Like, the whole process of doing that.
 
@@ -222,7 +222,7 @@ I'll hand it all the marketing. I pay for all the ads. I talk to all the custome
 
 Okay. Yeah. Okay. And can, can one of you like go through the pricing of how do you price it? I know this, this can go like, this varies a lot state to state, but like, how do you price the service? Itself? Like if it's like a deep clean or a standard clean, like, just like a generic idea of like, do you go on the premium side or do you not with pricing? I'd say for me, I used AI for it. And then. And if it stopped working, like if I don't get as many like bookings and I like for like an extended period of time, like two weeks or something, then I just like lower it by 10% or something.
 
-### [20:33](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=1233) phone script for answering plumbing calls
+### [20:33](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=1233) Phone script for answering plumbing calls
 
 But I'd say what you could do is just call around like your, um, your competition, like your target audience. Top three, and then see what they price. Like give them like, say like 2000 square feet, two bedrooms, two bathrooms, and like a standard clean, and then see what they all price and then do what the, the big lowest for the top three do. Do the same price as that. It's a trial Like, a plumber, and then you're sending out your partner, or were you just completely dispatched? Anytime anyone would say anything technical, I would just be like, yo, I'm not a plumber. I can, uh, I can just send somebody out.
 
@@ -236,7 +236,7 @@ So, like, a toilet install, or, uh. Water heater install, yeah. Water heater, I 
 
 So I gave her, like, a range just on the spot. And then, you know, it wasn't the same when, like, the guy went out. But, yeah. Yeah, yeah, uhm. Only for things that are very standard, you can do that. I would always, like, lead in with it, like, being a rough estimate or preliminary estimate or something like that if they really just want to see it. Even if you had to chat GPT. Yeah, I said that, but, like, yeah, I mean, people, when they hear the number, they, like, glue it to their heads, you know?
 
-### [23:49](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=1429) reviews, legal questions, and liability
+### [23:49](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=1429) Reviews, legal questions, and liability
 
 Yeah, so I think for the, oh, sorry, go ahead, Ryan. No, you go ahead. I had a question different. You go Okay, yeah, it was regarding reviews, but, like, I think the best way to go about, like, getting reviews for 9 is, like, to do, like, 20 to 25 on, like, each one. Through the, uh, Facebook Marketplace idea, and then have these, like, reviews, like, the jobs that you're getting paid for themselves to get more reviews.
 
@@ -252,13 +252,13 @@ Uh, is, uhm, when you wanna find a contractor to take on the jobs, don't just fi
 
 If they're rated, like, 3-point-something, and they wanna take on the leads, you wanna expect someone, maybe, like, you know, just what you said. Yeah. So this is what I would do. Like, like, like, we're like, like, lead-gen companies, but, like, on my website, like, it doesn't say anywhere that we're, like, a lead-gen company. Like, is that, is that, like, bad, or, or is that? You can see, a lot of websites have it at the bottom, if you go to a lot of websites. Yeah, I've got it on my, on my TOS. There we go.
 
-### [28:13](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=1693) llc and holding company setup
+### [28:13](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=1693) LLC and holding company setup
 
 You can see at the bottom, it's, uh, this is a referral, uh, website. You can. I got my LLC and DIN, uh, like, yesterday, so I'm making it legal, finally. Have you tried making, like, a holding company for your LLC? Uh, no. What would the benefit of that be? I'm not saying good with that. I'm not too sure either, but Chris told me a little bit about it, Chris B., in the group. Uhm, I think it's just, like, isolates, like, your assets and stuff.
 
 So, like, if you get sued, then, like, and also, like, your name and your address are different. So. I have a physical office for the hedge fund. So, like, that's where the LLC address is right now. So, yeah, like, I think I'm good. For now. Yeah, look into Northwestern Register Agent for the LLC stuff. Yeah, James, have you gotten reviews on, uh, L.A.? Uhm, I think we're in the process of it, yeah. Yeah. Yeah. High hopes for that one. Yeah. Hopefully that, that starts taking off. And have a big ass month. Yeah. Let's, let's, uh, see who pulls off the best in July.
 
-### [29:37](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=1777) account suspension and reinstatement risk
+### [29:37](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=1777) Account suspension and reinstatement risk
 
 Kareem's been, Kareem's been going crazy, though. He's, he's had quick, quick progress. I've got a lot planned for after I get my LLCs. Yeah. Yeah, One guy in the group said, it's gonna be risky for, uhm, for anything that's not, like, detailing or cleaning, but so what he did was he put up a profile and got a hundred views on them right, on the profile right away. Uhm, and through, like, aged Gmail accounts, and the account got suspended, he got it reinstated, and every single review after the profile got reinstated was sticking.
 
@@ -270,7 +270,7 @@ I'll find it right now. Uh, right here. Okay, I'll just show my camera. And it l
 
 Yeah, I just got them regardless. Fifteen bucks. Everything helps a bit. Even if you print it on a piece of paper and just stick it onto your credit card. That's fine. Oh, really? Yeah, you can definitely do that. What's, like, the success rate you have on these AdWords show listings? Me? Any of you. Sure. I actually want to, I actually want to say this for the storage units, because this is what, like, what I tried. So I did a total of 3 plus 4 plus 3, so 10, 10, uh, storage units this week, like that.
 
-### [32:49](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=1969) storage unit verification method
+### [32:49](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=1969) Storage unit verification method
 
 I tried to attempt, uhm, so I did 3 in a day, all 3 of them verified within 2-3 days. So that, that was great. And then I did 4 in a day and all 4 of them failed, because I went bad with the signs. Like, I went cheap with the signs. I just used paper, and I thought that would go through, but it didn't. And then today, I did those 4 again, and, uh, 2 of them, uh, already verified, which is wild, like, because it's the same day.
 
@@ -284,13 +284,13 @@ I just got a master lock that I used every single time for all of them. Okay. An
 
 Yeah. Have any of you tried, like, a street sign? Like, a customized one? Yeah. I did. Yeah. Did it work? No. How realistic was it? I, I did a bunch of them. I wanted to do, like, a few on a main street, you know, a lot of, like, downtown, where I live, and when I took the video, it always failed. Always. Cause it was on the same location. It wasn't. But I wasn't sure. Did you, like, spoof and, oh, okay. Yeah. Damn, you gotta try that, dude. You know what's crazy? I had a guy in the UK, I jumped on a call with him, and he was telling me how he got all his profiles verified on addresses, and I almost didn't believe him, so I'm like, okay, let me search him up, and his verification method was literally, he just printed a sign with the address on it , stuck it on his front door, on his, on his, just, room at home, stuck a sign that said, like, staff only, and just recorded videos at his house without changing his location or anything.
 
-### [36:03](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=2163) street signs, spoofing, and a verification story from the uk
+### [36:03](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=2163) Street signs, spoofing, and a verification story from the UK
 
 I don't know if it has to do with the fact that it's from the UK, but every single one of them went through. Uhm, this was an electrician profile, this was a demolition profile, and, uh, he got a couple of those up in both niches, so I don't know how or, like, why it worked, but it, it did. I know in the US, you gotta spoof your, uh, location. At least from my tests. Yeah. Like, you've got it. But for some reason, in the UK, it just, it went through on the address. So maybe, I don't maybe they're not as strict.
 
 But I wonder if you recorded it from the US and listed it in the UK, if it would have the same constraints. So I'm gonna think about, What spoofing tool, if you don't mind me asking, what spoofing tool do you use? Per location? Yeah. Uhm, I think Eric had one. In the videos, I use that one. I pay like a hundred for the year. Yeah, it's called GetGo. Mostly, it's like thirteen bucks. Yeah, that one. That works. Uh, Ryan, I don't know if we talked about it already, but what are you doing to, like, separate the profiles?
 
-### [37:24](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=2244) separating profiles across phones and proxies
+### [37:24](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=2244) Separating profiles across phones and proxies
 
 Are you just on different gmails on the same computer? What's, like, what's separating them? Uhm, I'm not logging in on the same computer. I always log in through my phone. I got a bunch of phones. And each phone has its own SIM card. And, Some phones I logged, like, on over, like, maybe 200 accounts on the same phone. I've never had any issues. Uhm, but each, each gmail, at most, has, like, 3 or 4 GMBs. Now, I'm, like, it's just a lot.
 
@@ -298,13 +298,13 @@ That's why, but, Typically, I would, I don't want to keep it to 1, but 1 to 4, y
 
 I'm testing that out for Instagram, because my Instagram account keeps getting banned. But, uhm, okay. Interesting. Yeah, because some people are having issues with suspensions. Have you had any, Ryan? I've had one disabled, recently. The landscape design, actually. But, that's, uh, the only one that we've had. And maybe one fencing one, actually. But that's, uh, another one. Did try to appeal them, or re-verify? No, I just put up a new listing, for now. Because those were old, and they were named, in a way. And set up in a way that I, I wouldn't do it now, how I would do it.
 
-### [39:03](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=2343) suspension stories and fresh-gmail timing advice
+### [39:03](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=2343) Suspension stories and fresh-Gmail timing advice
 
 Yeah. So, that's fine. James, what about you? Have you had anything suspend? Uh, no, nothing really. Except for one. But that one, I, I literally created a new Gmail just for GMB. And then, like, I got it verified two days after I created it. And then, another two days later, it got suspended. Or not, it didn't get suspended. The, the Gmail account itself got suspended. So, that's the only thing. How did the Gmail get suspended? I don't know. It just said that I was having, like, fake information or something. I don't know. So, I'd say don't start a GMB right after you've made it.
 
 Make a Gmail. No, dude. Anyone else have questions? Peter, Chesky, David? Ah, yeah, so I've had some, like, calls coming in. And I just have some, like, questions regarding, like, onboarding people. I've had, like, luck with some people. Like, I have my best guy, uhm, working with him. Like, I'm getting 70% profit margins, but. The problem with him is, he's, like, really dry, and, like, bad at communication. And then, uh, the other people, I'm not sure if I should, like, settle with 50 or 60%. I'm just not sure.
 
-### [40:28](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=2428) onboarding and paying detailing contractors
+### [40:28](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=2428) Onboarding and paying detailing contractors
 
 Like, it's really hard to get people to, like, kind of, understand what's going on with the business model, and just onboarding them over the whole process. Um, what are you saying to them? Um, I pretty much just say, like, I used to have a detailing business in the city area. I was wondering if, like, you'd be interested in taking, like, a couple jobs every now and then, and then just reach back if interested, and then they reach back.
 
@@ -324,7 +324,7 @@ Yeah, yeah, yeah. Okay, yeah, yeah, I'm gonna do that right now. I'd charge him 
 
 Yeah, I would. So, like, if they wanted Interior extra, it would be $350, right? Yeah. Okay, yeah, yeah. Alright. Yeah. Alright, well, thank you. For sure. Anyone else? Uh, is there anywhere else than, like, Facebook that you could find some guy for, like, detailing? Because, I mean, all my guys that I've reached out to on Facebook, they're, like, all Indian, and I would, like, call them. And they barely speak English. Yeah, try Nextdoor, and just try other Google business listings.
 
-### [45:56](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=2756) finding detailing contractors beyond facebook
+### [45:56](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=2756) Finding detailing contractors beyond Facebook
 
 Craigslist if you're, uh, desperate. Okay. Also, James, you said something about, like, not putting up GMB. Like, with the new Gmail right away. Like, does that also go for just detailing? Uhm, I'm not too sure. I haven't tried with detailing. Like, what issues do you have? Like, it just suspended right away, or what? Yeah, like, I made the Gmail just for the GMB. I made the GMB, got it verified, and then, like, a few days later, the Gmail got suspended.
 
@@ -332,7 +332,7 @@ And I couldn't log into it. Yeah. So, I'd say, like, if you want to do it off of
 
 So, if you were able to create, like, multiple accounts, I think you'd be able to sponsor it every time, like, with the free trial, and find someone pretty easily that way. It's just, like, speculation, but I haven't tried it yet, so. What are our goals, uh, for this month of July, guys? Targets, trying to hit. What are the goals, everyone? Why is no one, no one sharing? We don't have goals. We have no souls. I'm shooting for 20 this, uh, this month. Yeah, it's doable.
 
-### [48:00](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=2880) july goals
+### [48:00](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=2880) July goals
 
 Yeah, I think it is, yeah. I think so. Yeah, I'm gonna shoot to get my reviews up way, like, three times more than I did the last month. I'm trying to hit my first 10k a month, but, I mean, I'll have to, like, put in a lot of work because I'm just making my first dollars now, so. What niche are you in? Uh, car detailing right now. Okay. So it's also low ticket, so I'll have to do, like, quite a bit of jobs.
 
@@ -342,11 +342,11 @@ Yeah, I have, uh, five at the moment. They have, like, 15. Well, they're gonna h
 
 You did instant verification? Yeah. Yeah, all the five I had got instantly approved. Were they same Gmail that they got suspended on? Like, did you put all four in? No, they were different. Yeah, no, mine, I haven't gotten any suspended. Well, at least I'm hoping I don't. But, yeah, I have, uh, like, I have two on my main Gmail, and then the rest of them the three I just have all on separate Gmails. Yeah. Claude told me I could, like, go to Walmart and, like, buy a sim or something. Like, do you guys have guys think that that would be good to use that and, like, make a new Gmail on that and then put up a, like, a GMB right away?
 
-### [50:31](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=3031) gmail age vs. sim card for avoiding suspension
+### [50:31](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=3031) Gmail age vs. SIM card for avoiding suspension
 
 Or should I just, like, ask people for their phones? I think it's the age, the age of the Gmail that matters, not the SIM card. So, I don't think that would do much. Cause I put up, like, three new ones yesterday. But then I used my own number for two and those just instantly suspended. Yeah, you wanna, yeah, it's like, yeah. So it's definitely all gonna be different numbers, eh? Yeah. Yeah. What's everyone got planned for the weekend? Work. Work. Everyone's locked in. It's good.
 
-### [51:16](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=3076) weekend plans and small talk
+### [51:16](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=3076) Weekend plans and small talk
 
 What are your plans, Eric? Good. Thanks. Thanks for asking. Somebody, somebody cared enough to ask. I'm joking. Uhm. I don't know, man. I just kind of go with nothing. I'm actually, like, aside from working, I, like, don't do anything. Like, not that I work all day even anymore. I used to work a lot more but I kinda just, like, if I'm not working, I'm just straight scrolling reels like I do nothing. So, yeah, I'm kind of, like, super boring right now. You should try something out, bro. Like, try something new. Yeah, any- any hobby recommendations?
 
@@ -354,7 +354,7 @@ Go feed ducks or something. Or, like, go for a hike. A hike? Okay. Like, a solo 
 
 Is it good? I see it all over TikTok. Yeah, it's a good movie. Yeah, I thought it was No, don't watch it. Interesting. Yeah, well, I guess, uh, if anyone hasn't and anyone have any other, like, business-related stuff, but, we'll probably just end it here. I guess, is the only way you guys are getting reviews off Facebook? I got- Bobby, what were you gonna say? Oh, Reddit is good, too. Like, the same thing for Facebook, just do it on Reddit.
 
-### [53:09](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=3189) reviews via reddit and proxy citations
+### [53:09](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=3189) Reviews via Reddit and proxy citations
 
 I feel like Redditors would be, I don't know. You just gotta be careful with Reddit, yeah. Yeah. I mean, you could always ask people, but my source of Yeah, what about for listings like Outsider City? Cause I don't think it'll stick. Yeah. There's definitely a way to do it, like, with proxies. I'm trying to figure that out right now, but. I guess, just, uh, I mean, what, what would it be? You just log into the proxy on, like, a, a multi-login thing, like Ryan was saying?
 
@@ -362,7 +362,7 @@ And, uh, I don't see why there would be any issue with that. I can send you guys
 
 Oh, shit, okay. Yeah. So, like, the people, like, the people that, like, you, uh, that you posted, like, the links to, uhm, I can just use them for, for my Ontario ones? Yeah, that should be fine, and then I'll send you another one as well. Alright. Yeah. I have a better source, I think. At least, someone in the group's been using them, and, It seems to be a good source, so I'll send it over to I'm just gonna find it in my messages somewhere.
 
-### [54:48](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=3288) wrap-up and sign-off
+### [54:48](https://www.loom.com/share/8aa800d5f10848339d6ecc5839b53ada?t=3288) Wrap-up and sign-off
 
 But yeah, anyone else have anything, or are we all kind of caught up? I think we're all caught up. Alright. Alright, well yeah guys, it was a good, good chat today. Uhm, I guess we'll, we'll head out. And, uh, yeah, I mean, everyone, hope you guys have a good evening and have some time to relax and maybe lock in a little bit more. And, uh, get back to it and, and make more money. All right, y'all take care. All right, everyone take care. We'll see you guys all, um, next Thursday, same time. And I'll drop the recording in the chat sometime this evening.
 

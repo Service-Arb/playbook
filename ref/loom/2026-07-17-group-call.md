@@ -206,7 +206,7 @@ Eric hosts a weekly mastermind call with students running Google Business Profil
 
 ## transcript
 
-### [00:00](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=0) cole joins the call; landscaping subcontracting margins
+### [00:00](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=0) Cole joins the call; landscaping subcontracting margins
 
 ,calling me. Let me, let me actually answer it. Yo, Cole, we're, we're doing our weekly, uh, our weekly group call right now. Can I hop on? Obviously, bro. Jump in. Are you able to, are you able to, like, send me the link, like, to this message? I got you. Just on, uh, iMessage? Yeah, just send it to my iMessage, I'll try to join, sorry. I was, I was gonna join, I wanted to join so bad, I was like, f***, I don't know how.
 
@@ -225,7 +225,7 @@ Yeah. It kind of just, it really depends. I mean, this is where, like, AI helps 
 
 So, it's just, uh, like, they will come. You just can't be, yeah, too greedy with it. Yeah, fair enough. That makes sense. When, when are you going to know if this one closes? I already got quote approval today. So, I was on like a two hour Zoom meeting with the guy going over all the plans, sketches, and all of that. So, it's, it's approved, but deposit will be sent in the next week when permits are confirmed by the city. Yeah.
 
-### [03:13](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=193) deposit structure and team size
+### [03:13](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=193) Deposit structure and team size
 
 So, how, how do you structure the deposit? Do you take, like, what do you take up front? Is it just for materials or do you take, like, money from the deposit as well that you pocket? How do you structure it? Yeah, so I, well, so say if my sub quote's like a hundred grand, then I put 15% in. So it's like 115 grand. I'll take, uh, client has to pay 50% of the 115. Then I'll basically just send my subs 50% to him and then keep the 50% of my markup.
 
@@ -235,7 +235,7 @@ So then I still have, yeah, money from it. So I'm not out. Yeah. Yeah. I see. Do
 
 And then, uh, yeah, we have, we're honestly, we have like 41 guys right now that are kind of working under my, uh, company name. And then, uh, yeah, we're expanding. So usually around like, yeah, three to five projects a month, but I can't really give you a number on that. It just varies. Damn. So like really any business getting clients is like the backbone of the whole business. So like, you can just start that and then like on a, on a high ticket niche, you know, you have, um, demand and then you just get a 40 person team from there.
 
-### [04:42](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=282) client acquisition system and profile performance
+### [04:42](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=282) Client acquisition system and profile performance
 
 Cause you can build that with the demand. Yeah. Like with, um, with Eric's like teaching and stuff, like. He gives you the full system on how to get clients, which is, which is like the part you need. And that's what Eric does best, like teaching. So, and then, and then it's on you just to get the backend system. So like you set up all of your contracts signed with clients. Clients, uh, subcontractors and just getting the subcontractor yourself.
 
@@ -245,7 +245,7 @@ I think I made a post in the school like a week ago or something that kind of ga
 
 Yeah. Uhm, met him for the first time. Uhm, yeah, it's a six, six and a half, about six and a half K a week, so it's, it's, it's solid. Six and a half K a week in profit? Profit, yeah. When did you start? When did I start? June, uh, June 14th. Actually, no, June 1st, let's be honest. I joined here June 14th, about June 1st. And you did it in your own area, of course, yeah. I did it in my area, uhm, that was the big job, and, sorry, yeah, yeah, and, yeah, yeah. Sorry, brain fart.
 
-### [06:27](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=387) gmb verification count and getting reviews
+### [06:27](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=387) GMB verification count and getting reviews
 
 But, yeah, we have, uh, nine, uh, businesses verified, but only, like, three of them are ranking as of now, but I'm trying to figure out a way to get views. I just need to go out and actually ask people, like, Eric, and I got You should try these. The, uh, the Facebook, uhm, the Facebook, uhm, Marketplace, with, uh. That's what I'm gonna hop on. So, I did that, and I collected over, like, a hundred reviews, not this week, last week, and, like, so many of them fell off, but, yeah.
 
@@ -255,7 +255,7 @@ You said, like, you should do one per person, but I just don't get that kind of 
 
 Okay. Yeah, yeah, I was on, I was on that, but. Yeah. It works, it could work, but I feel like not a lot of people care about the review, like, Facebook review thing. Did he say, like, what vol, at what volume he's been able to get reviews at? So he's new to it, too. Like, the code's kind of new, but, uh, 15 is what the thing that the Python platform's set on, so you don't get, like, banned.
 
-### [07:44](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=464) review automation script and aged gmail accounts
+### [07:44](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=464) Review automation script and aged Gmail accounts
 
 Okay. And it just automates the method? Yeah, I saw it work in action. We were experiencing a glitch, though, because it wasn't sending, but, like, it does, like, invert, like, the tabs open, and it does, like, go and type, and it just doesn't send for some reason. But for his, it is sending. He has a Windows, I have a Mac. That's really- You've been posting a lot, Eric, about, like, the Gmail thing, where you buy an aged Gmail, and then you'll set the location to your area or whatever, and then you'll go and sell them after.
 
@@ -265,21 +265,21 @@ Do you know if that's still working? You've heard any drop? Yeah, they drop. Lik
 
 Wait, sorry, which one's one a day? Uh, if you're doing the age gmail accounts. And you're just purchasing them to leave yourself reviews. That I would limit to one a day. Cause then they start to drop off. Oh, oh, okay. Raymond, you got the two, the two verified now, right? Yeah, I got two profiles in. And then other two I did, like, yeah, I'm just trying to set up as many as possible with, like, SAB to PAB.
 
-### [09:14](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=554) batch filming verification videos
+### [09:14](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=554) Batch filming verification videos
 
 Yeah, you know, for the recorded ones, uhm, you saw what I said, but yeah, maybe try next time. Uhm, do a couple, Do a couple, uhm, a couple videos at once. This was Ryan, by the way, who suggested it, where you do, like, a couple videos each time you go out, and that way it gives you the opportunity to, like, 4X it. If you want to ask him any questions, he's right here. Great, uh, interesting. Anymore? Ryan, go And I take four videos at the same time.
 
 
 Oh, yeah, yeah, I got you, then. Okay. Yeah, sometimes if it fails, you have these more rentings, you might as well, yeah. Wouldn't you have four offices in the same, uh, city, then? Like, are these servers? No, they are addresses. Like, what do you have for, like, your four businesses are just going to be ranking in the same area, same address? So, so the point is, go ahead. I was just going to say, yeah, so the whole point of doing that in the first place is, is if one doesn't approve, then you have four other chances for it to get approved.
 
-### [10:29](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=629) video verification approval struggles
+### [10:29](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=629) Video verification approval struggles
 
 Okay. Yeah. Oh, I got Uh, you cut out. Oh, you said, like, sometimes all four of them won't go through. Does that have something to do with, like, doing multiple at the same time? No, they're just, like, Google's pretty. It's just plumbing specifically, man. Plumbing is just harder with Google. Everything else is, like, you know, not that bad. But no, it's not that it's just because it's all four. It's literally just because the video is pretty hard to just get approved, no matter what you do.
 
 
 Really. Yeah, I saw eight plumbing videos and only one got verified. And they all have different reasons, even though I replicated the same exact video every time. One time it didn't show business name, one time it didn't show vehicle, and I did the same thing every time. It's annoying. What is it you saw in the video? Uhm, okay, so, the street sign. Okay, well, I do it a different way. I do them from my house. But, I use a fake street sign, and then I use a location spoofer.
 
-### [11:44](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=704) what to show in sab verification videos
+### [11:44](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=704) What to show in SAB verification videos
 
 And, I showed that I show. My house address, I showed the signage on my car, which is on, on a truck, which is, looks like a work truck. And then, I show all the equipment. I show all the equipment in my garage. I go inside my house. I show my office with two things pulled up on a screen. And, this is actually for PAB. I don't, oh wait. I'm not sure if I said that right. Uh, SAB, my fault. PAB, bro. You do all of that for an SAB? You mean like no ad is shown? Yeah, because they're still hard to get verified. But, uhm. It's fine. It takes me an hour to shoot eight videos. Like, whatever. Two out of eight go through.
 
@@ -292,40 +292,40 @@ Do you show the street sign or not even? Okay, that's good. I'm, I'm, I'm testin
 
 Yeah, no, that was James, but I mean, just like, in general, without, like, any vehicle at all. Uh, just like, it works if you just have, like, tools in your garage as well, and a business card. Yeah, uhm. Do you see any correlation between, like, you verify it with a video for address straight away, versus converting from SAV to address? Like, is one always going to rank higher than the other, or is whenever, when you convert, it'll be the same?
 
-### [13:58](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=838) address vs sab-to-address ranking
+### [13:58](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=838) Address vs SAB-to-address ranking
 
 It's the same thing. I would say from my data, address shown performs a lot better, especially for plumbing and a few, a few niches. Not like DEX, you can get away with that, but plumbing, you do need to show the address in my data. And I, or maybe I got the question wrong. I think he was saying, like, if you switch it from a service area to a physical address versus initially right away having a physical Yeah, yeah, It's interesting because whenever you switch it from a from service area to address, it'll actually show serves area, and it'll show the address under.
 
 
 So it'll have both of them, and the addresses will just have one. So I feel like it treats it as both, instead of as in the first one, because there's only one. I don't know. Yeah, I don't think so, to be honest. I don't know. I don't think it treats it as both, I think it's just one or the other. Okay. Yeah. Anyone else have any questions? Cheyenne, how's, how's it been? How has yours, progress been going, if you're I don't know how to manage subcontractors. I'm getting like two calls per day. I have landscaping, concrete, and construction in, uh.
 
-### [15:16](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=916) cheyenne's subcontractor management problems
+### [15:16](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=916) Cheyenne's subcontractor management problems
 
 A suburb, and I don't know how to manage my subs. Like, I'm getting ripped I am getting ripped off by every sub I'm, working with right now. So I got paid by the sub I'm working with right now, but he owe me payment for, like, not answering my call. Call. You said 12 jobs? And are these landscaping? I, uh, seven of them. I'm getting like two calls per day. Yeah. Yeah. One of them is mostly landscaping and other one is mostly landscaping. Okay. Cool. Do you have any, have you experienced that at all?
 
-### [16:09](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=969) contracts to protect against subcontractors
+### [16:09](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=969) Contracts to protect against subcontractors
 
 Um, wait, can you repeat the question for like, uh, like just finding reliable subcontractors? Yeah. You're getting Uh, yeah. Do you have a contract in place with your subcontractors? Yeah. So the first thing I would do before working with anybody is making just a simple agreement slash, um, just contract they can sign so you don't get, uh, screwed over and scammed like that. I actually just got like, uh, Not scammed, but I kind of got screwed over today from one of my subs, but at least I'm I was protected and I honestly broke even on that one but But yeah, I would say the biggest thing is just because it's like you're running a real business You have to have contracts in place making sure that you're protected And then yeah, I make sure everything's just kind of aligned on and agreed upon paper So then if anything does happen, then you have paper proof, uh to support your backup claims or anything And you can send that online, right? Like they don't have to okay. Yeah, you can uh, I use uh You can send it through a DocuSign. I could put it in the chat. Just a simple, uh, website You can sign contracts to subcontractors, get, uh, quick signatures online And then you can print it off from there as well.
 
 
 So you have it on paper copy, but um, yeah I'd say that's one of like the four first, first steps before you actually commence work to your guys is having a contract in place, knowing that if something does go wrong on a job site, that they're reliable, they're going to be using their liability insurance. And then kind of just use, I would use Claude AI to kind of write it down for you. Um, but yeah, make sure I can also make another post in the school on what to heavily have onto that contract, um, to make sure everyone here is just protected and you're not getting sued and shit like that.
 
-### [17:55](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=1075) insurance and incorporation
+### [17:55](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=1075) Insurance and incorporation
 
 But yeah. Yeah, bro. That'd be amazing. Yeah, bro. Yeah, trust me, that would be amazing. A hundred percent. Just write it with Claude really quick and we're all good. Yeah, just, yeah. Claude AI, the contract. Yeah. Big one is just, uh, make sure they have the liability insurance WCB coverage on their work. So if anyone does get hurt, it's not on you. And then, uhm, I mean, down the I, I mean, down the line, I would, like I said in the other posts as well, like, I mean, it's not necessary at the start, but if you're going to be working on, like, multi six-figure projects, I would recommend getting, uh, maybe just registering your business, incorporating it, so then it's not a legally, legally, uh, a legal entity.
 
 
 Yeah, exactly. So it's not, if the company gets sued, you're not getting sued kind of thing. Yup. Yeah. And then also possibly get liability insurance just for yourself, just in case something does come up down the line. I'm pretty sure, especially if you have contracts in, uh, contracts in line with your subs, it won't, but yeah, it's just good to have. And I think it's like, I don't know, maybe like a thousand to 2,000. A year, which you should probably easily be paying off within the first year.
 
-### [19:06](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=1146) per-job vs general contracts
+### [19:06](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=1146) Per-job vs general contracts
 
 So, um, I would recommend that, but do you make them sign it for every single job or just when you begin working with them? Um, I would. I would, you, so I would say if you're on bigger jobs, I would recommend possibly just making a specific contract for that specific job, just so it's clear. Um, and then I would just have an overall general one that you just have in place. Just in case you don't have that, uh, separate sign, say if it's going to be like a smaller, like 15 to 30 grand job, it's like, you don't need a separate contract for that, but if you're working on like a six, seven figure job, and if something does go wrong, you're going to be like six figures in the pocket, uhm, you know, down in the pocket to like go fix something, you're going to call an insurance company, then, yeah, I would have that separate contract just for that one client and one job.
 
-### [19:57](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=1197) filtering low-ticket jobs, outsourcing marketing
+### [19:57](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=1197) Filtering low-ticket jobs, outsourcing marketing
 
 How do you filter out between the low ticket, like just lawn mowing jobs and the high ticket, like, do you still get calls for the low, lower ones, or do you just like have some filters in place somehow? Yes, I mean, yeah, so on, on this meeting, I just got two job requests for, um, or like lawn mows. I mean, I just, like right now, my, my guys are busy. They're booked out for, like, a few months right now in advance, so I get the calls, of course, but then I just say, look, we're, like, booked out, and we just don't have time or team capacity to be fulfilling those small jobs, um, but yeah, it's, it kind of gets annoying, and then down the line, I don't think, um, a lot of people have done this, but I've brought on my own marketing agency, so they're doing all, like, the marketing, paid advertising, all of my Google business updates for me now, just because I don't have too much time to do that , and I've, I spend my time better, actually, like, managing client communication and all that stuff. But I think that's something you don't need to get into now, I'd say, down the line, when you have a good source of revenue coming in, and you can reinvest back into the business, uhm, is when you wanna , yeah, probably get into, like, the paid advertising area, and then GMBs, of course, are absolutely insane for me. We're getting, uhm, leads and clients, so it just really isn't But, yeah.
 
-### [21:20](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=1280) choosing a niche: landscaping vs plumbing
+### [21:20](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=1280) Choosing a niche: landscaping vs plumbing
 
 Okay, well, uh, I guess no one else has another question, so I'm just gonna ask another thing. So, you have the money. Most experience in that niche out of everyone. So, based on all your experience over, like, all your months, would you say, like, would you suggest people to get into that niche over all other ones, or would you rather them, like, stick into, like, plumbing or concrete? Like, just based on your landscaping experience, like, if it was easy or what?
 
@@ -335,11 +335,11 @@ I would say, I mean, landscaping is just such a, uh, wide variety of things, so 
 
 Uhm, I would say if you're in car detailing, I would say keep that running, maybe look into something higher-ticket, like plumbing, landscaping. I don't know, concrete's a good one, too, construction can be good, uhm, but when you are getting into the higher-ticket, uhm, sort of niches, and, uhm, higher-ticket businesses, there's gonna be a lot more back-end work you have to have in place to, like, successfully run those up, uhm, because if you accidentally scuff something up on, like, a car, for example, you're not gonna, you're only gonna be, maybe, pay out, like, a hundred, two hundred bucks to fix it, but if you mess something up in someone's backyard, you possibly could be out, like, twenty to a hundred thousand dollars, where you're gonna be making a phone call to your insurance company. And then, who knows if they're gonna cover you, but, uhm, yeah, I would say, if you're in a low-ticket, uh, niche right now, I would say keep, keep that ball rolling, just so you have income coming in, and then I would say reinvest, possibly, or start into a higher-ticket, uh, higher-ticket thing, it could be landscaping, it could be whatever, it's just whatever's good for your area, I would say, I would do that research first.
 
-### [23:25](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=1405) eric's own niche-selection story
+### [23:25](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=1405) Eric's own niche-selection story
 
 Like, Eric, uhm, I was gonna start out plumbing before I even started landscaping, I was in car detailing, and it was going pretty good, and then I had multiple meetings with Eric, going over like, how many different niches of what could work, and then plumbing was, like, pretty competitive in Vancouver , like, most of the top-ranked people with, like, 12,000 five-star reviews, and I was like, f*** no, so I was not getting into that. Landscaping and construction was something that was not my competitive, pretty much, at all, and it ended up being, like, uh, yeah, like, a golden goose.
 
-### [23:57](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=1437) onsite estimating and quote process
+### [23:57](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=1437) Onsite estimating and quote process
 
 It was a great one to get into, so it's just, like, wherever, wherever you are, just do your research, and then you'll find and come across a niche that will work for your area. What all, what all information do you get from the person, like, if it's a big landscaping job? Like, do you just ask the, like, people that you contracted out to what information you want to collect, or how do you go about that? Yeah, I mean I can, uh, run you through. So I, I've set it up pretty well now, where I don't do any of the onsites anymore.
 
@@ -349,11 +349,11 @@ I have, uh, two estimators that go out and do it for me, and they're all profess
 
 Okay, so you don't do anything pretty much except, like, getting their contact information, pretty much? Yeah, just, uhm, I mean, well, now I do a lot more, for example, like, when you're, you'll kind of see, I don't know what the rules are, but in where I'm from, uh, you do need permits to do a lot of stuff, so, like, now I'm working with, uh, the district of where I'm from, working with, uhm, some of, like, yeah, the higher-up, like, mayor people to just, uhm, confirm those, uh, contracts or whatever it is. Make sure we can actually work, and that's, you'll kinda get into that slowly, but, again, you're just gonna learn along the way, and you kinda, you kinda just learn through the process once you're in the process, if you know what I mean, like, it, it'll all come to you naturally, uhm, and then, yeah, the biggest thing is, it's just, like, yeah, don't act like you know everything, but, again, act like you know what you're doing, uhm, when you're talking to clients, but, again, like, yeah, have, uh , if you do trust your sub, have them reach out to clients, uhm, have them, call them, make sure to go over, like, the quote and everything, and, blah, blah, blah, but, uhm, yeah, it's, it's pretty straightforward, just schedule the on-site, and then stay in communication, making sure everything's on a steady flow.
 
-### [26:41](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=1601) researching niche competition and keywords
+### [26:41](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=1601) Researching niche competition and keywords
 
 Okay, thank you. Yeah. By, by researching niche, you mean, like, looking at keywords, like, search? I meant, like, like, yes, like, kind of, just, like, seeing what the competition is in your area. I know Eric kind of touched based on that in his course, and then just kind of seeing what's good for your area, like, yeah, just searching up keywords, how many people are searching them up, per month, if there's going to be good client flow, like, coming to you and seeing the competition, like, plumbing, where I'm from, is just way too, uh, competitive where I'm at, it's just, I don't think anyone should open up a plumbing company where I'm at, uhm, it's just way too competitive right now, and then, I just, I did search up landscaping, and there was, like, no competition at all, so I basically just overtook everyone, I'm ranked first, uhm, in, in every single GMB right now, I'm ranked over, uh, some of the most known landscaping companies, and now my name is finally getting out there, world.
 
-### [27:36](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=1656) energy drink review-farming method
+### [27:36](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=1656) Energy drink review-farming method
 
 And those companies are starting to suggest clients, uhm, that come to them to me, so it's kind of like my brand name is starting to build upon itself and starting to get known in the area that I live. So, so yeah. I need your reviews. I do, I do. I think I posted them this like a month ago. I did the, uhm, a few of my buddies on Arizona, they did the energy drink kind of pop-up thing, so I went to my local university, they had like a lot of foot traffic there, post up a table, just, I put on a sign, free energy drink, takes 5 seconds , make sure to put on the takes 5 seconds cause it catches people's eye, and then, uhm, have barcodes, they scan the barcode, leave a 5-star review, and then, uhm, yeah, that's pretty much it.
 
@@ -372,14 +372,14 @@ They've all stuck, so. It's pretty good. I got all of them in, like, two or thre
 
 So, so, yeah. But, yeah, and make sure, I don't know if a QR code has to do with any of them sticking up, but if, uh, all of them are just scanned the QR code, brought them right to the review page, and then, um, just left a five-star review. And I also had, like, a little cheat sheet with just, uh, multiple comments they could write down. Um, so, if they do want to leave a comment, they can, like, just follow what I kind of already wrote down there.
 
-### [30:48](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=1848) collecting payments (stripe, jobber, crm fees)
+### [30:48](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=1848) Collecting payments (Stripe, Jobber, CRM fees)
 
 So, it's, for fast forwarding. It doesn't really matter. How do you personally collect payments for your landscaping? Yeah, so, we, I collect payments through pretty much everything. We do wire transfer, e-transfer, card payments. It kind of, you have to get that, if you want to take credit card payments, you have to look into getting, like, I use Stripe, uh, personally to accept credit card payments. So, you take them, and you send it to them? Well, uhm, like, my CRM does. So, Jobber is my CRM, uhm, it just has a credit card payment, just add-on, they can just pay online there, and then you have to have a Stripe account, or whatever, whatever, like, credit card processing, thing.
 
 
 Software you use attached to your CRM, kinda take, it takes, maybe like, a day to set up, it's, it's pretty straight-forward, but as soon as that's ready, then yeah, you can take credit card payments on whatever CRM you choose. But, also, key note, I would also recommend looking at what's your CRM. CRM takes off your credit card payments, so, Jobber takes a 22.9% plus 30 cent, uh, uh, commission off credit card payments, so if you're getting, like, a $10,000 payment in, watch out, because Jobber will take, uh, $1,000, maybe $2,000 off that, so then add on to your quotes, uhm, payment information, and just say, if, paying by credit card, be aware that this fee will apply, and then you can kind of just calculate the fee and add it on to the final invoice when, uhm, you close out the job.
 
-### [32:25](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=1945) chargeback and deposit disputes
+### [32:25](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=1945) Chargeback and deposit disputes
 
 Okay. So, Hey, have you ever had a crazy chargeback from a big job? Yeah, so, I, uh, what was this, like a month ago, I had two, uhm, so, this is how actually, kind of, when I started out getting into the bigger projects, I was a bit lost in the area of how everything worked. I had, uhm, all my quotes, I had no contract, disclaimer, like protecting me. I can also send what I have in my quote now, so you can kind of just copy it word for word, but, uhm, yeah.
 
@@ -392,28 +392,28 @@ I made that ten bucks each. I made that clear to the client, but then he called 
 
 So there will be, there will be hiccups. There will be losses that you will take and there will be like really pissed off clients you deal with. But at the end of the day, like the client's always right. You don't want to make them wrong. You want to make them happy and they, you don't know what they're going to say about your company or anything. Especially when you, I'm like, yeah, geeky, geeky fellows that leave bad reviews, you can just remove them anyway. So I don't really know why they do that, but, 5k with a charge. I think it was actually 6k with chargebacks for detailing, um, over, over a six month period. Um, so it was basically a guy, we did a couple of cars for him and then he was kind of subbing us.
 
-### [34:31](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=2071) car detailing chargeback and evidence
+### [34:31](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=2071) Car detailing chargeback and evidence
 
 Um, and so he just called the company and charged us. 30 details. So I'm going through that shit right now. Um, where are you? Why don't they even do that? Cause they're evil. I just, uh, it's a scam. Uh, okay. So you have like confirmations of these jobs happening, right? Oh yeah. I've got, I've got a. They hold Google dry with all the evidence and stuff. So I'm going through. Yeah, dude. Yeah. You're chilling. Don't worry about it.
 
 
 So I hope, I hope we'll see. Yeah. Crazy. Yeah. I convinced. I don't know if I should admit this, but I convinced, uh, PayPal that a car detailing job was done and it never really happened. Uh, that was last year though. There's a bunch of photos and stuff. It's kind of fake shit. Yeah. Yeah. I bet. But I've got, uh, pictures, all kinds of shit. So it should be straight. I'm sorry. Sorry. Yeah. You go ahead, Eric. So you've definitely talked about Asphalt and. Literally, I saw two of my neighbors throughout the week, just, I think it's a sign from God, like, the people, they come, the Asphalt, and they, like, fix the driveway within a few hours, and, you know, it's a new job.
 
-### [35:49](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=2149) asphalt opportunity and rank-and-rent model
+### [35:49](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=2149) Asphalt opportunity and rank-and-rent model
 
 So, and there's definitely money being made there. So I guess you've, you've talked about it a lot. But, like, have, has any of your students, like, tried it out yet? Yeah, so I have, uh, well, I have a guy who's, uh, I actually made a YouTube video with him, his name is Ray. He's doing, like, RankinRent, sort of, model, uhm, with, like, primarily asphalt and paving. Contractors. So, he's doing good, he's doing, like, 50k a month recurring profit, uhm, but he basically, yeah, like, he works with the contractors and he just sells the, like, he, he basically rents each, his , each of his Google business profiles, he rents to a contractor. So, the contractor pays him, like, 2k a month, for example, and he's on all the calls, uhm, so he's making a ton of money, and then, that's the easiest way to go about it, cause it's the same thing, it's like, you have to, uh, if you're , if you're gonna try and do, like, a commission split, it's gonna be the same thing as, like, with coal, like, there's so much that goes into it, uh, yeah, you can do a lot per project, but you're gonna have to be, you know, like, talking to customers.
 
 
 So much more stress and more time, yeah, you're right. Yeah, definitely. Uhm, is he in another mentorship program? The coal? Wait, no, no, no, no, no, the guy doing asphalt. No. Oh, okay. I thought he learned it from this other guy. Nah. Does anyone else do, like, plumbing here? I do. I think pretty much most people, like, uh, Kareem does plumbing. I'm about to switch. Who else does plumbing in here? Why's that? Well, I'm not, I'm gonna keep what I have existing, and then, it's just cause the contractor told me He's just lazy.
 
-### [37:33](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=2253) plumbing struggles with low-ticket contractors
+### [37:33](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=2253) Plumbing struggles with low-ticket contractors
 
 You guys started three business models in the last two months. He's blaming the contractor. No, no, two, bro, just two. Just two, Bro, but I've been plumbing for, like, four months now. You made money from your first month and then what happened? Uh, same amount every month. Like, 4k, 3k. Yeah. It's just, these contractors, bro, I just physically can't get over 400 a job. And I'll switch contractors. And it'll be the same thing. And I'll, like, I'll legit, bro, these contractors, or maybe it's like the calls I'm getting in the areas are always such low ticket.
 
 
 Wait, what, what area are you from? Uh, I don't do it in my area. Yeah, I do it outside. I'm in, I live in the worst area in the world. Oh. Unfortunately. I mean, me, I just started, like, six days ago. I didn't even get my first call. I'm just, like, trying to rank my profile. I just wanted to ask you guys, like, uh, do you guys wait to get your first call or lead, and then you find a contractor?
 
-### [38:45](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=2325) finding contractors: indeed vs marketplace
+### [38:45](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=2325) Finding contractors: Indeed vs Marketplace
 
 I say get a contractor first because it also motivates you as well to go and do more through your profile. Because you'll actually be held accountable for, to get jobs for them. But also, it's also important because that first call is going to be super awkward. Have you found a difference in, like, how good the contractor is? Just looking on, like, Indeed, compared to, like, just Facebook Marketplace or something? You mean, like, posting on Indeed? Yeah, like, if you're gonna put a post on Indeed, like, looking for a plumber, compared to, like, just Yeah, much does it mean?
 
@@ -423,7 +423,7 @@ Who's the guy that did the video? The video of the golf court? I keep forgetting
 
 Then just open up a different email and use a different card. So you don't pay. What did you, uh, just for like your contractors you hired off indeed? Yeah, for contractors I found a good one in the Tri-City area. Yeah, they come, like, with their vans and everything already, right? Yeah, he's, uh, he's like an older guy but he's very happy. Like, he's been doing this for 30 years and he's enjoying being busy, so. Yeah, no, I've actually noticed a lot of the older guys are actually really good.
 
-### [40:28](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=2428) ai truck images and van mismatch concerns
+### [40:28](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=2428) AI truck images and van mismatch concerns
 
 Bro, my best plumbers are the old guys. Yeah. Like, they're not entitled, they're just happy to work and, you know, get their hands dirty. Yeah. So, big question for y'all. Do any of y'all AI trucks, and then put that on your listing? Cause I'm wondering if that's gonna be a huge problem down the road. Nah, I don't think so. It just looks, it just looks, uh, like, a lot of the AI images you guys make look horrible. Oh, nah, I'm chillin' on that.
 
@@ -436,7 +436,7 @@ I, I guess it happens sometimes, but if you, like, have, like, a van, and people
 
 Isn't your listing in Florida? We don't have trees in Florida. Who the hell were these pictures taken? I'm not hiring you just because of that. I was like, bro, what? You're going too far into this. Yeah, some people do a pain, but, I mean, eh, just fix your website, I guess. I'm definitely not putting trucks on. It's just, I'm just ruining it. I gotta re-style. Yeah. Arik, I have a quick question for you. Yeah, What I am thinking, in DC, I considered 8 cities, and I want 8 GMBs in each city. So, with 100 reviews on each GMB, Plumbing.
 
-### [42:37](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=2557) gmbs per city, lead volume, proximity ranking
+### [42:37](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=2557) GMBs per city, lead volume, proximity ranking
 
 Yeah, yeah, yeah, yeah, Address each, address GMB. 36 GMBs. 100 reviews each. Okay, well, if you have 36 GMBs with 100 reviews each, you're gonna be getting, like, 50 leads a day. Dude... Yeah, at that point it's just like, you're not gonna be able to handle it. Uhm, the thing is, when you have an address, it's just like, you don't have to rank across the whole city. You will get calls from people close by, just because you're close by. I'm in downtown Toronto right now, it's like, my building is alone has like 2,000 people.
 
@@ -446,14 +446,14 @@ The building beside me, another 2,000 people. Right? If I search plumber near me
 
 Uhm, but, yeah, I mean, uhm. Like, 8 GMBs with 100 reviews, you'll be getting more calls than you could probably answer. That's true. So, how many GMBs should I aim for per city, according to you? Uhm, I only know how to verify that. I don't GMBs. I don't know SAB to address or the email or anything else. I don't know anything else. So, how have you been doing your address ones? The way I am doing is I am using my apartment and I would like. Four of my GMBs are ranking in my city on first and it's been four weeks since they are lying.
 
-### [44:21](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=2661) verification documents and location spoofing
+### [44:21](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=2661) Verification documents and location spoofing
 
 And so are, are you, uh, when you're doing the, are you doing a, you're doing a video, right? Yeah. What are you doing for the video? So the only difference would be, I show a couple of more document in the video. So those documents would be business ownership, my business registration, and the electricity bill. Do you, uh, do you change your location settings? So, I tried doing that, two of my GMBs got live, but I don't know why Google, now Google knows I spoof my location while verifying, so I can't do it anymore.
 
 
 Have you tried, uhm, when you did it, did you just do it, like, uh, just on your browser normally? So, I have a secondary Android device, I spoof my location, and I have a residential IP of that particular security device. And I hotspot it from my other device. So, I tried to do everything perfectly, but I don't So, I tried submitting three, uh, videos for Steam, GMB, and every Uh, which, again, if you're doing addresses, you will get good results. Uh, across, like, Vancouver, Burnaby, Surrey, Richmond, that whole area, you could probably, before you get diminishing returns, you could get 15 profiles up to 10.
 
-### [46:05](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=2765) finding addresses across a metro area
+### [46:05](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=2765) Finding addresses across a metro area
 
 20, 15 to 20 around the area, uhm, it's like Vancouver, you can have one in each corner, Burnaby, same thing, Surrey as well, and, like, that'll be enough to get you. So, I am trying to find a new way to shoot a video, so, if I, shoot a video in a basement, would that work? I don't think that would m- have much of a difference. It's not so much about, like, whether it's a basement or if it's, you know, one story or two stories.
 
@@ -463,11 +463,11 @@ So, the reason would be, All the storage and the co-working spaces are in the ce
 
 Yeah. Okay, so, Okay, I mean, we're in Vancouver right now. Uh, I'm clicking Storage Unit Vancouver, there's one quite literally everywhere. This isn't, you know, like, they're literally everywhere. They're everywhere. That is true. There's a million storage units, no matter where you want to place a GMB, there's a storage unit. The cold ones are a little bit more rare, but still. Yeah, and, uh, the indoors and outdoors, I mean, from my experience, they both work just fine. Like, there's, you don't need to have them indoors. Yeah. Wait, but Eric.
 
-### [47:45](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=2865) sab video location doesn't need to match listed area
+### [47:45](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=2865) SAB video location doesn't need to match listed area
 
 Mm-hmm. In your previous, like, video, like, one of the courses, um, you said, like, you could fake an address by, like, just saying that you're at that address while recording the video, even though you're not at that address. It's not a So, for the service area business profiles, it's not about saying it. It's just for service area businesses, the, like, the Google, whatever, whatever it is that's doing, checking these videos, it doesn't, like, cross-reference the area that you, uh, record the video with the area that you list the video or the profile in. So, you could list it anywhere. As a service area business video, list it anywhere in the same city, in the same country, a different country, doesn't matter.
 
-### [48:25](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=2905) live video verification via local service ads
+### [48:25](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=2905) Live video verification via local service ads
 
 Uhm, when you're doing the physical address, you would have to, kind of, like, uh, Cheyenne was saying, and, uh, it's still, it's not even, like, 100%, but you have to, like, spoof your location, and, kind of, like. You have to do a lot of shit, trust me, you do. Oh, thanks. Yeah. Yeah. So, so, at that point, I recommend, like, the live video. Video verifications are actually really easy. Oh, my God, I have some sauce for you guys, actually.
 
@@ -492,25 +492,25 @@ Whenever it's just on a non-verified profile? Uh, I'm not too sure, because, no,
 
 Yeah. This number, they're just going to direct you to the GMB, and you need to click on contact us, I think, and submit a form. Just ask, if you want to do a live video, if I remember correctly, they're going to put you in the queue. Nah, looks like they have a support number, because they want to get you with ads, so yeah, like, I would just reach out to this number here. Yeah, seems pretty easy, just search, like, I just searched up, get local service ads, I just searched up Verify LSA, click this over here, uh, and then it brought me there, so yeah, get support, get expert help, that's what I think, probably be the easiest way.
 
-### [53:45](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=3225) buying reviews via reddit contractor
+### [53:45](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=3225) Buying reviews via Reddit contractor
 
 Alright. The best way for review would be just digging out the links. Probably the quickest, if it's local, yeah. I also tried one more thing. I taught one of the guy in India. I'm paying him like a hundred bucks per month. So what do you do for me? So this way we can get like two or three reviews on one GMV per day. And all of those are sticking on my GMVs. So he's just doing it. Joining Reddit sub-communities in that particular city and just pretending as a girl.
 
 
 And there's no bad review I got so far. Interesting. How many, how many reviews were you able to get from that? So we can. Uh, I tried getting 15, all of them are good so far. You can aim for a hundred, trust me. It's easy and people are desperate, so they don't even care. They just want to see something. And you can get a hundred reviews in a And how many, uh, just one thing, how many GMB should I manage under one main?
 
-### [55:02](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=3302) gmbs per gmail account and review pacing
+### [55:02](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=3302) GMBs per Gmail account and review pacing
 
 Like, the less, the better. The safer you are with less. Like, you could do a couple, but I, you know, I would say one per Gmail is the safest. Hey, when, when should I start leaving reviews on the profile? I just changed it, uh, I just changed this, and it shows up already. How long should I wait for? Just like, start, start getting them slowly starting tomorrow. Tomorrow? And, when would I know if it's like, if it's confirmed? I mean, is it like, if it goes, if it goes, it passes like a week?
 
 
 A week or two and it didn't get suspended? Yeah, yeah, no, it should, it should be good. So if it would get suspended, it would just get like, within a day or two, or? Usually right away, Yeah, but usually if it's been up for two weeks, it's like, more than like, two weeks, technically safe. And from real people, like real local people that live in the area, not far away, how many reviews a day? You're saying it should also be slowly? You can get them pretty much right away. Uhm, yeah, I wouldn't, I wouldn't take it slow. I would just get them kind of, like, as much as you can.
 
-### [56:15](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=3375) review volume targets for a new address profile
+### [56:15](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=3375) Review volume targets for a new address profile
 
 How many should I aim for with a, with an address, a plumber address? Like, start off getting, like, 60 and then see. Yeah, I mean, 50. 50? Yeah, and then start, go from Yeah. Okay, we got a couple minutes. I gotta get on a call in a few minutes. Uhm, does anyone else have any questions or anything? Oh, never mind. I've got one. Uhm, yeah, what's up? Hey, what's up? So, uhm, I saw your video recently about purchasing emails and doing the reviews for yourself to get the good keywords and photos, just the higher quality reviews.
 
-### [56:48](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=3408) aged gmail review stick rate and proxies
+### [56:48](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=3408) Aged Gmail review stick rate and proxies
 
 How is that working as of now? Like, is the stick rate pretty high? I asked that exact same question. You gotta, you gotta take them. So, like I said, you gotta do one a day, but it'll stick for like, uh, like 60%. Okay. Like, word for word, I said the same thing, bro. Okay, okay. That's funny. The thing that freaked me out was, like, I'm buying an email. An email for the US, but it's not, like, particularly my area.
 
@@ -526,7 +526,7 @@ Yeah, 5 bucks for 5 GB. So it's gigabyte and we only pay for the data we use fro
 
 For the Reddit sub-community? I think the stick rate is around 80% or more. Yeah. I'll see you next time. Thank you. So for buying aged emails, you can leave multiple reviews on different GMBs. That's what you're saying, though. Just not one GMB. Uh, no, don't do that because, um, when you do that, Google is super smart. Multi, a trillion dollar company. They will track you across all your profiles and suspend all of your profiles for getting reviews, um, um, what's it called, unsportsmanlike behavior, basically.
 
-### [59:47](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=3587) google's cross-profile tracking and suspension rules
+### [59:47](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=3587) Google's cross-profile tracking and suspension rules
 
 Like, you're getting reviews or so. It's illegal, but anyways, don't do that. Only do one review, uh, per profile on one gmail, because let's just say, like you were saying, you put one review on three of your GMBs, they track that, they know you're a fake reviewer, they suspend all three of your profiles . That happened to me when I first started. Damn, okay. Yeah, so definitely don't make that mistake. Does that apply, like, if I'm doing it with different niches? Say I do one with detailing, then plumbing, then landscaping, all that? That'd be good.
 
@@ -536,14 +536,14 @@ Except, uhm, on one, another, uh, precaution to take is, uhm, every one Gmail ac
 
 Right. Even if it's a different niche. Makes sense. It was your plumbing profiles that got suspended or it was detailing? Plumbing, six of them, actually. All, uh, I, uh, what's it called? I re-got three out, if I do, using fake documents, but, yeah, I cross-tracked reviews and that's all. It was SAB? Yeah. Okay. You get into detailing? No, I got plumbing. Okay, good, good. Y'all had any luck, like, trying to pay someone to go hand out energy drinks or like- Like, ask people for reviews or anything?
 
-### [1:01:47](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=3707) recruiting help for energy drink handouts
+### [1:01:47](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=3707) Recruiting help for energy drink handouts
 
 Yeah, that's my review method. Or, well, that's the one that I've been trying to help people with. So, you said you got success though, tell me about No, I didn't. I've been trying to for like a couple weeks and I can't find anyone. You gotta find a high schooler that doesn't have a When you take them to universities and stuff, where there's high traffic, like, they're younger than the kids, so it's just, like, awkward for them.
 
 
 So and also No, I'm talking about when they're in school, like, when they're actively in school. That's what I was running in terms of detail before I found out about the, uh, AT&T. These emails and all the other methods. That's smart. Yeah. Um, but for what you're trying to do, Joseph, um, Craigslist, I'd say I got a few good ones from Craigslist. Um, Facebook Marketplace. I mean, well, just Facebook. By joining groups, you can find people. But I got good ones off Craigslist.
 
-### [1:02:54](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=3774) craigslist and marketplace for finding help
+### [1:02:54](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=3774) Craigslist and Marketplace for finding help
 
 Yeah. Did you just post it as, like, something for sale? Or did you post it as, like, a gig? No, I posted it as a brand ambassador, 14 bucks an hour, plus commission. Don't, don't copy the 14 bucks an hour. I was paying about, like, 5 bucks per view because of it. But, like, I would say in the post, like, they're getting paid hourly, plus commission. And I'd attach an image, because images are always increased conversion rate by a lot.
 
@@ -553,7 +553,7 @@ And it'd just be, like, an AI image of a guy holding candy in front of a univers
 
 But what Joseph's talking about is hire someone to stand there. Uhm, the difference is, is when you hire someone to stand there, you'll be looking at $4 per review. When you do it yourself, it'll be $0.75 per review. So, trade off awkwardness and your time for $3 less per review. That's They just, like, leave immediately. Okay. So, like, ah. It's just tough whenever you're hiring someone. I, I think from now on, I might just do it myself and just accept my fate.
 
-### [1:04:42](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=3882) sourcing and paying plumbing contractors
+### [1:04:42](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=3882) Sourcing and paying plumbing contractors
 
 Where are you guys finding these plumbing contractors? Like, for detailing, it was easy on Marketplace and Nextdoor, but plumbing, like, I'm not gonna lie, they're, they're, they're strict. They're, they're bougie. Yeah, I have the same issue. Uhm. Have you reached out to everyone on Marketplace or Facebook in your area? All the plumbers? Mostly. I'm scrolling to the bottom of the list. Actually, now, I've only gotten one guy on board. Everybody else has just kind of curved the opportunity or left me on read.
 
@@ -572,11 +572,11 @@ Because most of these guys that are on GMB know how to advertise, and even thoug
 
 Because they'll always take the lowest price. 20% markup's good. Let's find the in-between. We got a callback here. Bro, every time you turn your camera on, you just start laughing like crazy. No, because I'm doing something on the side as well. Oh, okay. Sorry. Have y'all had problems like this? Like, if you make an employer account on Indeed, because I made one like three days ago, and then I checked it today and they just like banned me from making employer accounts.
 
-### [1:08:20](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=4100) indeed and craigslist account bans
+### [1:08:20](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=4100) Indeed and Craigslist account bans
 
 Yes, bro. All of my Craigslist accounts have been shut down. They think I'm doing some fraud shit. It's, it's so weird. But, yeah. How'd you get around Just make a new one? Yeah, just make a new one. What it say, Joseph? I think I had it, I always have it, and you just need to verify. Yeah. They'll ask you to verify. What does it say? You just ban it, or it says we need to verify you, or something? Yeah, it just says it needs to verify me. It needs, like, my, like, business information and stuff.
 
-### [1:08:52](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=4132) side jobs and lifestyle tangent
+### [1:08:52](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=4132) Side jobs and lifestyle tangent
 
 Oh, yeah, just answer it, and you'll probably be approved. Okay. Yeah, that's how it works, usually. And you guys have a side, side job, still. I do. And I shouldn't, because I can be making all my money for myself. I a job within two weeks of this, but I'm a lazy b******. I mean, 4k a month is okay. I'm selling clothes. Yeah. Bro, I'm trying to get a side job. I've been so bored. What the f***? I've been so bored. Like, bro, I'm sitting on my ass all day, and like, like, I'm working, but it's like, I've got to a point where I'm like, not really working anymore, and then my girl's working at this cafe, so I handed in a resume to the guy at the cafe, and he's like, you're not f****** working here. What do you mean? You don't need it.
 
@@ -598,7 +598,7 @@ So, but yeah. Yeah. The thing about breast kills and all them is like, they're j
 
 I mean, that's what a lot of those, yeah, of course. That's why they clip money off. But yeah, like, um, like no, but he's like, his course is just getting him passive monthly income that will be there for a long time, you know? So, yeah, but yeah. Yeah, that's why that's the main reason everyone sells the course. And also, it usually always turns out to make more money than their main thing. Like, I know Brez, his main thing, like, his is the work you put in, the work you get out for his marketing agency, but like, course selling is, It's a little different.
 
-### [1:12:45](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=4365) evaluating niche competition levels
+### [1:12:45](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=4365) Evaluating niche competition levels
 
 It can run on its own. So it's, it's really, Yeah, what is it, H20? Yeah. So, Cole, uhm, I noticed earlier you said, You said that you checked your competition for plumbing and noticed it was just too much. What do you think? It's just like a, a good point where you like, all right, I got to find a new niche. Like right now I'm looking at my competition. It's about like top three. I see 400. I see 500. I see 750 and I see somebody with only a hundred, but then there's a guy with 1600 and you know, it's just kind of, that's way too high. That's high man.
 
@@ -614,7 +614,7 @@ So it's a good rule of thumb though. If you really cannot find a good niche or a
 
 Okay. Because you're, it's, Google ranks it, number one is proximity, and number, like, two is, or three is review count on how they rank your profile. So, yeah. Proximity is number one, always. That's why having address is so crucial. I just, I just need a niche that's kind of like similar to plumbing or HVAC. Because, like, like you said, I looked at other niches, like concrete and asphalt, like asphalt. Bro, they don't even have, like, 20 reviews, but I know that's a longer, a longer job, you know. Like, I want something, nothing to be picky or nothing at all.
 
-### [1:15:52](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=4552) alternate niches and get-rich-quick warning
+### [1:15:52](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=4552) Alternate niches and get-rich-quick warning
 
 Like, I'm going to get it all, but I kind of need something that's going to pay the same day, if you get what I'm saying. Electrical, uhm, like, electrical, fencing, I think electrical might, oh wait, Gokul, sorry. Why the, well, I do, like, landscaping, construction, and I had an asphalt job that paid overtime. Like, like 70 grand just to lay out a piece of asphalt. I took 10 days, no, no, no, two days to do. And then, yeah, I got paid out pretty much a week after, but it's, if you want to go into higher ticket things, you can't, you're not going to be getting that money right away.
 
@@ -627,11 +627,11 @@ Oh, and also if you're doing like where you want to get the money the same day, 
 
 I got you. So yeah, we like it or like, I mean, you didn't really do it that much though. I only did one client asphalt house and then I, I have, um, oh yeah, another piece of advice. I would get subcontractors if you're interested. If you're in a trade with like multiple, like kind of aspects like landscaping, you can have like lawn, artificial turf retaining walls. I would have one subcontractor for each individual item that like they're trained in, like, uh, for landscaping, you'll find subs that just do retaining walls that just do artificial turf.
 
-### [1:17:51](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=4671) specializing subcontractors by skill
+### [1:17:51](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=4671) Specializing subcontractors by skill
 
 And you want to bring those guys on because they're going to be the most skilled. But now I have a guy that does everything like 100%. So I kind of moved on from that. But, but yeah, um, but yeah, Asphalt's good. It's really good. I don't, there might be a lack of. Like, uh, and like, um, lead volume, like search volume for Asphalt. But like, if you do get Asphalt jobs, you're, you're going to get paid pretty well.
 
-### [1:18:16](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=4696) how cole built his subcontractor crew
+### [1:18:16](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=4696) How Cole built his subcontractor crew
 
 Okay. But like landscaping, how in the world did you get your crew for that? What do you mean? I think I'm going to get into landscaping to be honest. Cause it's either- it's between concrete, asphalt- asphalt, or landscaping. Yeah, so I- my process was pretty, like, pretty, like, complex, like I got pissed off a lot of times so I had- I would- I went onto Facebook Marketplace and I found, like, five different subcontractors that were kind of skilled in each kind of category a little bit themselves and then I kind of started giving them work and then out of nowhere, as soon as your brand name starts to kind of get out there a bit, you'll have other subcontractors other people start to reach out to you, but you have to make it so it's like, you don't want to sound like a scammy company that, like, you know, you can kind of tell if a company is like, oh, this guy's like not legit, right?
 
@@ -647,14 +647,14 @@ Um, so if you are like in the, in the area, if that'd be a problem, cause first 
 
 Just don't let them run the company for you. You're kind of, you're the boss. You're the one who's giving them work. You're the one that's like paying for them to feed their family. So you kind of like own the shit. Yep. You don't want to like be b****** around. All right. My phone's at three. So last thing, would it be a good idea to have a hiring or like, uh, if you want to be a part of the crew area on my website for people to sign up on or whatever?
 
-### [1:20:47](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=4847) website investment and hiring page
+### [1:20:47](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=4847) Website investment and hiring page
 
 Or something like that, possibly, um, actually, no, that just looked very unprofessional and they'll just call you anyway. Forget it. Yeah, no, I'll say like, I wouldn't get into the thing. I don't know what you're in, but like for me, landscaping, for me, I do not want to hire just one-off people. I hire like massive already established crews. So I don't know if it's for plumbing or you can hire one person. I mean, that might be, that might be something you want to get up there. Um, oh, and then also pay, I would recommend paying for a very expensive one.
 
 
 High quality website. Like I just paid five grand for my website to be built. Um, it converts like 30% more than some, um, other website. And you can either pay a guy on Fiverr, Upwork or whatever to do it for you. But I had my marketing agency build it out for me. Uhm, and then, yeah, like, I, I just took a massive photo with a bunch of team members, I have no clue who are. I have 40 people just, like, beside me, everyone's just, like, behind me as I have a photo on the website showing the crew.
 
-### [1:22:07](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=4927) subcontractor payment and tracking structure
+### [1:22:07](https://www.loom.com/share/92f78b7b1c0e483792e88f68b5c04277?t=4927) Subcontractor payment and tracking structure
 
 But, yeah. Oh, nice. Yeah, I mean, again, like, I kinda got lucky with the whole thing, I'm not gonna lie. But you'll find people on, just go on the Facebook marketplace and just search up for landscaping or whatever niche you're in, landscaping services. Most of those guys are, are the ones that you're looking Um, and that's all coming from one subcontractor, who, he kinda does what I do now. He makes all the hirings for new guys, so, I mean, I don't really do anything anymore, but, like, um. I kinda just got, it's kinda just like, worked itself out.
 

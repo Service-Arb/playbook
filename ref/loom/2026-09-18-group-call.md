@@ -24,14 +24,14 @@ Eric runs the weekly group call. The room reports the week — Ryan pulled over 
 - Valeriy's objection: the ordinary apps all go through the mock-location API, which is visible as spoofed.
 - Without rooting, plugging the phone into a computer and spoofing from there also works, and is a pain.
 
-### Injecting a real video into the verification flow 6:33
+### Injecting a real video into the verification flow 6:57
 
 - A real-life video injected into the verification flow drew none of the AI-detection errors — Google catches the AI *video*, not the injection.
 - Eric paid people on Fiverr to edit the words and signs in the video; his went through on service-area profiles but he expects a storefront to hold up better.
 - One pre-recorded video passed around the whole group is the obvious failure mode, and was raised as one.
 - Valeriy offered to put the verification-video system on github with a database of recordings behind it.
 
-### Hiring a VA, and what to hand them 8:45
+### Hiring a VA, and what to hand them 8:38
 
 - Route the CallRail number to an OpenPhone/Quo number; the VA logs into the Quo account from their computer and takes calls and texts there.
 - Eric's CRM is a google sheet and a google calendar. He tried GoHighLevel and found it made the process harder for everyone.
@@ -40,28 +40,28 @@ Eric runs the weekly group call. The room reports the week — Ryan pulled over 
 - Hire as soon as there is call volume, and at the latest once the business cash-flows — training them before the volume arrives is the point.
 - 8am–3pm cover comes out under a grand a month; expect around 50% call-to-booked in plumbing.
 
-### Paying a contractor hourly instead of per job 12:44
+### Paying a contractor hourly instead of per job 12:33
 
 - Vlad in the group pays his plumbers hourly — about $40/hour plus a 15% discount — and holds 50-55% margins doing it.
 - He also hired a Canadian assistant to do the quoting, rather than a VA.
 - Eric never did fulfilment this way; he pushed it out of his head and stayed on lead gen.
 - Quebec law is why one member will not take the payments himself — his sites are technically illegal as advertising without an NEQ.
 
-### What a physical address verification fails on 24:39
+### What a physical address verification fails on 24:46
 
 - Signage is what nearly everyone fails on. Photograph the sign before recording and ask ChatGPT whether it reads as permanent — Donovan's trick, and it has helped a lot of people.
 - Show yourself at the location, show the CRM on a device, show yourself unlocking the door. A staff-only sticker may help.
 - Approval is partly luck: the same video passes once and fails once. Set up three profiles while you are already there and shoot three videos.
 - The same phone number across them is fine; the business name has to differ at least slightly.
 
-### Running the review stand 26:56
+### Running the review stand 27:08
 
 - Ryan does it himself rather than paying someone — easier that way. Outside the campus, not inside it, and a bus stop near the entrance is the best spot.
 - Tuesday to Thursday, between 12 and 5. High schools work too, at 2:20-2:25 when they let out, table placed between the school and the bus stop.
 - Two sheets of paper saying free drinks, Gatorade on the table, and talk to the guys — the women mostly walk past.
 - One kid started working the queue for him unprompted.
 
-### Reviews off aged gmails, and the rate they stick 29:17
+### Reviews off aged gmails, and the rate they stick 29:16
 
 - Donovan reports somebody claiming 100+ reviews a day through a VPN with 80% sticking. Eric expects those to be deleted; only a week has passed.
 - Eric's own number: aged gmails only held up at one review a day, and then about 80% stuck indefinitely.
@@ -69,14 +69,14 @@ Eric runs the weekly group call. The room reports the week — Ryan pulled over 
 - 300 in a day did get a profile suspended. Under that, only the reviews drop.
 - (!) Getting a one-star first and building on top of it seems to slow the deletions — Eric's anecdote, seen twice, too early to lean on.
 
-### Getting strangers to create the profile 31:23
+### Getting strangers to create the profile 31:22
 
 - Cleaning profiles instant-verify off a good gmail, every time.
 - Out of friends to ask: post on facebook marketplace, $25 for a two-minute job, and whoever takes it brings friends and family for more.
 - Ryan got a hundred-plus detailing profiles by walking up to people in a mall and asking. Only works for the instant-verified ones.
 - Three to five profiles per gmail at most when other people are creating them and adding you as owner.
 
-### Appealing a suspended profile, and a banned gmail 33:35
+### Appealing a suspended profile, and a banned gmail 33:42
 
 - A profile that is suspended but still ranking and still taking calls is one Eric would appeal anyway — appealing does not hurt.
 - (!) It can: one member's appeal took the entire gmail down. He won that appeal back in two days, and then had to re-appeal every profile on it individually.
@@ -104,38 +104,38 @@ Eric runs the weekly group call. The room reports the week — Ryan pulled over 
 - Local people are the exception — volume there does not suspend anything.
 - The sequence he recommends: grind local reviews at the start, then upkeep slowly with aged gmails.
 
-### Which listings stay up 51:30
+### Which listings stay up 51:38
 
 - Everything video-verified has stuck for Eric, storage unit or otherwise, unless the whole account took a suspension.
 - There is no point waiting three weeks before a live video — fail a video and go straight to the live one.
 - A suspended *account* leaves the listings up and taking calls, but you cannot edit or optimise them until it is back.
 
-### What the live video agent asks for 54:43
+### What the live video agent asks for 54:58
 
 - The agent wants permanent signage outside. Told the building holds several businesses, he asked for a landlord's letter saying exterior signage is not allowed.
 - He also wants the vehicles and the signage on them, and signage inside.
 - A logo in a bolted picture frame failed — they said the paper could be slipped out.
 - Eric has seen terrible videos pass, so submit a couple of live tickets and use whichever one lands.
 
-### Eating a contractor's bad job 59:13
+### Eating a contractor's bad job 59:27
 
 - A contractor demanded payment the night of the job, got it, and the work turned out bad. The client is now refusing to pay.
 - At $550, Eric's answer is to eat it. Sending a second contractor puts you negative anyway.
 - Customers normally do pay on site; this one was a property manager, and the job was picked on lowest price.
 
-### Screenshotting every review, to appeal the ones that vanish 1:02:27
+### Screenshotting every review, to appeal the ones that vanish 1:02:07
 
 - The idea: screenshot every review on every profile, and once a month diff against what is live and appeal the missing ones.
 - Playwright hit what looks like bot detection while scrolling the page.
 - Valeriy's read is that a headless browser is right and an API is not, and that the fix depends on what specifically is being detected.
 
-### Getting a model past its guardrails 1:04:34
+### Getting a model past its guardrails 1:04:45
 
 - Start the conversation on a weaker model that will help, then switch to the strong one — it is more likely to keep going.
 - Frame it as understanding what the bad guys do, or as reconstructing your own lost app. Works about 80% of the time.
 - Running an open-weight model locally is the wrong trade: inference you buy is subsidised to roughly a tenth of what your own hardware costs.
 
-### Where the coaching call transcripts already live 1:06:51
+### Where the coaching call transcripts already live 1:06:50
 
 - The skool community's own coaching-calls tab already holds each loom, and each loom already has its transcript and timestamps on the right-hand side.
 - Reading the transcript and jumping to the interesting second is how one member found several of the methods he uses.
@@ -157,18 +157,18 @@ Eric runs the weekly group call. The room reports the week — Ryan pulled over 
 - So is leaving reviews anywhere at all — location does not matter for the local guide level.
 - Email warmup tools are not the same thing: Google wants activity in Maps, a bought domain, upgraded storage. Cheapest Workspace plan per email, paid with a Privacy.com card so the billing details differ.
 
-### Getting reviews when you do not live there 1:17:33
+### Getting reviews when you do not live there 1:17:27
 
 - What works is local people in a physical space, and the problem is finding someone willing to run the stand — table, chair, drinks, and no car.
 - A craigslist post in Dallas got ten replies and nobody who showed up.
 - The idea floated: get into an existing group with a common interest — a school group chat, a car club, a facebook group — and ask there. Churches and church groups were named as working well.
 
-### Verifying by volume 1:20:37
+### Verifying by volume 1:21:01
 
 - Elliot used to rent real office space in the US from South East Asia, take the lease, hire craigslist photographers to put logos up and shoot the video. Twelve verified, down to five after suspensions.
 - The member in the UK does it purely on volume: submit enough and something goes through.
 
-### The cleaning niche, from thirteen years in it 1:23:39
+### The cleaning niche, from thirteen years in it 1:23:48
 
 - Ilya has run a house-cleaning business for thirteen years, seven of them remote, and has not spoken to a cleaner or a customer in five.
 - Google LSA is over for it: $20 a call and half signing up has become $60-70 a call and one in ten recurring.
@@ -177,13 +177,13 @@ Eric runs the weekly group call. The room reports the week — Ryan pulled over 
 - It is operations-heavy: complaints, callouts, ~$500/month in contractor insurance, workers' comp, broken and stolen items, a flooded apartment and a lawsuit.
 - Starting from nothing he would pick something higher-ticket — HVAC or plumbing — for the same GMB setup cost.
 
-### Generating the brief documents 1:27:07
+### Generating the brief documents 1:26:42
 
 - Valeriy has a repo and a code skill that takes an address and a company name and generates the brief documents — branding, business cards, neighbouring-business filler.
 - They are not valid, they look valid, and nobody checks.
 - Send him documents that are known to work and he will add them.
 
-### Filing a DBA to hold a keyword-stuffed name 1:29:46
+### Filing a DBA to hold a keyword-stuffed name 1:29:55
 
 - Nobody in the group files one. A DBA registered with the exact keyword-stuffed name is how the profiles ranking with absurd names get away with it.
 - It also helps with reinstatements.
@@ -197,7 +197,7 @@ Eric runs the weekly group call. The room reports the week — Ryan pulled over 
 - A bad proxy is worse than a VPN: there are many reasons to have a VPN and only one to have a burnt proxy. Residential, from a small seller, not widely circulated.
 - Two or three reviews a week is what one member is doing by hand while he watches what sticks.
 
-### A fully AI video against an edited real one 1:39:45
+### A fully AI video against an edited real one 1:39:33
 
 - Fully AI is out — the detection is on the noise AI video carries, the same signal YouTube uses.
 - An edited real video is the open path, and one member's stopped working last week after a month of going through.
@@ -210,13 +210,13 @@ Eric runs the weekly group call. The room reports the week — Ryan pulled over 
 - Post under miscellaneous — $25-30/hour, a picture, a line about it being for students. One member in Canada had thirty people calling him.
 - Facebook business managers are bought the same way; Jordan has a supplier, Accounts Market is the fallback.
 
-### Which niche to pick 1:46:05
+### Which niche to pick 1:45:47
 
 - One member is spread across concrete, plumbers, drywall and landscaping to see which takes off, and is blocked on new plumbing GMBs until the video problem is solved.
 - Eric's advice to Valeriy was plumbing, plus one or two cleaning profiles in his own city to work out remote reviews and pricing.
 - Cleaning is recurring and operations-heavy; plumbing and HVAC are one-off and higher ticket for the same setup work.
 
-### Selling the calls you cannot fulfil 1:51:41
+### Selling the calls you cannot fulfil 1:51:36
 
 - Calls for services you do not offer — carpet cleaning off a house-cleaning profile — can be sold rather than fulfilled.
 - Ilya routes them to a tracking number with an affiliate network, `leadsmartinc.com`, at $5-10 a call.
