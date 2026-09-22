@@ -40,7 +40,7 @@ deleting it.
 ```
 ref/
 ├── README.md                     # the source list — every source, and which of them a puller reaches
-├── loom/<date>-<title>.md        # call recordings: loom's summary, its chapters, then one line per phrase
+├── loom/<date>-<title>.md        # call recordings: summary, then the transcript under its chapters
 ├── research/<id>.md              # chatgpt shares, one `## user` / `## assistant` section per turn
 ├── youtube/<id>.md               # channel videos, and `<id>/` the frames it cites
 └── skool_gmbpp/                  # the classroom, via `social_networks`
@@ -52,6 +52,37 @@ Two things a capture cannot state about itself are written beside it instead, si
 capture is never edited: **how far behind upstream it is**, in `skool_gmbpp/README.md`,
 rewritten every run with the day of the run; and **what a source says that this tree
 has no capture of**, printed by the puller for `ref/README.md` to be told about by hand.
+
+### Loom captures
+
+```md
+# <title>
+
+- source: <https://www.loom.com/share/<id>>
+- recorded: · duration: · transcribed by: · read by: · pulled by:
+
+## summary
+
+<loom's, verbatim>
+
+## transcript
+
+### [02:39](https://www.loom.com/share/<id>?t=159) Location Spoofing Strategy
+
+plain prose, in paragraphs, no stamps in it
+```
+
+- the transcript covers the whole recording. Loom's is taken when it reaches the end; otherwise
+  the puller transcribes the audio itself, and `transcribed by:` says which, and how far loom got
+  — and loom's summary and chapters go with its transcript, since they only read as far as it did
+- chapters are `###` headers inside `## transcript`, never a list of their own. The header is the
+  only timestamp — a citation links the chapter a claim sits in
+- nothing sits above the first header
+- a recording loom never chaptered gets an untitled header per paragraph instead — the times
+  `/loom-digest` needs to place chapters. It titles the ones that open a chapter and deletes the rest
+
+`scripts/loom-pull.rs` checks every capture on disk against this on each run, and `--check` runs only
+that; a hook runs it after any agent edit under `ref/loom/`.
 
 The one reading an agent may put in `ref/` is what the source's own platform would have:
 a loom recording loom never summarised gets a summary from `/loom-digest`, which says so
@@ -110,7 +141,7 @@ grows by hand.
 
 ```
 scripts/
-├── loom-pull.rs       # share page → its summary and chapters, and the signed transcript CDN
+├── loom-pull.rs       # share page → summary, chapters, and loom's transcript, or whisper's where loom's stops short
 ├── chatgpt-pull.rs    # headless chromium → the DOM's turns
 ├── yt-pull.rs         # yt-dlp → captions in citable blocks, chapters, frames, description
 └── skool-pull.rs      # recon classroom → the course tree, module by module and lesson by lesson
