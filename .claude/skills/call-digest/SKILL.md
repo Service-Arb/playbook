@@ -28,7 +28,7 @@ Do one file per run. These are long; a run that batches them writes worse summar
 ## `## summary`
 
 Goes between the header and `## transcript`. A paragraph, then a `### <name> <stamp>` section per
-topic with bullets under it — `ref/loom/2026-08-20-setupcall-with-derek.md` is the shape. The stamp
+topic with bullets under it — `ref/loom/2026-05-30-gmb-passive-profits-group-call.md` is the shape. The stamp
 drops the leading zero: `0:00`, `3:34`, `1:02:27`.
 
 A one-recorder video gets a first-person paragraph (`In this video, I walk you through…`); a call
