@@ -492,6 +492,13 @@ fn render(platform: Platform, id: &str, mut r: Recording) -> (String, String, bo
 		r.chapters = None;
 	}
 
+	// loom chapters a long call's first hour or so and stops; a reading that stops short is no reading
+	if r.chapters.as_ref().is_some_and(|c| c.last().is_none_or(|(t, _)| (*t as f64) < r.duration - TAIL_SECS)) {
+		eprintln!("  {}'s chapters stop short of the end — leaving its reading to `/call-digest`", platform.name());
+		r.summary = None;
+		r.chapters = None;
+	}
+
 	let missing: Vec<&str> = [("summary", r.summary.is_none()), ("chapters", r.chapters.is_none())]
 		.iter()
 		.filter(|(_, m)| *m)
