@@ -81,6 +81,9 @@ plain prose, in paragraphs, no stamps in it
 - chapters are `###` headers inside `## transcript`, never a list of their own. The header is the
   only timestamp — a citation links the chapter a claim sits in
 - nothing sits above the first header
+- paragraphs and headers are a blank line apart
+- a digested summary has a `### <topic> <stamp>` per chapter, same names and times; a platform's own
+  summary is verbatim and held to nothing
 - speaker turns, where the platform names speakers, are paragraphs opening `**<speaker>**:`
 - a recording nobody chaptered gets an untitled header per paragraph instead — the times
   `/call-digest` needs to place chapters. It titles the ones that open a chapter and deletes the rest
