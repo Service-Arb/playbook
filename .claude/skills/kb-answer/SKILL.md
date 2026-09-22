@@ -28,10 +28,10 @@ The answer usually gets pasted into a chat with someone who has no access to thi
 2. Eric said it
 3. a gmbpp member tested it
 4. a gmbpp member claimed it
-5. a gmbpp member heard or thought of it; a member of the other group
-   (skool.com/20kmodropservicingblueprint) tested it
-6. a member of the other group claimed it
-7. a member of the other group heard or thought of it
+5. a gmbpp member heard or thought of it; a cheap group
+   (skool.com/20kmodropservicingblueprint) member tested it
+6. a cheap group member claimed it
+7. a cheap group member heard or thought of it
 
 When a claim has more than one source, cite the highest one first. The others go under it as
 secondary, if at all.
