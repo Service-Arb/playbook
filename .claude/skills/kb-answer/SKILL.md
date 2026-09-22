@@ -21,3 +21,14 @@ The answer usually gets pasted into a chat with someone who has no access to thi
 - cite a `structured/` or `ref/` path only for what has nothing public under it, like the human's own
   notes, and say that it is internal
 - a claim with no source gets no citation. Say where it came from instead ("Eric, unrecorded")
+
+## Source reliability
+
+1. skool course material
+2. Eric said it
+3. someone tested it
+4. someone claimed it
+5. someone heard or thought of it
+
+When a claim has more than one source, cite the highest one first. The others go under it as
+secondary, if at all.
