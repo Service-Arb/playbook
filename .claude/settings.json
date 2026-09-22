@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "case \"$(jq -r .tool_input.file_path)\" in */ref/loom/*|*/ref/fathom/*) cd \"$CLAUDE_PROJECT_DIR\" && scripts/call-pull.rs --check >&2 2>&1 || exit 2;; esac"
+          }
+        ]
+      }
+    ]
+  }
+}

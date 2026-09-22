@@ -1,26 +1,26 @@
 ---
-name: loom-digest
-description: Fill in the summary or chapters loom never wrote for a capture in ref/loom/. Use when loom-pull.rs says a recording was left unread, when a ref/loom/ file's `read by:` line says `nothing yet`, or when asked to summarise / chapter a loom recording in this repo.
+name: call-digest
+description: Fill in the summary or chapters the platform never wrote for a call capture in ref/loom/ or ref/fathom/. Use when call-pull.rs says a recording was left unread, when a capture's `read by:` line says `nothing yet`, or when asked to summarise / chapter a recording in this repo.
 ---
 
-# loom-digest
+# call-digest
 
-`scripts/loom-pull.rs` writes what loom's own AI made of a recording, and always a full transcript.
-Loom does not always write a summary or chapters. A capture missing them says so:
+`scripts/call-pull.rs` writes what the platform's own AI made of a recording, and always a full
+transcript. The platform does not always write a summary or chapters. A capture missing them says so:
 
 ```md
-- read by: nothing yet — loom wrote no summary and no chapters, and `/loom-digest` writes them here
+- read by: nothing yet — loom wrote no summary and no chapters, and `/call-digest` writes them here
 ```
 
 Write what is missing, in loom's shape, so the only thing that tells a reader which recordings you
-read is that one line. The capture's shape is "Loom captures" in `docs/ARCHITECTURE.md`.
+read is that one line. The capture's shape is "Call captures" in `docs/ARCHITECTURE.md`.
 
 ## Pick the target
 
 With a path argument, that file. Without one:
 
 ```bash
-grep -l 'read by: nothing yet' ref/loom/*.md
+grep -l 'read by: nothing yet' ref/loom/*.md ref/fathom/*.md
 ```
 
 Do one file per run. These are long; a run that batches them writes worse summaries.
@@ -52,12 +52,12 @@ The summary's `###` topics and the chapters are the same list, with the same nam
 ## Then rewrite the header line
 
 ```md
-- read by: `/loom-digest`, <today's date>
+- read by: `/call-digest`, <today's date>
 ```
 
-If you did not write all of it, say what you wrote: ``- read by: `/loom-digest`, 2026-09-18 — chapters only``.
+If you did not write all of it, say what you wrote: ``- read by: `/call-digest`, 2026-09-18 — chapters only``.
 
-Run `scripts/loom-pull.rs --check`. A hook runs it after every edit here as well.
+Run `scripts/call-pull.rs --check`. A hook runs it after every edit here as well.
 
 ## What not to do
 
@@ -66,5 +66,5 @@ Run `scripts/loom-pull.rs --check`. A hook runs it after every edit here as well
 - do not write a claim the recording does not make. A reading of a source that the source does not
   support poisons everything downstream of it
 - do not promote anything into `structured/`. That is a separate step, and a human's
-- a re-pull (deleting the file and running `loom-pull.rs`) throws your work away. That is the right
-  trade: loom having caught up is worth more than what you wrote
+- a re-pull (deleting the file and running `call-pull.rs`) throws your work away. That is the right
+  trade: the platform having caught up is worth more than what you wrote
