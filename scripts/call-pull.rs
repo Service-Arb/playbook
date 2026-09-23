@@ -20,10 +20,12 @@ ureq = "3"
 //! loom page carries a *signed* URL for its transcript CDN; the signature expires, which is why it is
 //! read out of the page on every run rather than kept.
 //!
-//! A recording its platform never transcribed is transcribed here with whisper.
+//! The recording itself is kept beside its capture, as `<capture>/recording.<ext>`, and a capture
+//! found without it gets it fetched. A recording its platform never transcribed is transcribed here
+//! with whisper, from that same file.
 
 use std::{
-	collections::{BTreeMap, BTreeSet},
+	collections::BTreeMap,
 	path::{Path, PathBuf},
 	process::Command,
 };
@@ -40,15 +42,23 @@ const PARAGRAPH_WORDS: usize = 80;
 enum Platform {
 	Loom,
 	Fathom,
+	/// files in a shared folder; the folder is what gets registered, and what names and dates its files
+	Drive,
+	/// players that publish neither a transcript nor a title worth the name; the registry line names them
+	Vimeo,
+	Vocaroo,
 }
 
 impl Platform {
-	const ALL: [Platform; 2] = [Platform::Loom, Platform::Fathom];
+	const ALL: [Platform; 5] = [Platform::Loom, Platform::Fathom, Platform::Drive, Platform::Vimeo, Platform::Vocaroo];
 
 	fn share(self) -> &'static str {
 		match self {
 			Platform::Loom => "https://www.loom.com/share/",
 			Platform::Fathom => "https://fathom.video/share/",
+			Platform::Drive => "https://drive.google.com/file/d/",
+			Platform::Vimeo => "https://player.vimeo.com/video/",
+			Platform::Vocaroo => "https://vocaroo.com/",
 		}
 	}
 
@@ -56,6 +66,9 @@ impl Platform {
 		match self {
 			Platform::Loom => "ref/loom",
 			Platform::Fathom => "ref/fathom",
+			Platform::Drive => "ref/drive",
+			Platform::Vimeo => "ref/vimeo",
+			Platform::Vocaroo => "ref/vocaroo",
 		}
 	}
 
@@ -63,6 +76,18 @@ impl Platform {
 		match self {
 			Platform::Loom => "loom",
 			Platform::Fathom => "fathom",
+			Platform::Drive => "drive",
+			Platform::Vimeo => "vimeo",
+			Platform::Vocaroo => "vocaroo",
+		}
+	}
+
+	/// What goes between a share link and the second it seeks to.
+	fn seek(self) -> &'static str {
+		match self {
+			Platform::Vimeo => "#t=",
+			// vocaroo seeks to nothing and ignores it, which leaves the stamp still reading right
+			Platform::Loom | Platform::Fathom | Platform::Drive | Platform::Vocaroo => "?t=",
 		}
 	}
 }
@@ -91,7 +116,20 @@ struct Recording {
 	phrases: Vec<(f64, String)>,
 	turns: bool,
 	transcribed_by: String,
+	/// where the recording sits, when that is not its own share page
+	within: Option<String>,
 }
+
+/// What something other than the recording's own page says of it — a drive folder's listing, or the
+/// registry line — for recordings whose page says neither what they are nor when.
+struct Listed {
+	title: String,
+	/// a date, then what kind of date it is
+	recorded: String,
+	within: Option<String>,
+}
+
+const DRIVE_FOLDERS: [&str; 2] = ["https://drive.google.com/drive/folders/", "https://drive.google.com/drive/u/0/folders/"];
 
 fn main() {
 	let root = repo_root();
@@ -99,12 +137,15 @@ fn main() {
 	let have = captured(&root);
 	if args.iter().any(|a| a == "--check") {
 		assert_eq!(args.len(), 1, "--check takes nothing else");
-		eprintln!("{} call captures hold their shape", have.len());
+		for path in have.values() {
+			assert!(recording_in(&path.with_extension("")).is_some(), "{}: the recording is not kept beside it — run call-pull.rs to fetch it", path.display());
+		}
+		eprintln!("{} call captures hold their shape, each with its recording", have.len());
 		return;
 	}
-	let wanted: BTreeSet<Rec> = match args.is_empty() {
+	let wanted: BTreeMap<Rec, Option<Listed>> = match args.is_empty() {
 		true => links_in(&root.join("ref/README.md")),
-		false => args.iter().map(|a| rec_of(a)).collect(),
+		false => args.iter().map(|a| (rec_of(a), None)).collect(),
 	};
 	if wanted.is_empty() {
 		eprintln!("no recording links in ref/README.md and none given — nothing to pull");
@@ -112,24 +153,50 @@ fn main() {
 	}
 
 	let mut undigested = Vec::new();
-	for rec in &wanted {
+	for (rec, listed) in &wanted {
 		let (platform, id) = rec;
+		let url = format!("{}{id}", platform.share());
 		if let Some(had) = have.get(rec) {
-			eprintln!("have {id} — {}", had.display());
+			// a new file beside the capture, which is left as it is
+			let kept = had.with_extension("");
+			match recording_in(&kept) {
+				Some(_) => eprintln!("have {id} — {}", had.display()),
+				None => {
+					eprintln!("fetching the recording of {}", had.display());
+					fetch(&url, &kept);
+				}
+			}
 			continue;
 		}
 		eprintln!("pulling {} {id}", platform.name());
-		let page = get(&format!("{}{id}", platform.share()));
-		let recording = match platform {
-			Platform::Loom => loom(id, &page),
-			Platform::Fathom => fathom(&page),
+		// named only once the recording is read, so it waits outside the tree till then
+		let staged = root.join("tmp/call-pull").join(id);
+		let media = fetch(&url, &staged);
+		let mut recording = match platform {
+			Platform::Loom => loom(id, &get(&url)),
+			Platform::Fathom => fathom(&get(&url)),
+			Platform::Drive | Platform::Vimeo | Platform::Vocaroo => {
+				let listed = listed.as_ref().unwrap_or_else(|| panic!("{id}: a {} recording is pulled through what ref/README.md says of it", platform.name()));
+				heard(*platform, listed, &media)
+			}
 		};
+		if recording.phrases.is_empty() && matches!(platform, Platform::Loom | Platform::Fathom) {
+			eprintln!("  {} transcribed nothing", platform.name());
+			recording.transcribed_by = format!("whisper-cpp `{}` — {} transcribed nothing", model_name(), platform.name());
+			recording.phrases = whisper_phrases(&media).0;
+			assert!(!recording.phrases.is_empty(), "{id}: whisper heard nothing either");
+			recording.turns = false;
+			// the platform's reading, if any, is of a transcript it never produced
+			recording.summary = None;
+			recording.chapters = None;
+		}
 		let (name, doc, digested) = render(*platform, id, recording);
 		check(&name, &doc);
 		let dir = root.join(platform.dir());
 		std::fs::create_dir_all(&dir).unwrap_or_else(|e| panic!("creating {}: {e}", dir.display()));
 		let out = dir.join(&name);
 		assert!(!out.exists(), "{} is taken, and not by {id} — two recordings share a day and a title", out.display());
+		std::fs::rename(&staged, out.with_extension("")).unwrap_or_else(|e| panic!("moving {} beside {}: {e}", staged.display(), out.display()));
 		std::fs::write(&out, doc).unwrap_or_else(|e| panic!("writing {}: {e}", out.display()));
 		println!("{}", out.display());
 		if !digested {
@@ -172,6 +239,10 @@ fn captured(root: &Path) -> BTreeMap<Rec, PathBuf> {
 		//LOOP: bounded by the number of files in a finite directory
 		for entry in std::fs::read_dir(&dir).unwrap_or_else(|e| panic!("reading {}: {e}", dir.display())) {
 			let path = entry.expect("a directory entry is readable").path();
+			if path.is_dir() {
+				assert!(path.with_extension("md").exists(), "{} sits beside no capture", path.display());
+				continue;
+			}
 			let text = std::fs::read_to_string(&path).unwrap_or_else(|e| panic!("reading {}: {e}", path.display()));
 			let rec = check(&path.display().to_string(), &text);
 			verbatim(root, &path, &text);
@@ -219,7 +290,7 @@ fn check(name: &str, text: &str) -> Rec {
 	};
 	let (platform, id) = rec_of(field("source").trim_start_matches('<').trim_end_matches('>'));
 	let duration = secs(field("duration"));
-	field("transcribed by");
+	let silent = field("transcribed by").ends_with("— nobody speaks");
 	let read_by = field("read by");
 	let unchaptered = read_by.contains("no chapters");
 
@@ -233,7 +304,7 @@ fn check(name: &str, text: &str) -> Rec {
 		panic!("{name}: `{}` runs straight into the next line — paragraphs and headers are a blank line apart", w[0]);
 	}
 
-	let link = format!("]({}{id}?t=", platform.share());
+	let link = format!("]({}{id}{}", platform.share(), platform.seek());
 	let mut chapters = Vec::new();
 	let mut last = None;
 	let mut first = true;
@@ -255,7 +326,7 @@ fn check(name: &str, text: &str) -> Rec {
 		last = Some(t);
 		chapters.push((t, title.trim().to_string()));
 	}
-	assert!(!first, "{name}: the transcript is empty");
+	assert_eq!(first, silent, "{name}: a transcript is empty exactly when `transcribed by:` ends `— nobody speaks`");
 
 	// a platform's own summary is verbatim and need not agree with its chapters; ours has to
 	if read_by.starts_with("`/") {
@@ -277,17 +348,140 @@ fn check(name: &str, text: &str) -> Rec {
 /// The registry is `ref/README.md` and nothing else — a capture quotes its own source URL, and a
 /// transcript quotes every link that was said out loud, so scanning the tree would make the
 /// pullers feed on their own output.
-fn links_in(readme: &Path) -> BTreeSet<Rec> {
+fn links_in(readme: &Path) -> BTreeMap<Rec, Option<Listed>> {
 	let text = std::fs::read_to_string(readme).unwrap_or_else(|e| panic!("reading {}: {e}", readme.display()));
-	let mut found = BTreeSet::new();
+	let link_at = |at: usize| text[at..].split_whitespace().next().expect("split yields at least once").trim_end_matches([')', ']', ',', '.', '"', '`', '>']);
+	let mut found = BTreeMap::new();
 	for platform in Platform::ALL {
 		//LOOP: bounded by the number of occurrences in a finite file
 		for (at, _) in text.match_indices(platform.share()) {
-			let link = text[at..].split_whitespace().next().expect("split yields at least once");
-			found.insert(rec_of(link.trim_end_matches([')', ']', ',', '.', '"', '`', '>'])));
+			let rec = rec_of(link_at(at));
+			let listed = match platform {
+				Platform::Loom | Platform::Fathom | Platform::Drive => None,
+				Platform::Vimeo | Platform::Vocaroo => Some(registered(&text, at, &rec)),
+			};
+			found.insert(rec, listed);
+		}
+	}
+	for prefix in DRIVE_FOLDERS {
+		//LOOP: bounded by the number of occurrences in a finite file
+		for (at, _) in text.match_indices(prefix) {
+			let folder = link_at(at)[prefix.len()..].split(['?', '#', '/']).next().expect("split yields at least once");
+			for (id, listed) in drive_folder(folder) {
+				found.insert((Platform::Drive, id), Some(listed));
+			}
 		}
 	}
 	found
+}
+
+/// A recording as its registry line has it: `- [<date>](<url>) — <what it is>`. The date is the day
+/// the link was found, unless the host itself publishes one.
+fn registered(text: &str, at: usize, (platform, id): &Rec) -> Listed {
+	let line = text[..at].rsplit('\n').next().expect("rsplit yields at least once").to_string() + text[at..].split('\n').next().expect("split yields at least once");
+	let shape = || panic!("register {} links as `- [<date>](<url>) — <what it is>`, not `{line}`", platform.name());
+	let date = line.split_once("- [").unwrap_or_else(shape).1.split(']').next().expect("split yields at least once");
+	let title = line.split_once(") — ").unwrap_or_else(shape).1.trim();
+	let json = Command::new("yt-dlp").args(["-q", "--no-warnings", "-J"]).arg(format!("{}{id}", platform.share())).output().expect("yt-dlp runs");
+	assert!(json.status.success(), "yt-dlp could not read {id}: {}", String::from_utf8_lossy(&json.stderr));
+	let meta: serde_json::Value = serde_json::from_slice(&json.stdout).expect("yt-dlp -J prints json");
+	let recorded = match meta["upload_date"].as_str() {
+		Some(d) => format!("{}-{}-{} — uploaded, as {} has it", &d[..4], &d[4..6], &d[6..], platform.name()),
+		None => format!("{date} — first seen, as the registry has it; {} states no date", platform.name()),
+	};
+	Listed { title: title.to_string(), recorded, within: None }
+}
+
+/// A shared folder's recordings, read off the embeddable view drive serves without a session. What
+/// is not a recording is printed for the registry, the way any link a puller finds is.
+fn drive_folder(folder: &str) -> Vec<(String, Listed)> {
+	let url = format!("https://drive.google.com/drive/folders/{folder}");
+	let page = get(&format!("https://drive.google.com/embeddedfolderview?id={folder}"));
+	let unescape = |s: &str| s.replace("&amp;", "&").replace("&#39;", "'").replace("&quot;", "\"").replace("&lt;", "<").replace("&gt;", ">");
+	let folder_title = unescape(between(&page, "<title>", '<', "the folder's title").trim());
+	let mut out = Vec::new();
+	//LOOP: bounded by the entries of a finite page
+	for entry in page.split("<div class=\"flip-entry\" id=\"entry-").skip(1) {
+		let id = entry.split('"').next().expect("split yields at least once").to_string();
+		let mime = between(entry, "/type/", '"', "a file's type");
+		let title = unescape(between(entry, "flip-entry-title\">", '<', "a file's title").trim());
+		let modified = between(entry, "flip-entry-last-modified\"><div>", '<', "a file's date");
+		if !(mime.starts_with("audio/") || mime.starts_with("video/")) {
+			eprintln!("not a recording, not pulled — {folder_title} / {title} ({mime}): https://drive.google.com/file/d/{id}");
+			continue;
+		}
+		out.push((id, Listed {
+			title,
+			recorded: format!("{} — last modified on drive, which records no other date", drive_date(&modified)),
+			within: Some(format!("<{url}> — {folder_title}")),
+		}));
+	}
+	assert_eq!(page.matches("flip-entry-title").count(), page.matches("class=\"flip-entry\" id=").count(), "{folder}: drive listed entries this did not read");
+	out
+}
+
+/// Drive writes a date as `11/23/25`, drops the year for this one (`Mar 12`), and gives only a time
+/// for today.
+fn drive_date(shown: &str) -> String {
+	let today = String::from_utf8(Command::new("date").arg("+%F").output().expect("date runs").stdout).expect("date prints ascii");
+	let year = &today[..4];
+	const MONTHS: [&str; 12] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+	let num = |s: &str| s.parse::<u32>().unwrap_or_else(|e| panic!("drive wrote `{shown}` as a date: {e}"));
+	match shown.split(['/', ' ']).collect::<Vec<_>>()[..] {
+		[m, d, y] if y.len() == 2 => format!("20{y}-{:02}-{:02}", num(m), num(d)),
+		[mon, d] if MONTHS.contains(&mon) => format!("{year}-{:02}-{:02}", MONTHS.iter().position(|x| *x == mon).expect("contained") + 1, num(d)),
+		[_, ampm] if ampm == "AM" || ampm == "PM" => today.trim().to_string(),
+		_ => panic!("drive wrote `{shown}` as a date, in a shape this does not read"),
+	}
+}
+
+/// A recording nothing transcribed, named and dated by `listed`.
+fn heard(platform: Platform, listed: &Listed, media: &Path) -> Recording {
+	let (phrases, duration) = whisper_phrases(media);
+	let silence = match phrases.is_empty() {
+		true => " — nobody speaks",
+		false => "",
+	};
+	Recording {
+		title: listed.title.clone(),
+		recorded: listed.recorded.clone(),
+		duration,
+		summary: None,
+		chapters: None,
+		phrases,
+		turns: false,
+		transcribed_by: format!("whisper-cpp `{}` — {} transcribes nothing{silence}", model_name(), platform.name()),
+		within: listed.within.clone(),
+	}
+}
+
+/// The recording as its host serves it, into `dir/recording.<ext>` — video at 720p where there is a
+/// choice, and audio where the host holds nothing else.
+fn fetch(url: &str, dir: &Path) -> PathBuf {
+	std::fs::create_dir_all(dir).unwrap_or_else(|e| panic!("creating {}: {e}", dir.display()));
+	let status = Command::new("yt-dlp")
+		.args(["-q", "--no-warnings", "--no-progress", "-S", "res:720", "-o"])
+		.arg(dir.join("recording.%(ext)s"))
+		.arg(url)
+		.status()
+		.expect("yt-dlp runs");
+	assert!(status.success(), "yt-dlp could not fetch {url}: {status}");
+	recording_in(dir).unwrap_or_else(|| panic!("yt-dlp fetched {url} and wrote no {}/recording.*", dir.display()))
+}
+
+fn recording_in(dir: &Path) -> Option<PathBuf> {
+	let entries = match std::fs::read_dir(dir) {
+		Ok(e) => e,
+		Err(e) if e.kind() == std::io::ErrorKind::NotFound => return None,
+		Err(e) => panic!("reading {}: {e}", dir.display()),
+	};
+	entries
+		.map(|e| e.expect("a directory entry is readable").path())
+		.find(|p| p.file_stem().is_some_and(|s| s == "recording") && p.extension().is_some_and(|e| e != "part" && e != "ytdl"))
+}
+
+fn model_name() -> String {
+	Path::new(WHISPER_MODEL).file_stem().expect("the model is a file").to_string_lossy().into_owned()
 }
 
 fn get(url: &str) -> String {
@@ -335,6 +529,7 @@ fn loom(id: &str, page: &str) -> Recording {
 		phrases: loom_phrases(page, id).unwrap_or_default(), // none is a recording loom never transcribed, which `render` whispers
 		turns: false,
 		transcribed_by: "loom".to_string(),
+		within: None,
 	}
 }
 
@@ -426,14 +621,24 @@ fn fathom(page: &str) -> Recording {
 		phrases,
 		turns: true,
 		transcribed_by: "fathom".to_string(),
+		within: None,
 	}
 }
 
-/// The recording's audio through whisper, `(start secs, text)` per segment.
-fn whisper_phrases(url: &str, id: &str) -> Vec<(f64, String)> {
+/// The recording's audio through whisper, `(start secs, text)` per segment, and how long the audio runs.
+fn whisper_phrases(media: &Path) -> (Vec<(f64, String)>, f64) {
 	let model = PathBuf::from(std::env::var("HOME").expect("a user session has HOME")).join(WHISPER_MODEL);
-	assert!(model.exists(), "{} is missing — whisper needs a model to transcribe {id}", model.display());
-	let dir = std::env::temp_dir().join(format!("call-pull-{id}"));
+	assert!(model.exists(), "{} is missing — whisper needs a model to transcribe {}", model.display(), media.display());
+	let probe = |args: &[&str]| {
+		let out = Command::new("ffprobe").args(["-v", "error"]).args(args).args(["-of", "csv=p=0"]).arg(media).output().expect("ffprobe runs");
+		assert!(out.status.success(), "ffprobe could not read {}: {}", media.display(), String::from_utf8_lossy(&out.stderr));
+		String::from_utf8(out.stdout).expect("ffprobe prints ascii").trim().to_string()
+	};
+	let duration: f64 = probe(&["-show_entries", "format=duration"]).parse().expect("ffprobe prints the duration in seconds");
+	if probe(&["-select_streams", "a", "-show_entries", "stream=index"]).is_empty() {
+		return (Vec::new(), duration); // a phone clip recorded with the microphone off
+	}
+	let dir = std::env::temp_dir().join(format!("call-pull-{}", std::process::id()));
 	std::fs::create_dir_all(&dir).expect("the temp dir is writable");
 	let wav = dir.join("audio.wav");
 	let base = dir.join("audio");
@@ -441,13 +646,8 @@ fn whisper_phrases(url: &str, id: &str) -> Vec<(f64, String)> {
 		let status = cmd.status().unwrap_or_else(|e| panic!("running {cmd:?}: {e}"));
 		assert!(status.success(), "{cmd:?} failed: {status}");
 	};
-	if !wav.exists() {
-		run(Command::new("yt-dlp")
-			.args(["-q", "-x", "--audio-format", "wav", "--postprocessor-args", "ExtractAudio:-ar 16000 -ac 1", "-o"])
-			.arg(dir.join("audio.%(ext)s"))
-			.arg(url));
-	}
-	eprintln!("  transcribing {id} with whisper — minutes per hour of audio");
+	run(Command::new("ffmpeg").args(["-v", "error", "-y", "-i"]).arg(media).args(["-vn", "-ar", "16000", "-ac", "1"]).arg(&wav));
+	eprintln!("  transcribing {} with whisper — minutes per hour of audio", media.display());
 	run(Command::new("whisper-cli").arg("-m").arg(&model).arg("-f").arg(&wav).args(["-np", "-sns", "-oj", "-of"]).arg(&base));
 	let json = std::fs::read_to_string(base.with_extension("json")).expect("whisper-cli -oj writes <of>.json");
 	let parsed: serde_json::Value = serde_json::from_str(&json).expect("whisper-cli writes json");
@@ -458,11 +658,23 @@ fn whisper_phrases(url: &str, id: &str) -> Vec<(f64, String)> {
 			let ms = s["offsets"]["from"].as_f64().expect("a whisper segment carries its offset");
 			(ms / 1000., s["text"].as_str().expect("a whisper segment carries text").trim().to_string())
 		})
-		// `[BLANK_AUDIO]` and the like are whisper narrating silence, not anyone speaking
-		.filter(|(_, t): &(f64, String)| !t.is_empty() && !(t.starts_with('[') && t.ends_with(']')))
+		.filter(|(_, t): &(f64, String)| !hallucinated(t))
 		.collect();
 	std::fs::remove_dir_all(&dir).expect("the temp dir is ours");
-	phrases
+	(phrases, duration)
+}
+
+/// What whisper writes over silence and music rather than over speech: `[BLANK_AUDIO]` and its kin,
+/// `♪`, and a lone "you", repeated.
+// ponytail: a list of the known ones; silero VAD ahead of whisper if new kinds keep turning up
+fn hallucinated(segment: &str) -> bool {
+	let words: Vec<String> = segment
+		.split_whitespace()
+		.map(|w| w.trim_matches(|c: char| !c.is_alphanumeric()).to_lowercase())
+		.filter(|w| !w.is_empty())
+		.collect();
+	let t = segment.trim();
+	(t.starts_with('[') && t.ends_with(']')) || words.is_empty() || words.iter().all(|w| w == "you")
 }
 
 fn hms(secs: f64) -> String {
@@ -524,22 +736,12 @@ fn paragraphs(phrases: &[(f64, String)], turns: bool) -> Vec<(f64, String)> {
 /// The capture, its filename, and whether it needs `/call-digest`.
 fn render(platform: Platform, id: &str, mut r: Recording) -> (String, String, bool) {
 	let share = platform.share();
-	if r.phrases.is_empty() {
-		eprintln!("  {} transcribed nothing", platform.name());
-		let model = Path::new(WHISPER_MODEL).file_stem().expect("the model is a file").to_string_lossy().into_owned();
-		r.transcribed_by = format!("whisper-cpp `{model}` — {} transcribed nothing", platform.name());
-		r.phrases = whisper_phrases(&format!("{share}{id}"), id);
-		assert!(!r.phrases.is_empty(), "{id}: whisper heard nothing either");
-		r.turns = false;
-		// the platform's reading, if any, is of a transcript it never produced
-		r.summary = None;
-		r.chapters = None;
-	}
-
 	// loom chapters a long call's first hour or so and stops; a reading that stops short is no reading.
 	// measured against the last words rather than the recording, since calls are left running after everyone's gone
-	let spoken = r.phrases.last().expect("checked above").0;
-	if r.chapters.as_ref().is_some_and(|c| c.last().is_none_or(|(t, _)| (*t as f64) < spoken - TAIL_SECS)) {
+	if r.chapters.as_ref().is_some_and(|c| {
+		let spoken = r.phrases.last().expect("chapters come with a transcript").0;
+		c.last().is_none_or(|(t, _)| (*t as f64) < spoken - TAIL_SECS)
+	}) {
 		eprintln!("  {}'s chapters stop short of the end — leaving its reading to `/call-digest`", platform.name());
 		r.summary = None;
 		r.chapters = None;
@@ -558,22 +760,26 @@ fn render(platform: Platform, id: &str, mut r: Recording) -> (String, String, bo
 		 - duration: {}\n\
 		 - transcribed by: {}\n\
 		 - read by: {}\n\
+		 {}\
 		 - pulled by: `scripts/call-pull.rs`\n\
 		 \n",
 		r.title,
 		r.recorded,
 		hms(r.duration),
 		r.transcribed_by,
-		match missing.is_empty() {
-			true => platform.name().to_string(),
-			false => format!("nothing yet — {} wrote no {}, and `/call-digest` writes them here", platform.name(), missing.join(" and no ")),
+		match (r.phrases.is_empty(), missing.is_empty()) {
+			(true, _) => "nobody — nothing is said".to_string(),
+			(false, true) => platform.name().to_string(),
+			(false, false) => format!("nothing yet — {} wrote no {}, and `/call-digest` writes them here", platform.name(), missing.join(" and no ")),
 		},
+		r.within.as_ref().map_or(String::new(), |w| format!("- within: {w}\n")),
 	);
 	if let Some(summary) = &r.summary {
 		out.push_str(&format!("## summary\n\n{}\n\n", summary.trim()));
 	}
 	out.push_str("## transcript\n");
-	let header = |t: u64, name: &str| format!("\n### [{}]({share}{id}?t={t}) {name}\n", stamp(t)).replace(" \n", "\n");
+	let seek = platform.seek();
+	let header = |t: u64, name: &str| format!("\n### [{}]({share}{id}{seek}{t}) {name}\n", stamp(t)).replace(" \n", "\n");
 	let flush = |out: &mut String, body: &mut Vec<(f64, String)>| {
 		for (_, text) in paragraphs(body, r.turns) {
 			out.push_str(&format!("\n{text}\n"));
@@ -612,5 +818,10 @@ fn render(platform: Platform, id: &str, mut r: Recording) -> (String, String, bo
 			}
 		}
 	}
-	(format!("{}-{}.md", &r.recorded[..10], slug(&r.title)), out, missing.is_empty())
+	// a folder's file names repeat where a platform's titles don't, and the id is what tells them apart
+	let tail = match platform {
+		Platform::Drive => format!("-{}", &id[..6]),
+		Platform::Loom | Platform::Fathom | Platform::Vimeo | Platform::Vocaroo => String::new(),
+	};
+	(format!("{}-{}{tail}.md", &r.recorded[..10], slug(&r.title)), out, missing.is_empty() || r.phrases.is_empty())
 }

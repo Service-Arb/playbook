@@ -28,6 +28,8 @@ Capture and distillation never happen in the same file.
         every bullet on the right links back to a second on the left
 ```
 
+> very important to note that knowledge-base must be organized based on where and how it's likely to be used. [structured/approved/] drives the final agent's knowledge, so while [ref/] is organized based on where and when data is from, the actual knowledge we poses must follow the access patterns. Eg "expectations" from doing something are clearly subservient to the method/action itself
+
 ## Layers
 
 **`ref/`** — raw, verbatim, never hand-edited. One file per source, stating its own
@@ -43,6 +45,11 @@ ref/
 ├── loom/<date>-<title>.md        # call recordings: summary, then the transcript under its chapters
 ├── fathom/<date>-<title>.md      # the same, for calls recorded on fathom
 ├── drive/<date>-<title>-<id>.md  # the same, for recordings in a shared drive folder
+├── vimeo/ · vocaroo/             # the same, for hosts the registry line names and dates
+├── <platform>/<capture>/         # beside every call capture: the recording, and what it shows
+│   ├── recording.<ext>           # as the host serves it, 720p where there is a choice — LFS
+│   ├── shown.md                  # what is on screen that the speech does not say, by `call-watch.rs`
+│   └── frames/<secs>.jpg         # the frame each line of `shown.md` was read off — LFS
 ├── docs/<title>.md               # google docs, exported as markdown
 ├── research/<id>.md              # chatgpt shares, one `## user` / `## assistant` section per turn
 ├── youtube/<id>.md               # channel videos, and `<id>/` the frames it cites
@@ -90,9 +97,18 @@ plain prose, in paragraphs, no stamps in it
 - speaker turns, where the platform names speakers, are paragraphs opening `**<speaker>**:`
 - a recording nobody chaptered gets an untitled header per paragraph instead — the times
   `/call-digest` needs to place chapters. It titles the ones that open a chapter and deletes the rest
+- a recording nobody speaks in is captured all the same: `transcribed by:` ends `— nobody speaks`,
+  and only then is `## transcript` empty
+- every capture has its recording beside it; one found without it gets it fetched, and the capture
+  is left as it is
 
 `scripts/call-pull.rs` checks every capture on disk against this on each run, and `--check` runs only
-that; a hook runs it after any agent edit under `ref/loom/`, `ref/fathom/` or `ref/drive/`.
+that; a hook runs it after any agent edit under a call capture's platform dir.
+
+Machine transcriptions of a recording belong in `ref/` too, each naming what produced it: whisper's
+of its audio, in `transcribed by:`, and `scripts/call-watch.rs`'s of its picture, in `shown.md`,
+whose header names the model, the day and what it cost. Every line of `shown.md` links the second it
+describes and embeds the frame at that second, so the claim can be checked by eye.
 
 The one reading an agent may put in `ref/` is what the source's own platform would have:
 a recording its platform never summarised gets a summary from `/call-digest`, which says so
@@ -179,7 +195,8 @@ grows by hand.
 
 ```
 scripts/
-├── call-pull.rs       # loom / fathom share page, drive folder → summary, chapters, and the platform's transcript, or whisper's where there is none
+├── call-pull.rs       # loom / fathom share page, drive folder → summary, chapters, and the platform's transcript, or whisper's where there is none; the recording itself
+├── call-watch.rs      # not a puller: a kept recording's picture, through gemini → `shown.md`
 ├── doc-pull.rs        # google doc → its markdown export
 ├── chatgpt-pull.rs    # headless chromium → the DOM's turns
 ├── yt-pull.rs         # yt-dlp → captions in citable blocks, chapters, frames, description

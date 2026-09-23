@@ -49,14 +49,18 @@ this list does not.
   - [2026-09-04](https://www.loom.com/share/f48dd474eecf4f5090515a8c360ff59c)
   - [2026-09-11](https://www.loom.com/share/1eae977e2bc84cbd8b80a3b38506fe9f)
   - [2026-09-18](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5)
+- recordings the classroom links to, on hosts that name and date nothing:
+  - [2026-09-18](https://player.vimeo.com/video/1079014922) — address video shot in a different location
+  - [2026-09-18](https://vocaroo.com/118AEXIqXCDi) — the VA call whose audio the video missed
 - documents:
   - [2026-09-18](https://docs.google.com/document/d/1k5ZFhdIfE0zS-WIiUjTP3-6kZqQy3TOcEQIn1esvXBs/edit?tab=t.0) — the plumber onboarding script
 - research:
   - [2026-09-18](https://chatgpt.com/share/6aacb045-ac9c-83eb-a97d-8624c616a763)
 
+### What pulling has cost
+- what the recordings show, as `scripts/call-watch.rs` read it: 1 recordings, $0.02 in all
+
 ### No puller reaches these
 Said in the classroom, listed so `skool-pull.rs` stops asking.
 
-- [2026-09-18](https://player.vimeo.com/video/1079014922) — address video shot in a different location
-- [2026-09-18](https://vocaroo.com/118AEXIqXCDi) — the VA call whose audio the video missed
 - tools named rather than sourced: [getghostme](http://getghostme.com), [textverified](http://textverified.com), `accsrush.com`
