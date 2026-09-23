@@ -44,13 +44,13 @@ ref/
 ├── fathom/<date>-<title>.md      # the same, for calls recorded on fathom
 ├── research/<id>.md              # chatgpt shares, one `## user` / `## assistant` section per turn
 ├── youtube/<id>.md               # channel videos, and `<id>/` the frames it cites
-└── skool_gmbpp/                  # the classroom, via `social_networks`
+└── skool_<group>/                # a classroom, via `social_networks` — `gmbpp`, and the `cheap` group
     ├── README.md                 # what upstream holds, and the day it was last compared to this
     └── course/<NN-module>/       # a directory per module, a file per lesson, both in upstream's order
 ```
 
 Two things a capture cannot state about itself are written beside it instead, since a
-capture is never edited: **how far behind upstream it is**, in `skool_gmbpp/README.md`,
+capture is never edited: **how far behind upstream it is**, in `skool_<group>/README.md`,
 rewritten every run with the day of the run; and **what a source says that this tree
 has no capture of**, printed by the puller for `ref/README.md` to be told about by hand.
 

@@ -8,6 +8,7 @@ this list does not.
 - [course](https://www.skool.com/gmp-passive-profits-5347/classroom)
 - [convos](https://www.skool.com/gmp-passive-profits-5347)
 - [calls](https://www.skool.com/gmp-passive-profits-5347?c=bea7ab0d976f43dd953abd67d8987d0e&s=newest-cm&fl=)
+- [cheap group course](https://www.skool.com/20kmodropservicingblueprint/classroom)
 - discord groups: Service Arb, DropHub, Lockedin GMB
 - personal DMs: (all people marked as `ServiceArb` in rolodex)
 - course recordings, as `skool-pull.rs` finds them in the classroom — the lesson's own video, and
