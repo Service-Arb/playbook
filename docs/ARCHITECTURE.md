@@ -42,6 +42,8 @@ ref/
 ├── README.md                     # the source list — every source, and which of them a puller reaches
 ├── loom/<date>-<title>.md        # call recordings: summary, then the transcript under its chapters
 ├── fathom/<date>-<title>.md      # the same, for calls recorded on fathom
+├── drive/<date>-<title>-<id>.md  # the same, for recordings in a shared drive folder
+├── docs/<title>.md               # google docs, exported as markdown
 ├── research/<id>.md              # chatgpt shares, one `## user` / `## assistant` section per turn
 ├── youtube/<id>.md               # channel videos, and `<id>/` the frames it cites
 └── skool_<group>/                # a classroom, via `social_networks` — `gmbpp`, and the `cheap` group
@@ -59,7 +61,7 @@ has no capture of**, printed by the puller for `ref/README.md` to be told about 
 ```md
 # <title>
 
-- source: <https://www.loom.com/share/<id>>        # or https://fathom.video/share/<id>
+- source: <https://www.loom.com/share/<id>>        # or fathom.video/share/<id>, drive.google.com/file/d/<id>
 - recorded: · duration: · transcribed by: · read by: · pulled by:
 
 ## summary
@@ -90,7 +92,7 @@ plain prose, in paragraphs, no stamps in it
   `/call-digest` needs to place chapters. It titles the ones that open a chapter and deletes the rest
 
 `scripts/call-pull.rs` checks every capture on disk against this on each run, and `--check` runs only
-that; a hook runs it after any agent edit under `ref/loom/` or `ref/fathom/`.
+that; a hook runs it after any agent edit under `ref/loom/`, `ref/fathom/` or `ref/drive/`.
 
 The one reading an agent may put in `ref/` is what the source's own platform would have:
 a recording its platform never summarised gets a summary from `/call-digest`, which says so
@@ -170,7 +172,8 @@ grows by hand.
 
 ```
 scripts/
-├── call-pull.rs       # loom / fathom share page → summary, chapters, and the platform's transcript, or whisper's where it stops short
+├── call-pull.rs       # loom / fathom share page, drive folder → summary, chapters, and the platform's transcript, or whisper's where there is none
+├── doc-pull.rs        # google doc → its markdown export
 ├── chatgpt-pull.rs    # headless chromium → the DOM's turns
 ├── yt-pull.rs         # yt-dlp → captions in citable blocks, chapters, frames, description
 └── skool-pull.rs      # recon classroom → the course tree, module by module and lesson by lesson

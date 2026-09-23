@@ -31,6 +31,9 @@ this list does not.
   - [2026-01-14](https://www.loom.com/share/c115aafcfb8d45758f67546f05a73bdf)
   - [2026-01-18](https://www.loom.com/share/9d32ace40bed4abaa6c6c540d82159dc)
   - [2026-04-03](https://fathom.video/share/Y1jPUhCBxGNW8KjsrwE4P29LC4gbkPYR) — Art Khan's call, posted by Eric
+- eric's drive folders, every recording in them:
+  - [2025-12-21](https://drive.google.com/drive/folders/1jFd8aorlIyDqMB_OwfuFrzrFG0cPObkp) — example verification videos, and the rest of his resources
+  - [2026-09-18](https://drive.google.com/drive/folders/1hsPix3WX9bpFGrFg4a4GWLnSti3fv55X) — recordings of calls being answered
 - group calls, as they get shared:
   - [2026-05-30](https://www.loom.com/share/13aaeeeff8ef4abeacd0b7fc522a0bb5)
   - [2026-06-14](https://www.loom.com/share/c1c8b4ffd7d74343ab7b13e52c0a278b)
@@ -46,16 +49,14 @@ this list does not.
   - [2026-09-04](https://www.loom.com/share/f48dd474eecf4f5090515a8c360ff59c)
   - [2026-09-11](https://www.loom.com/share/1eae977e2bc84cbd8b80a3b38506fe9f)
   - [2026-09-18](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5)
+- documents:
+  - [2026-09-18](https://docs.google.com/document/d/1k5ZFhdIfE0zS-WIiUjTP3-6kZqQy3TOcEQIn1esvXBs/edit?tab=t.0) — the plumber onboarding script
 - research:
   - [2026-09-18](https://chatgpt.com/share/6aacb045-ac9c-83eb-a97d-8624c616a763)
 
 ### No puller reaches these
-Said in the classroom, listed so `skool-pull.rs` stops asking — a drive folder and a google doc need a
-session nothing here holds, and the rest are somebody else's player.
+Said in the classroom, listed so `skool-pull.rs` stops asking.
 
-- [2026-09-18](https://drive.google.com/drive/u/0/folders/1jFd8aorlIyDqMB_OwfuFrzrFG0cPObkp) — Eric's example verification videos
-- [2026-09-18](https://drive.google.com/drive/folders/1hsPix3WX9bpFGrFg4a4GWLnSti3fv55X) — recordings of calls being answered
-- [2026-09-18](https://docs.google.com/document/d/1k5ZFhdIfE0zS-WIiUjTP3-6kZqQy3TOcEQIn1esvXBs/edit?tab=t.0) — the plumber onboarding script
 - [2026-09-18](https://player.vimeo.com/video/1079014922) — address video shot in a different location
 - [2026-09-18](https://vocaroo.com/118AEXIqXCDi) — the VA call whose audio the video missed
 - tools named rather than sourced: [getghostme](http://getghostme.com), [textverified](http://textverified.com), `accsrush.com`
