@@ -25,7 +25,7 @@
           program = "${pkgs.writeShellApplication {
             name = "check";
             runtimeInputs = [ rust pkgs.git ];
-            text = "./scripts/call-pull.rs --check";
+            text = "./scripts/call-pull.rs --check && ./scripts/cite-check.rs";
           }}/bin/check";
         };
 

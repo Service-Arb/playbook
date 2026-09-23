@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "case \"$(jq -r .tool_input.file_path)\" in */ref/loom/*|*/ref/fathom/*|*/ref/drive/*) cd \"$CLAUDE_PROJECT_DIR\" && scripts/call-pull.rs --check >&2 2>&1 || exit 2;; esac"
+            "command": "case \"$(jq -r .tool_input.file_path)\" in */ref/loom/*|*/ref/fathom/*|*/ref/drive/*) cd \"$CLAUDE_PROJECT_DIR\" && scripts/call-pull.rs --check >&2 2>&1 || exit 2;; */structured/*) cd \"$CLAUDE_PROJECT_DIR\" && scripts/cite-check.rs >&2 2>&1 || exit 2;; esac"
           }
         ]
       }

@@ -15,8 +15,8 @@ The answer usually gets pasted into a chat with someone who has no access to thi
 
 - cite the source under the note, not the note. Give the loom chapter `?t=`, the youtube `&t=`, the
   skool lesson or post URL, the chatgpt share. If a note links a moment, use that moment
-- write the bare URL, `https://www.loom.com/share/<id>?t=3302`, not `[2026-09-18](…)`. Link text is
-  lost when the answer is copied out of a terminal
+- write the bare URL, `https://www.loom.com/share/<id>?t=3302`, not `[r3 2026-09-18](…)`. Link text
+  is lost when the answer is copied out of a terminal, and the `r<base>` means nothing outside this repo
 - put the source on the line under the claim it backs, the way the notes do it
 - cite a `structured/` or `ref/` path only for what has nothing public under it, like the human's own
   notes, and say that it is internal
@@ -24,5 +24,6 @@ The answer usually gets pasted into a chat with someone who has no access to thi
 
 ## Source reliability
 
-Rank sources by `docs/ARCHITECTURE.md`'s `## Reliability`. When a claim has more than one source,
-cite the best one first. The others go under it as secondary, if at all.
+Rank sources by effective reliability, as `structured/README.md` counts it from the `r<base>` and the
+date in a citation's link text. The notes already list a claim's sources best first. Cite the first
+one, and the others under it as secondary, if at all.

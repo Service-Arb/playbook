@@ -80,7 +80,7 @@ plain prose, in paragraphs, no stamps in it
 - the platform's summary and chapters are dropped when its chapters stop more than ten minutes short
   of the last words said
 - chapters are `###` headers inside `## transcript`, never a list of their own. The header is the
-  only timestamp — a citation links the chapter a claim sits in
+  only timestamp in the capture. A citation links the second a claim was said
 - nothing sits above the first header
 - paragraphs and headers are a blank line apart
 - a digest's prose is the prose of the committed pull it ran on, so a pull is committed before it is
@@ -108,27 +108,37 @@ and re-sourced — never its own inference.
 **`secondary/`** — conclusions that follow from the notes rather than from a source:
 plans, comparisons, decisions.
 
-## Topics
+## Blocks
 
-One file per topic, same names on both sides of `structured/`:
+`structured/` is a tree of topical blocks, the same shape on both sides. As with rust modules, `x.md`
+is the block and `x/` holds its children, and either one can exist alone:
 
-`verif_and_suspension` · `reviews` · `seo_and_profile` · `site_conversion` ·
-`profile_management` · `money_models` · `tooling`
+```
+structured/{approved,suggested}/
+├── market.md       market/niches/<niche>/…     niche and city choice; per-trade economics
+├── profile/        creation · verification/{video,live} · suspension/registration
+├── ranking/        naming · categories · reviews/{stand,rate_limits,deletion,sourcing,local_guide}
+├── conversion.md   site, intake, VA call handling
+├── fulfilment.md   contractors, splits, pricing
+└── infra.md        gmails, devices, proxies, phones, payments
+```
 
-The taxonomy follows the data. A topic that keeps collecting unrelated bullets splits.
+A block splits into `## info` (what is so), `## facts` (what someone ran, and its result) and
+`## plays` (an inefficiency and how to act on it). The taxonomy follows the data. A block that keeps
+collecting unrelated bullets splits into children.
 
 ## Note format
 
-A bullet is one line. Elaboration goes underneath it: `reason:` for why, `Q:` / `A:`
-for open questions, `>` for asides, `//` for parentheticals.
-
-Every claim carries its source directly beneath it — the link text is the date, so
-age reads at a glance:
+A bullet is one line. Elaboration goes underneath it. Every claim carries its source directly
+beneath it, and the link text is the base reliability and the date:
 
 ```md
-- not wise to compete with people with 200+ reviews
-  [2026-09-18](https://www.loom.com/share/<id>?t=4210)
+- one review a day per profile, at most
+  [r2 2026-09-18](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=3026)
 ```
+
+The rest of the format and the style are in `structured/README.md`. `scripts/cite-check.rs` enforces
+them, in `nix run .#check`, and a hook runs it after any agent edit under `structured/`.
 
 ## Reliability
 
@@ -150,12 +160,9 @@ Then everything decays with age, up to 10 — a cheap group member having heard 
 is as good as nothing. How the decay is counted is defined below this level, not here.
 
 A claim backed by several sources cites its best one first; the rest sit under it as secondary.
-
-## Recency
-
-Contradictions are resolved newest-wins: the new claim replaces the old one in place,
-and the old one stays as a dated line beneath it. Nothing is deleted for being wrong —
-only demoted, with its date still on it.
+Contradictions resolve the same way: the better effective reliability leads, and the other stays
+beneath it, demoted, with its date still on it. Nothing is deleted for being wrong. Between two
+sources of equal base, this is newest-wins.
 
 ## Pullers
 
@@ -176,7 +183,8 @@ scripts/
 ├── doc-pull.rs        # google doc → its markdown export
 ├── chatgpt-pull.rs    # headless chromium → the DOM's turns
 ├── yt-pull.rs         # yt-dlp → captions in citable blocks, chapters, frames, description
-└── skool-pull.rs      # recon classroom → the course tree, module by module and lesson by lesson
+├── skool-pull.rs      # recon classroom → the course tree, module by module and lesson by lesson
+└── cite-check.rs      # not a puller: holds every citation in structured/ to its capture in ref/
 ```
 
 Anything needing a session lives in
@@ -189,7 +197,8 @@ rolodex's `venues/` tree; nothing here duplicates that.
 
 ## Invariants
 
-- Nothing enters `structured/` that did not enter `ref/` first.
+- Nothing enters `structured/` that did not enter `ref/` first — bar `r0`, which enters as the
+  comment that closed its test's issue.
 - Every claim carries a link to its source and the date it was said.
 - `ref/` is written by pullers, never by hand — bar what `/call-digest` fills in, which says so.
 - An agent's own reading goes to `suggested/`, never straight to `approved/`.
