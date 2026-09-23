@@ -15,6 +15,7 @@
           inherit pkgs;
           pname = "playbook";
           enable = true;
+          lfs = true;
           jobs.errors.augment = [{ name = "flake-app"; args.app = "check"; }];
         };
         combined = v_flakes.utils.combine { inherit rust; modules = [ github ]; };
