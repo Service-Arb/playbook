@@ -8,8 +8,8 @@ jiff = "0.2"
 serde_json = "1"
 ---
 
-//! `./scripts/skool-pull.rs` — mirror the classroom under `ref/skool_gmbpp/course/`, one directory
-//! per module and one file per lesson, both numbered in the order skool serves them.
+//! `./scripts/skool-pull.rs` — mirror each group's classroom under `ref/skool_<group>/course/`, one
+//! directory per module and one file per lesson, both numbered in the order skool serves them.
 //!
 //! Skool is the one source here that needs a session, so the reading lives in `social_networks` and
 //! this shells out to it, the way the other pullers shell out to yt-dlp and chromium. Depending on
@@ -24,7 +24,7 @@ serde_json = "1"
 //!
 //! A capture is identified by the id it states and not by where it sits, so a lesson
 //! upstream renames or reorders is moved rather than pulled twice. What it says is never edited:
-//! `ref/skool_gmbpp/README.md` is rewritten every run with the day of the run and with every lesson
+//! `ref/skool_<group>/README.md` is rewritten every run with the day of the run and with every lesson
 //! skool has touched since we captured it, and re-pulling one is deleting its file.
 //!
 //! Every link the classroom says out loud — the lesson's video, the links in its body, whatever sits
@@ -38,24 +38,41 @@ use std::{
 	process::Command,
 };
 
-// one group, and the directory it was given by hand
-const SLUG: &str = "gmp-passive-profits-5347";
-const OUT: &str = "ref/skool_gmbpp";
+// each group, and the directory it was given by hand
+const GROUPS: &[(&str, &str)] = &[("gmp-passive-profits-5347", "ref/skool_gmbpp"), ("20kmodropservicingblueprint", "ref/skool_cheap")];
 const RECON: &str = "/home/v/s/social_networks/Cargo.toml";
 
 fn main() {
 	let root = repo_root();
-	let out_dir = root.join(OUT).join("course");
+	let mut links: BTreeSet<String> = BTreeSet::new();
+	for (group, out_root) in GROUPS {
+		links.extend(pull(&root, group, out_root));
+	}
+
+	let registry = std::fs::read_to_string(root.join("ref/README.md")).expect("ref/README.md is the registry");
+	let missing: Vec<&String> = links.iter().filter(|link| !registry.contains(link.as_str())).collect();
+	if !missing.is_empty() {
+		// the registry is written by hand on purpose, so this stops at saying what to put in it
+		eprintln!("\nlinks the classroom says and `ref/README.md` does not — paste them under `## Sources`, then re-run the puller of their platform:");
+		for link in missing {
+			eprintln!("  {link}");
+		}
+	}
+}
+
+/// One group's classroom into `out`, returning every link it says out loud.
+fn pull(root: &Path, group: &str, out_root: &str) -> BTreeSet<String> {
+	let out_dir = root.join(out_root).join("course");
 	std::fs::create_dir_all(&out_dir).expect("the course dir is ours to create");
 
 	let today = jiff::Zoned::now().date();
-	let courses = classroom();
+	let courses = classroom(group);
 	let have = captured(&out_dir);
 
 	let mut index = format!(
 		"# The classroom, as skool serves it\n\
 		 \n\
-		 - source: <https://www.skool.com/{SLUG}/classroom>\n\
+		 - source: <https://www.skool.com/{group}/classroom>\n\
 		 - checked: {today}\n\
 		 - written by: `scripts/skool-pull.rs`, every run\n\
 		 \n\
@@ -137,7 +154,7 @@ fn main() {
 			index.push_str(&format!(
 				"- [{}]({}){}\n",
 				text(lesson, "title"),
-				relative(&root.join(OUT), &out),
+				relative(&root.join(out_root), &out),
 				match behind {
 					true => format!(" — **stale**: skool says {at}"),
 					false => String::new(),
@@ -147,18 +164,9 @@ fn main() {
 	}
 
 	prune(&out_dir);
-	std::fs::write(root.join(OUT).join("README.md"), index).expect("the index is ours to write");
-	eprintln!("{written} new, {stale} stale — see {OUT}/README.md");
-
-	let registry = std::fs::read_to_string(root.join("ref/README.md")).expect("ref/README.md is the registry");
-	let missing: Vec<&String> = links.iter().filter(|link| !registry.contains(link.as_str())).collect();
-	if !missing.is_empty() {
-		// the registry is written by hand on purpose, so this stops at saying what to put in it
-		eprintln!("\nlinks the classroom says and `ref/README.md` does not — paste them under `## Sources`, then re-run the puller of their platform:");
-		for link in missing {
-			eprintln!("  {link}");
-		}
-	}
+	std::fs::write(root.join(out_root).join("README.md"), index).expect("the index is ours to write");
+	eprintln!("{written} new, {stale} stale — see {out_root}/README.md");
+	links
 }
 
 /// Write `doc` where it belongs, moving a capture of the same lesson that sits somewhere else — a
@@ -169,7 +177,7 @@ fn place(out: &Path, have: &BTreeMap<String, PathBuf>, id: &str, doc: &str) -> b
 		Some(had) => {
 			assert!(
 				!out.exists(),
-				"{} belongs at {}, and another capture is already there — delete `ref/skool_gmbpp/course/` and run this again",
+				"{} belongs at {}, and another capture is already there — delete its `course/` and run this again",
 				had.display(),
 				out.display()
 			);
@@ -294,11 +302,11 @@ fn stable(video: &str) -> String {
 
 /// `recon` prints the classroom as json on stdout and everything else on stderr, so stdout is the
 /// whole answer and a failure to parse it is a failure to read the classroom.
-fn classroom() -> Vec<serde_json::Value> {
+fn classroom(slug: &str) -> Vec<serde_json::Value> {
 	// `cargo run`, never the `r` alias: that one is `lrun`, which reads `cargo metadata` from the
 	// working directory and so cannot be called from outside its own workspace
 	let out = Command::new("cargo")
-		.args(["run", "-q", "--manifest-path", RECON, "--bin", "recon", "--", "classroom", &format!("skool:{SLUG}")])
+		.args(["run", "-q", "--manifest-path", RECON, "--bin", "recon", "--", "classroom", &format!("skool:{slug}")])
 		.output()
 		.unwrap_or_else(|e| panic!("cargo: {e}"));
 	if !out.status.success() {

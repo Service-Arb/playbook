@@ -24,14 +24,5 @@ The answer usually gets pasted into a chat with someone who has no access to thi
 
 ## Source reliability
 
-1. skool course material
-2. Eric said it
-3. a gmbpp member tested it
-4. a gmbpp member claimed it
-5. a gmbpp member heard or thought of it; a cheap group
-   (skool.com/20kmodropservicingblueprint) member tested it
-6. a cheap group member claimed it
-7. a cheap group member heard or thought of it
-
-When a claim has more than one source, cite the highest one first. The others go under it as
-secondary, if at all.
+Rank sources by `docs/ARCHITECTURE.md`'s `## Reliability`. When a claim has more than one source,
+cite the best one first. The others go under it as secondary, if at all.

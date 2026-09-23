@@ -128,6 +128,27 @@ age reads at a glance:
   [2026-09-18](https://www.loom.com/share/<id>?t=4210)
 ```
 
+## Reliability
+
+Every citation carries a reliability: 0 to 10, lower is better. Who said it and how they came to know
+it sets the base:
+
+| base | source                                                        |
+|------|---------------------------------------------------------------|
+| 0    | tested myself                                                 |
+| 1    | skool course material                                         |
+| 2    | Eric said it                                                  |
+| 3    | a gmbpp member tested it                                      |
+| 4    | a gmbpp member claimed it                                     |
+| 5    | a gmbpp member heard or thought of it; a cheap group member tested it |
+| 6    | a cheap group member claimed it                               |
+| 7    | a cheap group member heard or thought of it                   |
+
+Then everything decays with age, up to 10 — a cheap group member having heard of it long ago, which
+is as good as nothing. How the decay is counted is defined below this level, not here.
+
+A claim backed by several sources cites its best one first; the rest sit under it as secondary.
+
 ## Recency
 
 Contradictions are resolved newest-wins: the new claim replaces the old one in place,
