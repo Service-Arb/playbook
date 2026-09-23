@@ -131,7 +131,9 @@ fn watch(root: &Path, key: &str, path: &Path) -> Option<f64> {
 		let prompt = format!(
 			"This is the part of the recording \"{}\" that runs from {} to {} of it. What is said in it is already transcribed, below.\n\
 			 List what is shown that the speech does not already say: screen content, UI states, numbers on screen, physical scene details. \
-			 One entry per distinct thing shown, at the second it is best visible. A webcam view of someone talking is not an entry unless something in it matters.\n\
+			 One entry per distinct thing shown, at the second it is best visible. \
+			 The people on the call are never entries: their webcams, tiles, names, and their joining, leaving, or turning a camera on or off. \
+			 What is shared or filmed is: a shared screen, a document, a dashboard, a site, a phone screen, a place.\n\
 			 `t_secs` counts from the start of the whole recording, not of this part. `on_screen_text` is legible text copied as written, where it carries something.\n\
 			 Nothing shown beyond what is said is an empty list.\n\n\
 			 {}",
@@ -156,6 +158,7 @@ fn watch(root: &Path, key: &str, path: &Path) -> Option<f64> {
 				}, "required": ["t_secs", "shown"]}},
 			},
 		});
+		eprintln!("  watching {} {}–{}", capture.title, stamp(from), stamp(to));
 		let answer = call(key, "POST", &format!("{API}/v1beta/models/{MODEL}:generateContent"), Some(&body));
 		let usage = &answer["usageMetadata"];
 		let count = |k: &str| usage[k].as_u64().unwrap_or(0); // absent when zero, as thinking is on a model that did none

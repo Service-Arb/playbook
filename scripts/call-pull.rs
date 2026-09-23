@@ -460,7 +460,7 @@ fn heard(platform: Platform, listed: &Listed, media: &Path) -> Recording {
 fn fetch(url: &str, dir: &Path) -> PathBuf {
 	std::fs::create_dir_all(dir).unwrap_or_else(|e| panic!("creating {}: {e}", dir.display()));
 	let status = Command::new("yt-dlp")
-		.args(["-q", "--no-warnings", "--no-progress", "-S", "res:720", "-o"])
+		.args(["-q", "--no-warnings", "--no-progress", "-N", "8", "-S", "res:720", "-o"])
 		.arg(dir.join("recording.%(ext)s"))
 		.arg(url)
 		.status()
