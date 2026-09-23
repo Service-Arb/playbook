@@ -7,7 +7,7 @@
   [r3 2026-09-18](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=3343)
 
   A: Sam Hart says we can say that employees are out on the job if they want to see cars
-  // unsourced: Sam Hart
+  [r3 2026-09-11](https://www.loom.com/share/1eae977e2bc84cbd8b80a3b38506fe9f?t=200)
 
   > should submit multiple tickets for lives
   [r2 2026-09-18](https://www.loom.com/share/c197556c940b4d01b53376dab70d32e5?t=3473)
