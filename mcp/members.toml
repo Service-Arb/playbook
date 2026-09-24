@@ -1,0 +1,4 @@
+# the Google accounts that may sign in; checked on every call, so removing one takes effect on the next deploy
+members = [
+	"v79166789533@gmail.com",
+]

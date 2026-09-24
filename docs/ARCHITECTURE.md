@@ -225,6 +225,18 @@ decides how a capture is filed.
 Skool *conversations* are already `recon posts skool:<slug>`, which writes them into the
 rolodex's `venues/` tree; nothing here duplicates that.
 
+## Answering
+
+```
+skill/service-arb/         SKILL.md routes a question to the sources; sections/*.md say how to decide, per area
+  ├─ symlinked to .claude/skills/service-arb — the owner's agent reads the tree directly
+  └─ baked into mcp/ with structured/ and ref/**/*.md — members' agents get slices over MCP
+mcp/                       the member surface: search · read · guide, behind Google sign-in, every call logged
+```
+
+Members use the knowledge on their own tokens and never get the repo. What the server does, and how,
+is in `mcp/README.md`.
+
 ## Invariants
 
 - Nothing enters `structured/` that did not enter `ref/` first — bar `r0`, which enters as the
@@ -233,3 +245,5 @@ rolodex's `venues/` tree; nothing here duplicates that.
 - `ref/` is written by pullers, never by hand — bar what `/call-digest` fills in, which says so.
 - An agent's own reading goes to `suggested/`, never straight to `approved/`.
 - A puller writes a new capture, moves one, or does nothing; it never edits what one says.
+- The member image carries `skill/`, `structured/` and `ref/**/*.md` only: no scripts, no docs, no
+  history, no media.
