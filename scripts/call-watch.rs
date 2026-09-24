@@ -153,7 +153,7 @@ async fn watch(root: &Path, path: &Path) -> Option<f64> {
 		);
 		let client = batch
 			.iter()
-			.fold(Client::default().model(Model::Medium).force_json(), |c, (_, f)| c.append_file_from_path(f).expect("the frame was written"));
+			.fold(Client::default().model(Model::Fast).force_json(), |c, (_, f)| c.append_file_from_path(f).expect("the frame was written"));
 		let answer = ask(&client, &prompt, path).await;
 		cost += answer.cost_cents as f64 / 100.;
 		model.get_or_insert(answer.model.clone());
