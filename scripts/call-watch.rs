@@ -118,15 +118,11 @@ async fn watch(path: &Path) -> Option<f64> {
 	let mut out = format!(
 		"# shown: {}\n\n\
 		 - capture: [{name}](../{name})\n\
-		 - watched by: `{model}`, over {} frames, where the picture changes or every {} · `scripts/call-watch.rs`\n\
+		 - watched by: `{model}`, over {} frames, as `ask_llm`'s `Footage::{footage:?}` picks them · `scripts/call-watch.rs`\n\
 		 - watched: {}\n\
 		 - cost: ${cost:.4}\n",
 		capture.title,
 		watched.frames_read,
-		match footage {
-			Footage::Filmed => "1s",
-			Footage::Screen => "30s",
-		},
 		today.trim(),
 	);
 	for Shown { secs, shown, on_screen_text, .. } in &watched.shown {

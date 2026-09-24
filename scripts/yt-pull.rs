@@ -287,7 +287,7 @@ async fn video(id: &str, tmp: &Path, shots: &Path) -> Option<String> {
 		 - uploaded: {}\n\
 		 - duration: {}\n\
 		 - pulled by: `scripts/yt-pull.rs`\n\
-		 - read by: `{}` summary and chapters, `{watched_by}` what is shown, over {} frames where the picture changes\n\
+		 - read by: `{}` summary and chapters, `{watched_by}` what is shown, over {} frames, as `ask_llm`'s `Footage::Screen` picks them\n\
 		 - cost: ${:.4}\n\
 		 \n\
 		 ## summary\n\
