@@ -17,7 +17,7 @@
           enable = true;
           lfs = true;
           jobs.errors.augment = [{ name = "flake-app"; args.app = "check"; }];
-          containerRelease = { registry = "ghcr.io/service-arb"; };
+          containerRelease = { registry = "ghcr.io/service-arb"; lfs = false; }; # the image takes only markdown; the media is 17G
         };
         combined = v_flakes.utils.combine { inherit rust; modules = [ github ]; };
 
