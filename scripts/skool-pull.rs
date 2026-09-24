@@ -8,7 +8,7 @@ clap = { version = "4", features = ["derive"] }
 glass_pumpkin = "=2.0.0-rc0" # social_networks' lock; rc1 breaks grammers-crypto, which asks for `2.0.0-rc0`
 jiff = "0.2"
 serde = { version = "1", features = ["derive"] }
-social_networks_adapters = { path = "/home/v/s/social_networks/social_networks_adapters" }
+social_networks_adapters = "=0.3.23"
 tokio = { version = "1", features = ["full"] }
 v_utils = { version = "=2.17.6", features = ["xdg", "cli"] }
 v_utils_macros = "=2.12.5" # social_networks' lock; later ones call into a v_utils newer than 2.17.6

@@ -7,7 +7,7 @@ edition = "2024"
 ask_llm = { version = "3.4", default-features = false }
 glass_pumpkin = "=2.0.0-rc0" # social_networks' lock; rc1 breaks grammers-crypto, which asks for `2.0.0-rc0`
 jiff = "0.2"
-social_networks_adapters = { path = "/home/v/s/social_networks/social_networks_adapters", features = ["youtube-reads"] }
+social_networks_adapters = { version = "=0.3.23", features = ["youtube-reads"] }
 tokio = { version = "1", features = ["full"] }
 v_utils_macros = "=2.12.5" # social_networks' lock; later ones call into a v_utils newer than 2.17.6
 ---
@@ -25,7 +25,7 @@ v_utils_macros = "=2.12.5" # social_networks' lock; later ones call into a v_uti
 //! Half of what these videos say is said on screen — a dashboard, a search result, a review count —
 //! and captions carry none of it, so a capture also holds what the picture shows, read by `ask_llm`'s
 //! `Client::watch` with the captions as its speech, each line beside the frame it was read off. Then
-//! chapters, a summary and the description. Chapters are the uploader's own where youtube has them and
+//! chapters, a summary and the description. Chapters are youtube's where it has them and
 //! the model's reading of the transcript where it does not.
 //!
 //! Enrichment that cannot be produced aborts the video and writes nothing. The md file existing is
