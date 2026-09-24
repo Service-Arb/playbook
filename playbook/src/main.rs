@@ -9,8 +9,7 @@ use v_utils::io::{ConfirmResult, confirmation};
 const PLATFORMS: [&str; 5] = ["ref/loom", "ref/fathom", "ref/drive", "ref/vimeo", "ref/vocaroo"];
 /// Past this, `--execute` asks before spending.
 const CONFIRM_USD: f64 = 1.;
-/// ¢ per minute of recording, by the `ask_llm` `Footage` `scripts/call-watch.rs` reads it as. Terra's
-/// measured rates over ten, the ratio of luna's prices to terra's.
+/// ¢ per minute of recording, by the `ask_llm` `Footage` `scripts/call-watch.rs` reads it as.
 const SCREEN_CENTS_PER_MIN: f64 = 0.1;
 const PHONE_CENTS_PER_MIN: f64 = 0.6;
 
