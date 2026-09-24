@@ -1,10 +1,22 @@
 [workspace]
-members = ["playbook", "mcp"]
+members = ["playbook", "playbook_web"]
 resolver = "3"
 
 [workspace.package]
 edition = "2024"
 
 [workspace.dependencies]
+axum = { version = "0.8.9", features = ["form", "query"] }
+base64 = "0.22"
 clap = { version = "^4.6.7", features = ["derive"] }
+getrandom = "0.4.3"
+regex = "1.13.1"
+reqwest = { version = "0.13.5", default-features = false, features = ["rustls", "json", "form"] }
+rmcp = { version = "3.4.1", features = ["server", "macros", "transport-streamable-http-server"] }
+rusqlite = { version = "0.40.2", features = ["bundled"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "net", "signal"] }
+toml = "1.1.6"
 v_utils = { version = "^2.18.0", features = ["cli"] }

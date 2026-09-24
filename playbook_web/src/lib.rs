@@ -11,7 +11,7 @@ use axum::{Router, middleware, routing::get};
 use rmcp::transport::streamable_http_server::{StreamableHttpServerConfig, StreamableHttpService, session::local::LocalSessionManager};
 
 pub struct Config {
-	/// where members reach the server, e.g. `https://mcp.example.com`; the OAuth issuer and the resource
+	/// where members reach the server, e.g. `https://<host>/playbook_mcp`; the OAuth issuer, the resource, and the path it is served under
 	pub public_url: String,
 	pub google_client_id: String,
 	pub google_client_secret: String,
@@ -22,6 +22,7 @@ pub struct Config {
 
 struct State {
 	config: Config,
+	resource_metadata: String, // RFC 9728's path-inserted location
 	db: Mutex<rusqlite::Connection>, // ponytail: one lock for every query; a pool if calls ever queue on it
 	http: reqwest::Client,
 }
@@ -34,8 +35,11 @@ pub fn app(config: Config) -> Router {
 	LazyLock::force(&corpus::CORPUS); // a malformed capture fails the start, not a member's call
 	let db = rusqlite::Connection::open(&config.db).unwrap_or_else(|e| panic!("{}: {e}", config.db.display()));
 	db.execute_batch(include_str!("schema.sql")).unwrap();
-	let host = reqwest::Url::parse(&config.public_url).expect("PUBLIC_URL is a url").authority().to_owned();
+	let url = reqwest::Url::parse(&config.public_url).expect("PUBLIC_URL is a url");
+	let (host, base) = (url.authority().to_owned(), url.path().to_owned());
+	assert!(base.len() > 1, "PUBLIC_URL names the path the server is served under: {}", config.public_url);
 	let state = Arc::new(State {
+		resource_metadata: format!("{}/.well-known/oauth-protected-resource{base}", url.origin().ascii_serialization()),
 		config,
 		db: Mutex::new(db),
 		http: reqwest::Client::builder().timeout(std::time::Duration::from_secs(10)).build().unwrap(),
@@ -50,9 +54,9 @@ pub fn app(config: Config) -> Router {
 		)
 	};
 	Router::new()
-		.nest_service("/mcp", mcp)
+		.route_service(&base, mcp)
 		.layer(middleware::from_fn_with_state(state.clone(), auth::guard))
-		.merge(auth::routes())
+		.merge(auth::routes(&base))
 		.route("/health", get(|| async { "ok" }))
 		.with_state(state)
 }

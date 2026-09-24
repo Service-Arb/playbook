@@ -28,21 +28,21 @@ const REFRESH_TTL: i64 = 30 * 24 * 60 * 60;
 const DAY: i64 = 24 * 60 * 60;
 const CIMD_MAX_BYTES: usize = 64 * 1024;
 
-pub(crate) fn routes() -> Router<Arc<State>> {
+/// `base` is `PUBLIC_URL`'s path; the metadata sits where RFC 8414 and 9728 insert it
+pub(crate) fn routes(base: &str) -> Router<Arc<State>> {
 	Router::new()
-		.route("/.well-known/oauth-protected-resource", get(resource_metadata))
-		.route("/.well-known/oauth-protected-resource/mcp", get(resource_metadata))
-		.route("/.well-known/oauth-authorization-server", get(server_metadata))
-		.route("/register", post(register))
-		.route("/authorize", get(authorize))
-		.route("/callback", get(callback))
-		.route("/token", post(token))
+		.route(&format!("/.well-known/oauth-protected-resource{base}"), get(resource_metadata))
+		.route(&format!("/.well-known/oauth-authorization-server{base}"), get(server_metadata))
+		.route(&format!("{base}/register"), post(register))
+		.route(&format!("{base}/authorize"), get(authorize))
+		.route(&format!("{base}/callback"), get(callback))
+		.route(&format!("{base}/token"), post(token))
 }
 
-/// Admits a request to `/mcp` only with a live access token of a member under their daily budget.
+/// Admits a request to the MCP endpoint only with a live access token of a member under their daily budget.
 pub(crate) async fn guard(Axum(state): S, mut req: Request, next: Next) -> Response {
 	let unauthorized = || {
-		let challenge = format!("Bearer resource_metadata=\"{}/.well-known/oauth-protected-resource\"", state.config.public_url);
+		let challenge = format!("Bearer resource_metadata=\"{}\"", state.resource_metadata);
 		(StatusCode::UNAUTHORIZED, [(header::WWW_AUTHENTICATE, challenge)]).into_response()
 	};
 	let Some(token) = req.headers().get(header::AUTHORIZATION).and_then(|h| h.to_str().ok()).and_then(|h| h.strip_prefix("Bearer ")) else {
@@ -77,7 +77,7 @@ pub(crate) async fn guard(Axum(state): S, mut req: Request, next: Next) -> Respo
 async fn resource_metadata(Axum(state): S) -> Json<Value> {
 	let base = &state.config.public_url;
 	Json(json!({
-		"resource": format!("{base}/mcp"),
+		"resource": base,
 		"authorization_servers": [base],
 		"bearer_methods_supported": ["header"],
 	}))
@@ -151,7 +151,7 @@ async fn authorize(Axum(state): S, Query(q): Query<AuthorizeQuery>) -> Response 
 		return (StatusCode::BAD_REQUEST, "response_type=code with code_challenge_method=S256 only").into_response();
 	}
 	if let Some(resource) = &q.resource
-		&& resource.trim_end_matches('/') != format!("{}/mcp", state.config.public_url)
+		&& resource.trim_end_matches('/') != state.config.public_url
 	{
 		return (StatusCode::BAD_REQUEST, format!("{resource} is not served here")).into_response();
 	}
