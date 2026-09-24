@@ -58,7 +58,7 @@ this list does not.
   - [2026-09-18](https://chatgpt.com/share/6aacb045-ac9c-83eb-a97d-8624c616a763)
 
 ### What pulling has cost
-- what the recordings show, as `scripts/call-watch.rs` read it: 1 recordings, $0.02 in all
+- what the recordings show, as `scripts/call-watch.rs` read it: 26 recordings, $7.52 in all
 
 ### No puller reaches these
 Said in the classroom, listed so `skool-pull.rs` stops asking.

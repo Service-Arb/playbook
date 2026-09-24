@@ -139,7 +139,7 @@ async fn watch(root: &Path, path: &Path) -> Option<f64> {
 			"The {} images are frames of the recording \"{}\", in order at these times (seconds in brackets): {}.\n\
 			 Each was taken where the picture changed, or {floor}s after the last. Each carries its second in the band under it. What is said around them is already transcribed, below.\n\
 			 List what the frames show that the speech does not already say: screen content, UI states, numbers on screen, physical scene details. \
-			 The people on the call are never entries: their webcams, tiles, names, and their joining, leaving, or turning a camera on or off. \
+			 The people on the call are never entries: their webcams, tiles, names, how many there are, and their joining, leaving, or turning a camera on or off. \
 			 What is shared or filmed is: a shared screen, a document, a dashboard, a site, a phone screen, a place.\n\
 			 Answer {{\"entries\": [{{\"t_secs\": <the seconds printed under the one frame it is read off>, \"shown\": <one sentence>, \"on_screen_text\": <legible text copied as written, where it carries something, else omitted>}}]}}. \
 			 A frame that shows nothing new gets no entry.\n\n{}",
@@ -176,14 +176,15 @@ async fn watch(root: &Path, path: &Path) -> Option<f64> {
 		false => "?t=",
 	};
 	let today = String::from_utf8(Command::new("date").arg("+%F").output().expect("date runs").stdout).expect("date prints ascii");
+	// not `source:`, which would make this a second capture of the recording
+	let name = path.file_name().expect("a capture has a name").to_string_lossy();
 	let mut out = format!(
 		"# shown: {}\n\n\
-		 - source: <{}>\n\
+		 - capture: [{name}](../{name})\n\
 		 - watched by: `{}`, over {} frames, where the picture changes or every {floor}s · `scripts/call-watch.rs`\n\
 		 - watched: {}\n\
 		 - cost: ${cost:.4}\n",
 		capture.title,
-		capture.source,
 		model.expect("there is always a first frame, so always a request"),
 		frames.len(),
 		today.trim(),
@@ -234,7 +235,7 @@ fn changes(media: &Path, scratch: &Path, gap: f64, floor: u32) -> Vec<(u64, Path
 			"-vf",
 			&format!("select='eq(n\\,0)+gt(scene\\,{SCENE})+gte(t-prev_selected_t\\,{floor})',showinfo,scale=-2:'min(720\\,ih)',pad=iw:ih+40:0:0:black,drawtext=text='%{{eif\\:t\\:d}}s':x=10:y=h-32:fontsize=26:fontcolor=white"),
 			"-fps_mode",
-			"vfr",
+			"passthrough", // `vfr` drops a frame that shares its stamp with the one before, and showinfo still names it
 			"-q:v",
 			"4",
 		])
