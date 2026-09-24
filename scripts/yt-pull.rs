@@ -4,7 +4,11 @@
 edition = "2024"
 
 [dependencies]
-serde_json = "1"
+glass_pumpkin = "=2.0.0-rc0" # social_networks' lock; rc1 breaks grammers-crypto, which asks for `2.0.0-rc0`
+jiff = "0.2"
+social_networks_adapters = { path = "/home/v/s/social_networks/social_networks_adapters", features = ["youtube-reads"] }
+tokio = { version = "1", features = ["full"] }
+v_utils_macros = "=2.12.5" # social_networks' lock; later ones call into a v_utils newer than 2.17.6
 ---
 
 //! `./scripts/yt-pull.rs sync` — list every video of every channel `ref/README.md` links, in
@@ -12,11 +16,9 @@ serde_json = "1"
 //! `./scripts/yt-pull.rs transcribe` — capture every video that list has unticked, into
 //! `ref/youtube/<who>/<id>.md`, ticking it as it goes.
 //!
-//! yt-dlp does the talking: it is the only thing that tracks youtube's player, and the captions it
-//! hands back are already timed.
+//! Youtube is read by `social_networks_adapters`, linked; this only decides how a capture is filed.
 //!
-//! Auto-captions arrive as a rolling two-line window — a few words per cue, re-sent as the window
-//! scrolls — so cues are gathered into blocks of at least `BLOCK` seconds. A block is both a
+//! Auto-captions arrive a few words per cue, so cues are gathered into blocks of at least `BLOCK` seconds. A block is both a
 //! readable paragraph and a `&t=` anchor that lands where the words are.
 //!
 //! Half of what these videos say is said on screen — a dashboard, a search result, a review count —
@@ -32,6 +34,9 @@ use std::{
 	path::{Path, PathBuf},
 	process::Command,
 };
+
+use jiff::civil::Date;
+use social_networks_adapters::youtube::{self, Chapter, Cue};
 
 const WATCH: &str = "https://www.youtube.com/watch?v=";
 const INDEX: &str = "ref/youtube/README.md";
@@ -55,20 +60,21 @@ struct Section {
 #[derive(Clone)]
 struct Entry {
 	id: String,
-	uploaded: String,
+	uploaded: Date,
 	title: String,
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
 	let root = repo_root();
 	match std::env::args().skip(1).collect::<Vec<_>>().as_slice() {
-		[cmd] if cmd == "sync" => sync(&root),
-		[cmd] if cmd == "transcribe" => transcribe(&root),
+		[cmd] if cmd == "sync" => sync(&root).await,
+		[cmd] if cmd == "transcribe" => transcribe(&root).await,
 		_ => panic!("usage: yt-pull.rs <sync|transcribe>"),
 	}
 }
 
-fn sync(root: &Path) {
+async fn sync(root: &Path) {
 	let channels = channels_in(&root.join("ref/README.md"));
 	assert!(!channels.is_empty(), "no youtube channel linked in ref/README.md — nothing to sync");
 	// youtube's flat listing dates nothing, so a video's date is asked for once and read back from here after
@@ -76,24 +82,22 @@ fn sync(root: &Path) {
 		true => parse(root).sections.into_iter().flat_map(|s| s.entries).map(|e| (e.id.clone(), e)).collect(),
 		false => BTreeMap::new(),
 	};
-	let sections = channels
-		.into_iter()
-		.map(|(who, channel)| {
-			let mut ids: BTreeSet<String> = expand(&channel).into_iter().collect();
-			ids.extend(captured(&root.join("ref/youtube").join(&who))); // one taken down upstream stays, as its capture does
-			let unknown: Vec<&str> = ids.iter().filter(|id| !known.contains_key(*id)).map(String::as_str).collect();
-			eprintln!("{who}: {} video(s), {} not dated yet", ids.len(), unknown.len());
-			let mut entries: Vec<Entry> = ids.iter().filter_map(|id| known.get(id).cloned()).collect();
-			entries.extend(metadata(&unknown));
-			entries.sort_by(|a, b| b.uploaded.cmp(&a.uploaded).then(a.id.cmp(&b.id)));
-			Section { who, channel, entries }
-		})
-		.collect();
-	let today = String::from_utf8(Command::new("date").arg("+%F").output().expect("date is on PATH").stdout).expect("date prints utf-8");
-	write(root, &Index { checked: today.trim().to_string(), sections });
+	let mut sections = Vec::new();
+	for (who, channel) in channels {
+		let mut ids: BTreeSet<String> = youtube::uploads(&channel).await.unwrap_or_else(|e| panic!("listing {channel}: {e:?}")).into_iter().collect();
+		ids.extend(captured(&root.join("ref/youtube").join(&who))); // one taken down upstream stays, as its capture does
+		let unknown: Vec<&str> = ids.iter().filter(|id| !known.contains_key(*id)).map(String::as_str).collect();
+		eprintln!("{who}: {} video(s), {} not dated yet", ids.len(), unknown.len());
+		let mut entries: Vec<Entry> = ids.iter().filter_map(|id| known.get(id).cloned()).collect();
+		let listed = youtube::listing(&unknown).await.unwrap_or_else(|e| panic!("dating {unknown:?}: {e:?}"));
+		entries.extend(listed.into_iter().map(|l| Entry { id: l.id, uploaded: l.uploaded, title: l.title }));
+		entries.sort_by(|a, b| b.uploaded.cmp(&a.uploaded).then(a.id.cmp(&b.id)));
+		sections.push(Section { who, channel, entries });
+	}
+	write(root, &Index { checked: jiff::Zoned::now().date().to_string(), sections });
 }
 
-fn transcribe(root: &Path) {
+async fn transcribe(root: &Path) {
 	let index = parse(root);
 	let tmp = std::env::temp_dir().join("yt-pull");
 	let mut mute = Vec::new();
@@ -108,7 +112,7 @@ fn transcribe(root: &Path) {
 			eprintln!("pulling {}/{id}", section.who);
 			// a video youtube never captioned is a real absence, not a broken run — the rest of the
 			// channel is still worth having, so it is named at the end rather than aborting here
-			match video(id, &tmp, &dir.join(id)) {
+			match video(id, &tmp, &dir.join(id)).await {
 				Some(doc) => {
 					std::fs::write(&out, doc).expect("ref/youtube is ours to write");
 					write(root, &index);
@@ -154,13 +158,6 @@ fn channels_in(readme: &Path) -> Vec<(String, String)> {
 	found
 }
 
-/// The flat listing is one request and carries no per-video metadata, which is why it is only ever
-/// used for the ids.
-fn expand(source: &str) -> Vec<String> {
-	let out = yt_dlp(&["--flat-playlist", "--print", "%(id)s", source]);
-	out.lines().map(str::trim).filter(|l| !l.is_empty()).map(str::to_string).collect()
-}
-
 fn captured(dir: &Path) -> Vec<String> {
 	if !dir.exists() {
 		return Vec::new();
@@ -171,25 +168,6 @@ fn captured(dir: &Path) -> Vec<String> {
 		.filter(|p| p.extension().is_some_and(|e| e == "md"))
 		.map(|p| p.file_stem().expect("filtered on an extension").to_str().expect("a video id is ascii").to_string())
 		.collect()
-}
-
-fn metadata(ids: &[&str]) -> Vec<Entry> {
-	if ids.is_empty() {
-		return Vec::new();
-	}
-	let urls: Vec<String> = ids.iter().map(|id| format!("{WATCH}{id}")).collect();
-	let mut args = vec!["--skip-download", "--print", "%(id)s\u{1f}%(upload_date)s\u{1f}%(title)s"];
-	args.extend(urls.iter().map(String::as_str));
-	let out = yt_dlp(&args);
-	let entries: Vec<Entry> = out
-		.lines()
-		.map(|line| {
-			let [id, upload, title]: [&str; 3] = line.split('\u{1f}').collect::<Vec<_>>().try_into().unwrap_or_else(|v| panic!("yt-dlp was asked for three fields, and answered {v:?}"));
-			Entry { id: id.to_string(), uploaded: dashed(upload), title: title.to_string() }
-		})
-		.collect();
-	assert_eq!(entries.len(), ids.len(), "yt-dlp was asked about {ids:?}, and answered:\n{out}");
-	entries
 }
 
 /// Every tick is read off the disk, so a capture pulled or deleted is reflected on the next write.
@@ -242,22 +220,11 @@ fn parse(root: &Path) -> Index {
 				true => title.strip_prefix('[').and_then(|t| t.strip_suffix(&format!("]({}/{id}.md)", section.who))).unwrap_or_else(|| panic!("{bad}")),
 				false => title,
 			};
-			section.entries.push(Entry { id, uploaded: uploaded.to_string(), title: title.to_string() });
+			let uploaded = uploaded.parse().unwrap_or_else(|e| panic!("{bad}: {e}"));
+			section.entries.push(Entry { id, uploaded, title: title.to_string() });
 		}
 	}
 	Index { checked: checked.unwrap_or_else(|| panic!("{INDEX} states no `checked:` day")), sections }
-}
-
-fn yt_dlp(args: &[&str]) -> String {
-	let out = Command::new("yt-dlp")
-		.arg("--no-update")
-		.args(args)
-		.output()
-		.unwrap_or_else(|e| panic!("yt-dlp: {e} — is it on PATH?"));
-	if !out.status.success() {
-		panic!("yt-dlp {args:?} failed:\n{}", String::from_utf8_lossy(&out.stderr));
-	}
-	String::from_utf8(out.stdout).expect("yt-dlp prints utf-8")
 }
 
 fn hms(secs: f64) -> String {
@@ -265,54 +232,33 @@ fn hms(secs: f64) -> String {
 	format!("{:02}:{:02}:{:02}", s / 3600, (s % 3600) / 60, s % 60)
 }
 
-fn video(id: &str, tmp: &Path, shots: &Path) -> Option<String> {
-	// a stale caption file or video from an earlier run would be picked up as this one's
-	let _ = std::fs::remove_dir_all(tmp);
-	std::fs::create_dir_all(tmp).expect("the temp dir is ours to create");
-
-	let meta = yt_dlp(&[
-		"--skip-download",
-		// `--print` alone implies `--simulate`, and a simulated run writes no caption file
-		"--no-simulate",
-		"--write-auto-subs",
-		"--write-subs",
-		"--sub-langs",
-		"en.*",
-		"--sub-format",
-		"json3",
-		"--print",
-		"%(title)s\u{1f}%(upload_date)s\u{1f}%(duration)s\u{1f}%(channel)s\u{1f}%(chapters)j\u{1f}%(description)j",
-		"-o",
-		tmp.join("%(id)s").to_str().expect("the temp path is utf-8"),
-		&format!("{WATCH}{id}"),
-	]);
-	let meta: Vec<&str> = meta.trim().split('\u{1f}').collect();
-	assert_eq!(meta.len(), 6, "yt-dlp was asked for six fields on {id}, and answered {meta:?}");
-	let (title, upload, duration, channel) = (meta[0], meta[1], meta[2], meta[3]);
-	let duration: f64 = duration.parse().unwrap_or_else(|e| panic!("yt-dlp stated {id}'s duration as {duration:?}: {e}"));
-
-	let captions = captions(tmp)?;
-	let blocks = blocks(&captions);
+async fn video(id: &str, tmp: &Path, shots: &Path) -> Option<String> {
+	let video = youtube::video(id).await.unwrap_or_else(|e| panic!("reading {id}: {e:?}"));
+	let blocks = blocks(&video.captions?);
 	assert!(!blocks.is_empty(), "{id} has a caption track that carries no words");
 
-	let chapters = chapters(meta[4], id);
-	let answer = ask(&prompt(title, &blocks, chapters.is_none()));
-	let sections = chapters.unwrap_or_else(|| derived(&answer, id, duration));
-	let shot_at = frames(id, tmp, shots, &sections);
+	let answer = ask(&prompt(&video.title, &blocks, video.chapters.is_none()));
+	let sections: Vec<(f64, String)> = match video.chapters {
+		Some(chapters) => chapters.into_iter().map(|Chapter { at, title }| (at, title)).collect(),
+		None => derived(&answer, id, video.duration),
+	};
+	let shot_at = frames(id, tmp, shots, &sections).await;
 
 	let mut out = format!(
-		"# {title}\n\
+		"# {}\n\
 		 \n\
 		 - source: <{WATCH}{id}>\n\
-		 - channel: {channel}\n\
+		 - channel: {}\n\
 		 - uploaded: {}\n\
 		 - duration: {}\n\
 		 - pulled by: `scripts/yt-pull.rs`\n\
 		 \n\
 		 ## summary\n\
 		 \n",
-		dashed(upload),
-		hms(duration)
+		video.title,
+		video.channel,
+		video.uploaded,
+		hms(video.duration)
 	);
 	for line in marked(&answer, SUMMARY, id) {
 		out.push_str(line);
@@ -324,14 +270,9 @@ fn video(id: &str, tmp: &Path, shots: &Path) -> Option<String> {
 		out.push_str(&format!("- [{}]({WATCH}{id}&t={}) {heading}\n  ![]({id}/{shot}.jpg)\n", hms(*at), *at as u64));
 	}
 
-	// `NA` is youtube's answer for a video whose uploader wrote nothing under it
-	let description: String = match meta[5].trim() {
-		"NA" => String::new(),
-		field => serde_json::from_str(field).unwrap_or_else(|e| panic!("yt-dlp states a description as a json string, and answered {field:?}: {e}")),
-	};
-	if !description.trim().is_empty() {
+	if let Some(description) = &video.description {
 		out.push_str(&format!("\n## description\n\n```\n{}\n```\n", description.trim()));
-		let links = urls_in(&description);
+		let links = urls_in(description);
 		if !links.is_empty() {
 			out.push('\n');
 			for link in &links {
@@ -345,13 +286,7 @@ fn video(id: &str, tmp: &Path, shots: &Path) -> Option<String> {
 		// the whole link on every block, so a line stays citable once it is copied out of this file
 		out.push_str(&format!("[{}]({WATCH}{id}&t={}) {words}\n\n", hms(*at), *at as u64));
 	}
-	let _ = std::fs::remove_dir_all(tmp);
 	Some(out)
-}
-
-fn dashed(upload: &str) -> String {
-	assert_eq!(upload.len(), 8, "yt-dlp states an upload date as YYYYMMDD, and answered {upload:?}");
-	format!("{}-{}-{}", &upload[..4], &upload[4..6], &upload[6..])
 }
 
 fn urls_in(text: &str) -> BTreeSet<String> {
@@ -362,38 +297,18 @@ fn urls_in(text: &str) -> BTreeSet<String> {
 		.collect()
 }
 
-/// yt-dlp names the track by the language it found, and asks for both the uploader's and youtube's
-/// own. A hand-written track is the better read, and sorting puts its shorter name first.
-fn captions(tmp: &Path) -> Option<serde_json::Value> {
-	let mut tracks: Vec<PathBuf> = std::fs::read_dir(tmp)
-		.expect("the temp dir was just created")
-		.map(|e| e.expect("a readable dir yields readable entries").path())
-		.filter(|p| p.extension().is_some_and(|e| e == "json3"))
-		.collect();
-	tracks.sort();
-	let track = tracks.first()?;
-	Some(serde_json::from_str(&std::fs::read_to_string(track).expect("yt-dlp just wrote it")).expect("yt-dlp writes json3 as json"))
-}
-
-fn blocks(captions: &serde_json::Value) -> Vec<(f64, String)> {
-	let events = captions["events"].as_array().expect("a json3 caption track is a list of events");
+fn blocks(cues: &[Cue]) -> Vec<(f64, String)> {
 	let mut out = Vec::new();
 	let mut start = None;
 	let mut words = String::new();
 	//LOOP: one pass over a finite caption track
-	for event in events {
-		let Some(segs) = event["segs"].as_array() else { continue };
-		let text: String = segs.iter().filter_map(|s| s["utf8"].as_str()).collect();
-		// the rolling window re-sends the newline between its two lines as a cue of its own
-		if text.trim().is_empty() {
-			continue;
-		}
-		let at = event["tStartMs"].as_f64().expect("a json3 event is stamped") / 1000.;
+	for Cue { at, text } in cues {
+		let at = *at;
 		let block = *start.get_or_insert(at);
 		if !words.is_empty() {
 			words.push(' ');
 		}
-		words.push_str(text.trim());
+		words.push_str(text);
 		if at - block >= BLOCK {
 			out.push((block, std::mem::take(&mut words)));
 			start = None;
@@ -403,26 +318,6 @@ fn blocks(captions: &serde_json::Value) -> Vec<(f64, String)> {
 		out.push((start.expect("words are only pushed after a block starts"), words));
 	}
 	out
-}
-
-/// `NA` is youtube's answer for a video the uploader never chaptered, which is most of them.
-fn chapters(field: &str, id: &str) -> Option<Vec<(f64, String)>> {
-	if field.trim() == "NA" {
-		return None;
-	}
-	let parsed: serde_json::Value = serde_json::from_str(field).unwrap_or_else(|e| panic!("yt-dlp states {id}'s chapters as json, and answered {field:?}: {e}"));
-	let list = parsed.as_array().expect("yt-dlp states chapters as a list");
-	let out: Vec<(f64, String)> = list
-		.iter()
-		.map(|c| {
-			(
-				c["start_time"].as_f64().expect("a youtube chapter is stamped"),
-				c["title"].as_str().expect("a youtube chapter is titled").to_string(),
-			)
-		})
-		.collect();
-	assert!(!out.is_empty(), "{id} carries a chapter list with nothing in it");
-	Some(out)
 }
 
 fn prompt(title: &str, blocks: &[(f64, String)], want_sections: bool) -> String {
@@ -501,27 +396,16 @@ fn derived(answer: &str, id: &str, duration: f64) -> Vec<(f64, String)> {
 	sections
 }
 
-/// One capped pull per video: youtube binds a media URL to the player client that asked for it, so
-/// ffmpeg seeking that URL answers 403 and the frames have to come off a local file, which is then
-/// dropped with the rest of the temp dir. The seconds it ends up grabbing at are what names the
-/// files, so they are handed back rather than recomputed where the markdown points at them.
-fn frames(id: &str, tmp: &Path, shots: &Path, sections: &[(f64, String)]) -> Vec<u64> {
+/// The seconds it ends up grabbing at are what names the files, so they are handed back rather than
+/// recomputed where the markdown points at them.
+async fn frames(id: &str, tmp: &Path, shots: &Path, sections: &[(f64, String)]) -> Vec<u64> {
+	// a video from an earlier run would be picked up as this one's
+	if tmp.exists() {
+		std::fs::remove_dir_all(tmp).unwrap_or_else(|e| panic!("clearing {}: {e}", tmp.display()));
+	}
+	std::fs::create_dir_all(tmp).expect("the temp dir is ours to create");
 	let video = tmp.join("video");
-	yt_dlp(&[
-		// the default client hands back URLs that 403 on download, and the mobile ones are offered
-		// nothing above 360p, at which a dashboard in a screen-share stops being readable
-		"--extractor-args",
-		"youtube:player_client=web_embedded",
-		// the floor is the point of the frames and the ceiling is what keeps the pull cheap; a video
-		// offering neither is better refused here than captured with nothing legible in it
-		"-f",
-		"bv*[height<=720][height>=480]",
-		"--no-part",
-		"-q",
-		"-o",
-		video.to_str().expect("the temp path is utf-8"),
-		&format!("{WATCH}{id}"),
-	]);
+	youtube::download(id, &video).await.unwrap_or_else(|e| panic!("pulling {id}: {e:?}"));
 	let duration = ffprobe(&video);
 	std::fs::create_dir_all(shots).expect("ref/youtube is ours to create under");
 	let mut grabbed = Vec::new();
@@ -540,6 +424,7 @@ fn frames(id: &str, tmp: &Path, shots: &Path, sections: &[(f64, String)]) -> Vec
 		assert!(status.success() && shot.exists(), "no frame at {at}s of {id}");
 		grabbed.push(at);
 	}
+	std::fs::remove_dir_all(tmp).unwrap_or_else(|e| panic!("removing {}: {e}", tmp.display()));
 	grabbed
 }
 

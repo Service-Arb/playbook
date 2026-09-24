@@ -4,17 +4,20 @@
 edition = "2024"
 
 [dependencies]
+clap = { version = "4", features = ["derive"] }
+glass_pumpkin = "=2.0.0-rc0" # social_networks' lock; rc1 breaks grammers-crypto, which asks for `2.0.0-rc0`
 jiff = "0.2"
-serde_json = "1"
+serde = { version = "1", features = ["derive"] }
+social_networks_adapters = { path = "/home/v/s/social_networks/social_networks_adapters" }
+tokio = { version = "1", features = ["full"] }
+v_utils = { version = "=2.17.6", features = ["xdg", "cli"] }
+v_utils_macros = "=2.12.5" # social_networks' lock; later ones call into a v_utils newer than 2.17.6
 ---
 
 //! `./scripts/skool-pull.rs` — mirror each group's classroom under `ref/skool_<group>/course/`, one
 //! directory per module and one file per lesson, both numbered in the order skool serves them.
 //!
-//! Skool is the one source here that needs a session, so the reading lives in `social_networks` and
-//! this shells out to it, the way the other pullers shell out to yt-dlp and chromium. Depending on
-//! that crate directly would mean resolving its tree without its lockfile, which picks versions its
-//! own pins exist to avoid.
+//! Skool is read by `social_networks_adapters`, linked; this only decides how a capture is filed.
 //!
 //! Credentials are `social_networks`' own: `~/.config/social_networks`'s `[skool]` section, reading
 //! `$DEFAULT_MAIL` / `$DEFAULT_PASSWORD`, with a browser-minted cookie cached between runs.
@@ -35,18 +38,36 @@ serde_json = "1"
 use std::{
 	collections::{BTreeMap, BTreeSet},
 	path::{Path, PathBuf},
-	process::Command,
 };
+
+use social_networks_adapters::{
+	reach::{VenueRef, VenueSource},
+	skool::{Course, Skool, SkoolCredentials, Video},
+};
+use v_utils::macros::{MyConfigPrimitives, Settings};
 
 // each group, and the directory it was given by hand
 const GROUPS: &[(&str, &str)] = &[("gmp-passive-profits-5347", "ref/skool_gmbpp"), ("20kmodropservicingblueprint", "ref/skool_cheap")];
-const RECON: &str = "/home/v/s/social_networks/Cargo.toml";
 
-fn main() {
+/// The `[skool]` section of `~/.config/social_networks`, read as `recon` reads it.
+#[derive(Clone, Debug, Default, MyConfigPrimitives, Settings)]
+#[settings(config_name = "social_networks")]
+struct Config {
+	#[settings(skip)]
+	#[serde(default)]
+	skool: Option<SkoolCredentials>,
+}
+
+#[tokio::main]
+async fn main() {
 	let root = repo_root();
+	let config = Config::try_build(SettingsFlags::default()).unwrap_or_else(|e| panic!("reading ~/.config/social_networks: {e}"));
+	let creds = config.skool.expect("a skool classroom is only readable by a member, so this needs a `[skool]` section in ~/.config/social_networks");
+	let mut skool = Skool::try_new(Some(creds)).unwrap_or_else(|e| panic!("{e:?}"));
 	let mut links: BTreeSet<String> = BTreeSet::new();
 	for (group, out_root) in GROUPS {
-		links.extend(pull(&root, group, out_root));
+		let courses = skool.classroom(&VenueRef::new(VenueSource::Skool, *group)).await.unwrap_or_else(|e| panic!("reading {group}'s classroom: {e:?}"));
+		links.extend(pull(&root, group, out_root, &courses));
 	}
 
 	let registry = std::fs::read_to_string(root.join("ref/README.md")).expect("ref/README.md is the registry");
@@ -61,12 +82,11 @@ fn main() {
 }
 
 /// One group's classroom into `out`, returning every link it says out loud.
-fn pull(root: &Path, group: &str, out_root: &str) -> BTreeSet<String> {
+fn pull(root: &Path, group: &str, out_root: &str, courses: &[Course]) -> BTreeSet<String> {
 	let out_dir = root.join(out_root).join("course");
 	std::fs::create_dir_all(&out_dir).expect("the course dir is ours to create");
 
 	let today = jiff::Zoned::now().date();
-	let courses = classroom(group);
 	let have = captured(&out_dir);
 
 	let mut index = format!(
@@ -84,14 +104,14 @@ fn pull(root: &Path, group: &str, out_root: &str) -> BTreeSet<String> {
 	let mut stale = 0usize;
 
 	for (m, course) in courses.iter().enumerate() {
-		let module_dir = out_dir.join(format!("{:02}-{}", m + 1, slug(text(course, "title"))));
+		let module_dir = out_dir.join(format!("{:02}-{}", m + 1, slug(&course.title)));
 		std::fs::create_dir_all(&module_dir).expect("a module dir is ours to create");
-		index.push_str(&format!("\n## {}\n\n", text(course, "title")));
+		index.push_str(&format!("\n## {}\n\n", course.title));
 
 		written += place(
 			&module_dir.join("README.md"),
 			&have,
-			text(course, "id"),
+			&course.id,
 			&format!(
 				"# {}\n\
 				 \n\
@@ -101,29 +121,26 @@ fn pull(root: &Path, group: &str, out_root: &str) -> BTreeSet<String> {
 				 - pulled by: `scripts/skool-pull.rs`\n\
 				 \n\
 				 {}\n",
-				text(course, "title"),
-				text(course, "permalink"),
-				text(course, "id"),
-				day(text(course, "at")),
-				text(course, "body"),
+				course.title,
+				course.permalink,
+				course.id,
+				day(course.at),
+				course.body,
 			),
 		) as usize;
 
-		let lessons = course["lessons"].as_array().expect("a course carries its lessons");
-		for (l, lesson) in lessons.iter().enumerate() {
-			let id = text(lesson, "id");
-			let video = lesson["video"].as_str();
-			let resources = lesson["resources"].as_str();
-			links.extend(urls_in(text(lesson, "body")));
-			if let Some(resources) = resources {
+		for (l, lesson) in course.lessons.iter().enumerate() {
+			let id = lesson.id.as_str();
+			links.extend(urls_in(&lesson.body));
+			if let Some(resources) = &lesson.resources {
 				links.extend(urls_in(resources));
 			}
 			// a mux URL is skool's own player and not a source anything else can be pointed at
-			if let Some(video) = video.filter(|v| !v.starts_with("https://stream.mux.com/")) {
-				links.insert(video.to_string());
+			if let Some(Video::Link(link)) = &lesson.video {
+				links.insert(link.clone());
 			}
 
-			let at = day(text(lesson, "at"));
+			let at = day(lesson.at);
 			let doc = format!(
 				"# {}\n\
 				 \n\
@@ -135,25 +152,30 @@ fn pull(root: &Path, group: &str, out_root: &str) -> BTreeSet<String> {
 				 - pulled by: `scripts/skool-pull.rs`\n\
 				 \n\
 				 {}\n{}",
-				text(lesson, "title"),
-				text(lesson, "permalink"),
+				lesson.title,
+				lesson.permalink,
 				id,
-				text(lesson, "module"),
+				lesson.module,
 				at,
-				video.map(stable).as_deref().unwrap_or("none — this lesson is text"),
-				text(lesson, "body"),
-				resources.map(|r| format!("\n## resources\n\n```json\n{r}\n```\n")).unwrap_or_default(),
+				match &lesson.video {
+					// the signed URL dies within the hour; the playback id is the part a re-read can act on
+					Some(Video::Mux { playback_id, .. }) => format!("mux:{playback_id}"),
+					Some(Video::Link(link)) => link.clone(),
+					None => "none — this lesson is text".to_string(),
+				},
+				lesson.body,
+				lesson.resources.as_ref().map(|r| format!("\n## resources\n\n```json\n{r}\n```\n")).unwrap_or_default(),
 			);
 			// a capture is never edited, so what skool changed under one is said in the index instead —
 			// read before the capture is placed, since placing it is what moves it
 			let behind = have.get(id).is_some_and(|had| captured_at(had) != at);
 			stale += behind as usize;
 
-			let out = module_dir.join(format!("{:02}-{}.md", l + 1, slug(text(lesson, "title"))));
+			let out = module_dir.join(format!("{:02}-{}.md", l + 1, slug(&lesson.title)));
 			written += place(&out, &have, id, &doc) as usize;
 			index.push_str(&format!(
 				"- [{}]({}){}\n",
-				text(lesson, "title"),
+				lesson.title,
 				relative(&root.join(out_root), &out),
 				match behind {
 					true => format!(" — **stale**: skool says {at}"),
@@ -248,13 +270,9 @@ fn relative(base: &Path, path: &Path) -> String {
 	path.strip_prefix(base).expect("every capture sits under the course dir").display().to_string()
 }
 
-fn text<'a>(node: &'a serde_json::Value, key: &str) -> &'a str {
-	node[key].as_str().unwrap_or_else(|| panic!("a classroom node carries no `{key}`: {node}"))
-}
-
-/// skool states the day it last changed; the time of day says nothing a re-read asks
-fn day(at: &str) -> String {
-	at.split('T').next().expect("split yields at least once").to_string()
+/// skool states the moment it last changed; the time of day says nothing a re-read asks
+fn day(at: jiff::Timestamp) -> String {
+	at.strftime("%F").to_string()
 }
 
 /// A filename that says what the thing is. The id stays in the file, so this one is free to read
@@ -288,32 +306,6 @@ fn urls_in(text: &str) -> Vec<String> {
 		}
 	}
 	found
-}
-
-/// What is still true tomorrow. A mux URL is signed, expires within the hour and is served only
-/// under skool's own `Referer`, so writing it down whole records a dead link and a page of token —
-/// the playback id is the part a re-read can act on. Anything else is somebody's pasted link.
-fn stable(video: &str) -> String {
-	match video.strip_prefix("https://stream.mux.com/") {
-		Some(rest) => format!("mux:{}", rest.split(['.', '?']).next().expect("split yields at least once")),
-		None => video.to_string(),
-	}
-}
-
-/// `recon` prints the classroom as json on stdout and everything else on stderr, so stdout is the
-/// whole answer and a failure to parse it is a failure to read the classroom.
-fn classroom(slug: &str) -> Vec<serde_json::Value> {
-	// `cargo run`, never the `r` alias: that one is `lrun`, which reads `cargo metadata` from the
-	// working directory and so cannot be called from outside its own workspace
-	let out = Command::new("cargo")
-		.args(["run", "-q", "--manifest-path", RECON, "--bin", "recon", "--", "classroom", &format!("skool:{slug}")])
-		.output()
-		.unwrap_or_else(|e| panic!("cargo: {e}"));
-	if !out.status.success() {
-		panic!("recon classroom failed:\n{}", String::from_utf8_lossy(&out.stderr));
-	}
-	let stdout = String::from_utf8(out.stdout).expect("recon prints utf-8");
-	serde_json::from_str(&stdout).unwrap_or_else(|e| panic!("recon's stdout is not a list of courses: {e}\n{}", &stdout[..stdout.len().min(400)]))
 }
 
 fn repo_root() -> PathBuf {

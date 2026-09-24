@@ -1,7 +1,7 @@
 # The classroom, as skool serves it
 
 - source: <https://www.skool.com/gmp-passive-profits-5347/classroom>
-- checked: 2026-09-18
+- checked: 2026-09-24
 - written by: `scripts/skool-pull.rs`, every run
 
 A lesson skool has touched since we captured it is marked `stale` — delete its file and run
