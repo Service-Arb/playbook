@@ -4,6 +4,7 @@
 edition = "2024"
 
 [dependencies]
+ask_llm = { version = "3.4", default-features = false }
 glass_pumpkin = "=2.0.0-rc0" # social_networks' lock; rc1 breaks grammers-crypto, which asks for `2.0.0-rc0`
 jiff = "0.2"
 social_networks_adapters = { path = "/home/v/s/social_networks/social_networks_adapters", features = ["youtube-reads"] }
@@ -22,9 +23,10 @@ v_utils_macros = "=2.12.5" # social_networks' lock; later ones call into a v_uti
 //! readable paragraph and a `&t=` anchor that lands where the words are.
 //!
 //! Half of what these videos say is said on screen — a dashboard, a search result, a review count —
-//! and captions carry none of it, so a capture also holds chapters, a frame per chapter, a summary
-//! and the description. Chapters are the uploader's own where youtube has them and the model's
-//! reading of the transcript where it does not; the frames come off the video itself.
+//! and captions carry none of it, so a capture also holds what the picture shows, read by `ask_llm`'s
+//! `Client::watch` with the captions as its speech, each line beside the frame it was read off. Then
+//! chapters, a summary and the description. Chapters are the uploader's own where youtube has them and
+//! the model's reading of the transcript where it does not.
 //!
 //! Enrichment that cannot be produced aborts the video and writes nothing. The md file existing is
 //! what makes the next run skip it, so a half-written one would never be repaired.
@@ -32,17 +34,15 @@ v_utils_macros = "=2.12.5" # social_networks' lock; later ones call into a v_uti
 use std::{
 	collections::{BTreeMap, BTreeSet},
 	path::{Path, PathBuf},
-	process::Command,
 };
 
+use ask_llm::{Client, Footage, Model, Said, Shown, Watch};
 use jiff::civil::Date;
 use social_networks_adapters::youtube::{self, Chapter, Cue};
 
 const WATCH: &str = "https://www.youtube.com/watch?v=";
 const INDEX: &str = "ref/youtube/README.md";
 const BLOCK: f64 = 30.;
-/// Into a chapter rather than onto its first frame, which is still the transition out of the last.
-const SHOT_INTO: f64 = 8.;
 const SUMMARY: &str = "SUMMARY";
 const SECTIONS: &str = "SECTIONS";
 
@@ -172,20 +172,35 @@ fn captured(dir: &Path) -> Vec<String> {
 
 /// Every tick is read off the disk, so a capture pulled or deleted is reflected on the next write.
 fn write(root: &Path, index: &Index) {
+	let spent = index
+		.sections
+		.iter()
+		.flat_map(|s| s.entries.iter().map(move |e| root.join("ref/youtube").join(&s.who).join(format!("{}.md", e.id))))
+		.filter(|p| p.exists())
+		.map(|p| {
+			let text = std::fs::read_to_string(&p).unwrap_or_else(|e| panic!("reading {}: {e}", p.display()));
+			let cost = text.lines().find_map(|l| l.strip_prefix("- cost: $")).unwrap_or_else(|| panic!("{} states no cost — delete it to re-pull", p.display()));
+			cost.trim().parse::<f64>().unwrap_or_else(|e| panic!("{}: `{cost}`: {e}", p.display()))
+		})
+		.fold((0f64, 0usize), |(usd, n), c| (usd + c, n + 1));
 	let mut out = format!(
 		"# YouTube, as the channels serve it\n\
 		 \n\
 		 - checked: {}\n\
 		 - written by: `scripts/yt-pull.rs sync`, which lists every video; `transcribe` ticks each it captures\n\
 		 \n\
+		 - spent: ${:.2} over {} captures, as their `cost:` lines state\n\
+		 \n\
 		 A directory per person, named by the text of their channel's link in `../README.md`. In it,\n\
-		 `<id>.md` is a video's capture — summary, chapters, description, then the captions in citable\n\
-		 blocks — and `<id>/<secs>.jpg` are the frames its chapters show.\n\
+		 `<id>.md` is a video's capture — summary, chapters, what is shown, description, then the captions\n\
+		 in citable blocks — and `<id>/<secs>.jpg` the frames its `## shown` lines were read off.\n\
 		 \n\
 		 A line per video, newest first: the day youtube says it was uploaded, linked to the video, then\n\
 		 its title — linked to the capture once there is one. `scripts/yt-pull.rs transcribe` captures\n\
 		 every unticked line.\n",
-		index.checked
+		index.checked,
+		spent.0,
+		spent.1,
 	);
 	for Section { who, channel, entries } in &index.sections {
 		out.push_str(&format!("\n## {who} — <{channel}>\n\n"));
@@ -237,12 +252,32 @@ async fn video(id: &str, tmp: &Path, shots: &Path) -> Option<String> {
 	let blocks = blocks(&video.captions?);
 	assert!(!blocks.is_empty(), "{id} has a caption track that carries no words");
 
-	let answer = ask(&prompt(&video.title, &blocks, video.chapters.is_none()));
+	let answer = Client::default()
+		.model(Model::Fast)
+		.ask(prompt(&video.title, &blocks, video.chapters.is_none()))
+		.await
+		.unwrap_or_else(|e| panic!("summarising {id}: {e:?}"));
 	let sections: Vec<(f64, String)> = match video.chapters {
 		Some(chapters) => chapters.into_iter().map(|Chapter { at, title }| (at, title)).collect(),
-		None => derived(&answer, id, video.duration),
+		None => derived(&answer.text, id, video.duration),
 	};
-	let shot_at = frames(id, tmp, shots, &sections).await;
+
+	// a video from an earlier run would be picked up as this one's
+	if tmp.exists() {
+		std::fs::remove_dir_all(tmp).unwrap_or_else(|e| panic!("clearing {}: {e}", tmp.display()));
+	}
+	std::fs::create_dir_all(tmp).expect("the temp dir is ours to create");
+	let media = tmp.join("video");
+	youtube::download(id, &media).await.unwrap_or_else(|e| panic!("pulling {id}: {e:?}"));
+	let spec = Watch {
+		title: video.title.clone(),
+		speech: Some(blocks.iter().map(|(secs, text)| Said { secs: *secs, text: text.clone() }).collect()),
+		footage: Footage::Screen,
+		frames: shots.to_path_buf(),
+	};
+	let watched = Client::default().model(Model::Video).watch(&media, spec).await.unwrap_or_else(|e| panic!("watching {id}: {e:?}"));
+	std::fs::remove_dir_all(tmp).unwrap_or_else(|e| panic!("removing {}: {e}", tmp.display()));
+	let watched_by = watched.model.as_deref().unwrap_or_else(|| panic!("{id} downloaded with no picture"));
 
 	let mut out = format!(
 		"# {}\n\
@@ -252,22 +287,36 @@ async fn video(id: &str, tmp: &Path, shots: &Path) -> Option<String> {
 		 - uploaded: {}\n\
 		 - duration: {}\n\
 		 - pulled by: `scripts/yt-pull.rs`\n\
+		 - read by: `{}` summary and chapters, `{watched_by}` what is shown, over {} frames where the picture changes\n\
+		 - cost: ${:.4}\n\
 		 \n\
 		 ## summary\n\
 		 \n",
 		video.title,
 		video.channel,
 		video.uploaded,
-		hms(video.duration)
+		hms(video.duration),
+		answer.model,
+		watched.frames_read,
+		(answer.cost_cents + watched.cost_cents) as f64 / 100.,
 	);
-	for line in marked(&answer, SUMMARY, id) {
+	for line in marked(&answer.text, SUMMARY, id) {
 		out.push_str(line);
 		out.push('\n');
 	}
 
 	out.push_str("\n## chapters\n\n");
-	for ((at, heading), shot) in sections.iter().zip(&shot_at) {
-		out.push_str(&format!("- [{}]({WATCH}{id}&t={}) {heading}\n  ![]({id}/{shot}.jpg)\n", hms(*at), *at as u64));
+	for (at, heading) in &sections {
+		out.push_str(&format!("- [{}]({WATCH}{id}&t={}) {heading}\n", hms(*at), *at as u64));
+	}
+
+	out.push_str("\n## shown\n");
+	for Shown { secs, shown, on_screen_text, .. } in &watched.shown {
+		out.push_str(&format!("\n- [{}]({WATCH}{id}&t={secs}) {}\n", hms(*secs as f64), shown.replace('\n', " ")));
+		if let Some(text) = on_screen_text {
+			out.push_str(&format!("  > {}\n", text.replace('\n', " / ")));
+		}
+		out.push_str(&format!("  ![]({id}/{secs}.jpg)\n"));
 	}
 
 	if let Some(description) = &video.description {
@@ -336,8 +385,7 @@ fn prompt(title: &str, blocks: &[(f64, String)], want_sections: bool) -> String 
 			"\n{SECTIONS}\n\
 			 One line per section, `<seconds> <heading>`, seconds being a whole-number offset into the \
 			 video and heading a handful of lowercase words. Six to twelve sections, in order. Open a \
-			 section where the speaker turns to a new thing, so a frame grabbed a few seconds in shows \
-			 whatever is on screen for it.\n"
+			 section where the speaker turns to a new thing.\n"
 		));
 	}
 	ask.push_str("\n--- transcript ---\n");
@@ -345,25 +393,6 @@ fn prompt(title: &str, blocks: &[(f64, String)], want_sections: bool) -> String 
 		ask.push_str(&format!("{} {words}\n", *at as u64));
 	}
 	ask
-}
-
-/// Reached through the `claude` CLI the way `ask_llm`'s claude backend does, so the answer bills the
-/// subscription rather than credits — which is also why the keys that would redirect it are dropped.
-fn ask(prompt: &str) -> String {
-	let out = Command::new("claude")
-		.args(["-p", prompt])
-		.args(["--model", "haiku"])
-		.args(["--tools", ""]) // an answer, not an agent
-		.arg("--safe-mode") // this checkout's CLAUDE.md, hooks and MCP servers are not part of the question
-		.arg("--no-session-persistence")
-		.env_remove("ANTHROPIC_API_KEY")
-		.env_remove("CLAUDE_TOKEN")
-		.output()
-		.unwrap_or_else(|e| panic!("claude: {e} — is it on PATH?"));
-	if !out.status.success() {
-		panic!("claude exited {}:\n{}", out.status, String::from_utf8_lossy(&out.stderr));
-	}
-	String::from_utf8(out.stdout).expect("claude prints utf-8")
 }
 
 /// The lines of one named block of the answer. A missing block is the model having answered some
@@ -394,49 +423,4 @@ fn derived(answer: &str, id: &str, duration: f64) -> Vec<(f64, String)> {
 		.collect();
 	assert!(sections.windows(2).all(|w| w[0].0 < w[1].0), "the model's sections for {id} do not run in order: {sections:?}");
 	sections
-}
-
-/// The seconds it ends up grabbing at are what names the files, so they are handed back rather than
-/// recomputed where the markdown points at them.
-async fn frames(id: &str, tmp: &Path, shots: &Path, sections: &[(f64, String)]) -> Vec<u64> {
-	// a video from an earlier run would be picked up as this one's
-	if tmp.exists() {
-		std::fs::remove_dir_all(tmp).unwrap_or_else(|e| panic!("clearing {}: {e}", tmp.display()));
-	}
-	std::fs::create_dir_all(tmp).expect("the temp dir is ours to create");
-	let video = tmp.join("video");
-	youtube::download(id, &video).await.unwrap_or_else(|e| panic!("pulling {id}: {e:?}"));
-	let duration = ffprobe(&video);
-	std::fs::create_dir_all(shots).expect("ref/youtube is ours to create under");
-	let mut grabbed = Vec::new();
-	for (at, _) in sections {
-		let at = (at + SHOT_INTO).min(duration - 1.) as u64;
-		let shot = shots.join(format!("{at}.jpg"));
-		let status = Command::new("ffmpeg")
-			.args(["-nostdin", "-loglevel", "error", "-y", "-ss"])
-			.arg(at.to_string())
-			.arg("-i")
-			.arg(&video)
-			.args(["-frames:v", "1", "-q:v", "4"])
-			.arg(&shot)
-			.status()
-			.unwrap_or_else(|e| panic!("ffmpeg: {e} — is it on PATH?"));
-		assert!(status.success() && shot.exists(), "no frame at {at}s of {id}");
-		grabbed.push(at);
-	}
-	std::fs::remove_dir_all(tmp).unwrap_or_else(|e| panic!("removing {}: {e}", tmp.display()));
-	grabbed
-}
-
-/// The stream's own length, not youtube's: `-ss` past the last frame writes nothing, and the two
-/// disagree by a second often enough to matter on the closing section.
-fn ffprobe(video: &Path) -> f64 {
-	let out = Command::new("ffprobe")
-		.args(["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0"])
-		.arg(video)
-		.output()
-		.unwrap_or_else(|e| panic!("ffprobe: {e} — is it on PATH?"));
-	assert!(out.status.success(), "ffprobe {}:\n{}", video.display(), String::from_utf8_lossy(&out.stderr));
-	let text = String::from_utf8(out.stdout).expect("ffprobe prints utf-8");
-	text.trim().parse().unwrap_or_else(|e| panic!("ffprobe stated a duration of {text:?}: {e}"))
 }

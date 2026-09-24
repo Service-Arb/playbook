@@ -55,7 +55,7 @@ ref/
 ├── research/<id>.md              # chatgpt shares, one `## user` / `## assistant` section per turn
 ├── youtube/                      # channel videos
 │   ├── README.md                 # every video each channel lists, dated, ticked once captured — `yt-pull.rs sync`
-│   └── <who>/<id>.md             # a video, and `<id>/` the frames it cites
+│   └── <who>/<id>.md             # a video: summary, chapters, what is shown, captions — and `<id>/<secs>.jpg` the frames its `## shown` lines were read off
 └── skool_<group>/                # a classroom, via `social_networks` — `gmbpp`, and the `cheap` group
     ├── README.md                 # what upstream holds, and the day it was last compared to this
     └── course/<NN-module>/       # a directory per module, a file per lesson, both in upstream's order
@@ -110,7 +110,8 @@ that; a hook runs it after any agent edit under a call capture's platform dir.
 
 Machine transcriptions of a recording belong in `ref/` too, each naming what produced it: whisper's
 of its audio, in `transcribed by:`, and `scripts/call-watch.rs`'s of its picture, in `shown.md`,
-whose header names the model, the day and what it cost. Every line of `shown.md` links the second it
+whose header names the model, the day and what it cost. A youtube capture reads its picture the same
+way, into its own `## shown`, and states the models and the cost in its header. Every line of `shown.md` links the second it
 describes and embeds the frame at that second, so the claim can be checked by eye.
 
 The one reading an agent may put in `ref/` is what the source's own platform would have:
@@ -202,10 +203,10 @@ grows by hand.
 ```
 scripts/
 ├── call-pull.rs       # loom / fathom share page, drive folder → summary, chapters, and the platform's transcript, or whisper's where there is none; the recording itself
-├── call-watch.rs      # not a puller: a kept recording's frames, where the picture changes, through `ask_llm` → `shown.md`
+├── call-watch.rs      # not a puller: a kept recording, through `ask_llm`'s `Client::watch` → `shown.md`
 ├── doc-pull.rs        # google doc → its markdown export
 ├── chatgpt-pull.rs    # headless chromium → the DOM's turns
-├── yt-pull.rs         # sync: channels → the dated list of their videos; transcribe: captions in citable blocks, chapters, frames, description
+├── yt-pull.rs         # sync: channels → the dated list of their videos; transcribe: captions in citable blocks, summary and chapters through `ask_llm`, the video through `Client::watch` → `## shown`, description
 ├── skool-pull.rs      # skool's classroom → the course tree, module by module and lesson by lesson
 └── cite-check.rs      # not a puller: holds every citation in structured/ to its capture in ref/
 ```
