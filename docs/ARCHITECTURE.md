@@ -28,7 +28,8 @@ Capture and distillation never happen in the same file.
         every bullet on the right links back to a second on the left
 ```
 
-> very important to note that knowledge-base must be organized based on where and how it's likely to be used. [structured/approved/] drives the final agent's knowledge, so while [ref/] is organized based on where and when data is from, the actual knowledge we poses must follow the access patterns. Eg "expectations" from doing something are clearly subservient to the method/action itself
+> very important to note that knowledge-base must be organized based on where and how it's likely to be used. [structured/approved/] drives the final agent's knowledge, so while [ref/] is organized based on where and when data is from, the actual knowledge we poses must follow the access patterns. Eg "expectations" from doing something are clearly subservient to the method/action itself, and data on how verify profiles, and on how to get reviews, are completely separate buckets.
+> As such, the 
 
 ## Layers
 
@@ -164,10 +165,10 @@ it sets the base:
 | base | source                                                        |
 |------|---------------------------------------------------------------|
 | 0    | tested myself                                                 |
-| 1    | skool course material                                         |
+| 1    | skool course material or in [structured/approved/]            |
 | 2    | Eric said it                                                  |
 | 3    | a gmbpp member tested it                                      |
-| 4    | a gmbpp member claimed it                                     |
+| 4    | a gmbpp member claimed it or in [structured/suggested]        |
 | 5    | a gmbpp member heard or thought of it; a cheap group member tested it |
 | 6    | a cheap group member claimed it                               |
 | 7    | a cheap group member heard or thought of it                   |
@@ -196,7 +197,7 @@ grows by hand.
 ```
 scripts/
 ├── call-pull.rs       # loom / fathom share page, drive folder → summary, chapters, and the platform's transcript, or whisper's where there is none; the recording itself
-├── call-watch.rs      # not a puller: a kept recording's picture, through gemini → `shown.md`
+├── call-watch.rs      # not a puller: a kept recording's frames, where the picture changes, through `ask_llm` → `shown.md`
 ├── doc-pull.rs        # google doc → its markdown export
 ├── chatgpt-pull.rs    # headless chromium → the DOM's turns
 ├── yt-pull.rs         # yt-dlp → captions in citable blocks, chapters, frames, description
