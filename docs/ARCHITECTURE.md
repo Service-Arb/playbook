@@ -205,8 +205,8 @@ scripts/
 ├── call-watch.rs      # not a puller: a kept recording's frames, where the picture changes, through `ask_llm` → `shown.md`
 ├── doc-pull.rs        # google doc → its markdown export
 ├── chatgpt-pull.rs    # headless chromium → the DOM's turns
-├── yt-pull.rs         # sync: channels → the dated list of their videos; transcribe: yt-dlp → captions in citable blocks, chapters, frames, description
-├── skool-pull.rs      # recon classroom → the course tree, module by module and lesson by lesson
+├── yt-pull.rs         # sync: channels → the dated list of their videos; transcribe: captions in citable blocks, chapters, frames, description
+├── skool-pull.rs      # skool's classroom → the course tree, module by module and lesson by lesson
 └── cite-check.rs      # not a puller: holds every citation in structured/ to its capture in ref/
 ```
 
@@ -216,10 +216,10 @@ lists every call capture under the paths with the estimated cost of redoing it. 
 `--execute`, and asks first when the total is past $1. Audio is redone only for a whisper transcript
 that has no digest yet, since a re-pull drops the digest.
 
-Anything needing a session lives in
-[`social_networks`](https://github.com/valeratrades/social_networks), and a puller shells
-out to it rather than linking it — that crate's tree only resolves against its own lock.
-It knows how to read a platform; the puller here decides how a capture is filed.
+A platform that needs a session, or one
+[`social_networks`](https://github.com/valeratrades/social_networks) already knows, is read
+by linking `social_networks_adapters`. It knows how to read a platform; the puller here
+decides how a capture is filed.
 
 Skool *conversations* are already `recon posts skool:<slug>`, which writes them into the
 rolodex's `venues/` tree; nothing here duplicates that.
