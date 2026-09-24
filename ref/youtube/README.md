@@ -19,7 +19,7 @@ every unticked line.
 - [ ] [2026-09-17](https://www.youtube.com/watch?v=GRONlIZpzpQ) The Most Profitable WINTER Niches for Remote Service Arbitrage
 - [ ] [2026-09-16](https://www.youtube.com/watch?v=5axxS9pHeOk) Speed-running $0 to $10k/mo with "Remote Cleaning" so you can copy me and hit it next month
 - [ ] [2026-09-14](https://www.youtube.com/watch?v=5RMRP22LrzI) after 4 years i finally escaped the matrix and now i'm depressed
-- [x] [2026-09-13](https://www.youtube.com/watch?v=cXAKQeNQOd8) [How to Rank #1 on Google as a Service Area Business (SAB)](eric/cXAKQeNQOd8.md)
+- [ ] [2026-09-13](https://www.youtube.com/watch?v=cXAKQeNQOd8) How to Rank #1 on Google as a Service Area Business (SAB)
 - [ ] [2026-09-11](https://www.youtube.com/watch?v=3MEgzC6Rzbc) How Bradley Grew a $2M Painting Company Using Google My Business
 - [ ] [2026-09-11](https://www.youtube.com/watch?v=9qYlL5lrddI) Why Your Google Business Profile Stopped Getting Calls (and how to fix it)
 - [ ] [2026-09-10](https://www.youtube.com/watch?v=Oq5cVF1j2ec) "GMB flipping" might be the easiest way to hit $100k/mo ($100,350 in 55 days)
@@ -43,14 +43,14 @@ every unticked line.
 - [ ] [2026-08-19](https://www.youtube.com/watch?v=ueSHOxE3m4Q) what it actually took to hit $100k/mo at 20 (except im brutally honest and not tryna sell a course)
 - [ ] [2026-08-18](https://www.youtube.com/watch?v=RE8L-5GwnPg) How I get DIRT CHEAP Contractors for my Drop-Serivcing Business (SMS Blast)
 - [ ] [2026-08-17](https://www.youtube.com/watch?v=cPaH_uPZeQU) exactly how id hit $30k/mo in 60 days again with remote service arbitrage
-- [x] [2026-08-16](https://www.youtube.com/watch?v=-0S3VwM75BM) [How many GBP's Do You Need to Make $10k/mo? (Remote Service Arbitrage)](eric/-0S3VwM75BM.md)
+- [ ] [2026-08-16](https://www.youtube.com/watch?v=-0S3VwM75BM) How many GBP's Do You Need to Make $10k/mo? (Remote Service Arbitrage)
 - [ ] [2026-08-15](https://www.youtube.com/watch?v=GnPkfT58KM8) I went from failing everything i tried to millionaire 1 year later (at 20 y/o)
 - [ ] [2026-08-14](https://www.youtube.com/watch?v=TbHR7MAaEg4) How I Prevent Contractors from Stealing my Clients ($70k/mo Remote Service Business)
 - [ ] [2026-08-13](https://www.youtube.com/watch?v=PSFjRWlXX1w) How Austin Started a 6-Figure Remote Service Business in 3 Months (completely from scratch)
 - [ ] [2026-08-13](https://www.youtube.com/watch?v=QoYuBISaGCA) Why 95% of People Fail "remote service arbitrage" and the Rest Make Millions
 - [ ] [2026-08-12](https://www.youtube.com/watch?v=va4n7uxmhbI) social media is cancer and the reason you feel so worthless
 - [ ] [2026-08-11](https://www.youtube.com/watch?v=DXud9XnICsU) 3 Tricks to Instantly Rank Higher on Google Maps (that actually work)
-- [x] [2026-08-10](https://www.youtube.com/watch?v=0D4Jo7QrVNw) [How Joseph Sold his Service Arbitrage Business for $100k 2 Months After Starting](eric/0D4Jo7QrVNw.md)
+- [ ] [2026-08-10](https://www.youtube.com/watch?v=0D4Jo7QrVNw) How Joseph Sold his Service Arbitrage Business for $100k 2 Months After Starting
 - [ ] [2026-08-10](https://www.youtube.com/watch?v=5k0sEi4QGUs) making millions at 20 has destroyed my mental health
 - [ ] [2026-08-08](https://www.youtube.com/watch?v=h0pzi_z9UR4) no matter how stupid or lazy you are, do this and you'll make $10k/mo online
 - [ ] [2026-08-08](https://www.youtube.com/watch?v=r_6NXlQzHJ0) The Most Underrated MRR Drop-servicing Niches to hit $20k/mo

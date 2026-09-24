@@ -5,6 +5,7 @@
 - uploaded: 2026-04-27
 - duration: 00:09:08
 - pulled by: `scripts/yt-pull.rs`
+- cost: $0.0000
 
 ## summary
 
