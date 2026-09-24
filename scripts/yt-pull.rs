@@ -7,9 +7,10 @@ edition = "2024"
 serde_json = "1"
 ---
 
-//! `./scripts/yt-pull.rs [<channel-or-video-url>...]` — write `ref/youtube/<id>.md` for every video
-//! we do not have yet. With no arguments it takes the youtube links already written down in
-//! `ref/README.md`, so adding a channel to the playbook is pasting its link there.
+//! `./scripts/yt-pull.rs sync` — list every video of every channel `ref/README.md` links, in
+//! `ref/youtube/README.md`, under a header per person: the link text names their directory.
+//! `./scripts/yt-pull.rs transcribe` — capture every video that list has unticked, into
+//! `ref/youtube/<who>/<id>.md`, ticking it as it goes.
 //!
 //! yt-dlp does the talking: it is the only thing that tracks youtube's player, and the captions it
 //! hands back are already timed.
@@ -27,55 +28,94 @@ serde_json = "1"
 //! what makes the next run skip it, so a half-written one would never be repaired.
 
 use std::{
-	collections::BTreeSet,
+	collections::{BTreeMap, BTreeSet},
 	path::{Path, PathBuf},
 	process::Command,
 };
 
 const WATCH: &str = "https://www.youtube.com/watch?v=";
+const INDEX: &str = "ref/youtube/README.md";
 const BLOCK: f64 = 30.;
 /// Into a chapter rather than onto its first frame, which is still the transition out of the last.
 const SHOT_INTO: f64 = 8.;
 const SUMMARY: &str = "SUMMARY";
 const SECTIONS: &str = "SECTIONS";
 
+struct Index {
+	checked: String,
+	sections: Vec<Section>,
+}
+
+struct Section {
+	who: String,
+	channel: String,
+	entries: Vec<Entry>,
+}
+
+#[derive(Clone)]
+struct Entry {
+	id: String,
+	uploaded: String,
+	title: String,
+}
+
 fn main() {
 	let root = repo_root();
-	let out_dir = root.join("ref/youtube");
-	std::fs::create_dir_all(&out_dir).expect("ref/youtube is ours to create");
+	match std::env::args().skip(1).collect::<Vec<_>>().as_slice() {
+		[cmd] if cmd == "sync" => sync(&root),
+		[cmd] if cmd == "transcribe" => transcribe(&root),
+		_ => panic!("usage: yt-pull.rs <sync|transcribe>"),
+	}
+}
 
-	let args: Vec<String> = std::env::args().skip(1).collect();
-	let sources: BTreeSet<String> = match args.is_empty() {
-		true => links_in(&root.join("ref/README.md")),
-		false => args.into_iter().collect(),
+fn sync(root: &Path) {
+	let channels = channels_in(&root.join("ref/README.md"));
+	assert!(!channels.is_empty(), "no youtube channel linked in ref/README.md — nothing to sync");
+	// youtube's flat listing dates nothing, so a video's date is asked for once and read back from here after
+	let known: BTreeMap<String, Entry> = match root.join(INDEX).exists() {
+		true => parse(root).sections.into_iter().flat_map(|s| s.entries).map(|e| (e.id.clone(), e)).collect(),
+		false => BTreeMap::new(),
 	};
-	if sources.is_empty() {
-		eprintln!("no youtube links in ref/README.md and none given — nothing to pull");
-		return;
-	}
+	let sections = channels
+		.into_iter()
+		.map(|(who, channel)| {
+			let mut ids: BTreeSet<String> = expand(&channel).into_iter().collect();
+			ids.extend(captured(&root.join("ref/youtube").join(&who))); // one taken down upstream stays, as its capture does
+			let unknown: Vec<&str> = ids.iter().filter(|id| !known.contains_key(*id)).map(String::as_str).collect();
+			eprintln!("{who}: {} video(s), {} not dated yet", ids.len(), unknown.len());
+			let mut entries: Vec<Entry> = ids.iter().filter_map(|id| known.get(id).cloned()).collect();
+			entries.extend(metadata(&unknown));
+			entries.sort_by(|a, b| b.uploaded.cmp(&a.uploaded).then(a.id.cmp(&b.id)));
+			Section { who, channel, entries }
+		})
+		.collect();
+	let today = String::from_utf8(Command::new("date").arg("+%F").output().expect("date is on PATH").stdout).expect("date prints utf-8");
+	write(root, &Index { checked: today.trim().to_string(), sections });
+}
 
-	let mut ids = BTreeSet::new();
-	for source in &sources {
-		ids.extend(expand(source));
-	}
-	eprintln!("{} video(s) across {} source(s)", ids.len(), sources.len());
-
+fn transcribe(root: &Path) {
+	let index = parse(root);
 	let tmp = std::env::temp_dir().join("yt-pull");
 	let mut mute = Vec::new();
-	for id in &ids {
-		let out = out_dir.join(format!("{id}.md"));
-		if out.exists() {
-			continue;
-		}
-		eprintln!("pulling {id}");
-		// a video youtube never captioned is a real absence, not a broken run — the rest of the
-		// channel is still worth having, so it is named at the end rather than aborting here
-		match video(id, &tmp, &out_dir.join(id)) {
-			Some(doc) => {
-				std::fs::write(&out, doc).expect("ref/youtube is ours to write");
-				println!("{}", out.display());
+	for section in &index.sections {
+		let dir = root.join("ref/youtube").join(&section.who);
+		std::fs::create_dir_all(&dir).expect("ref/youtube is ours to create under");
+		for Entry { id, .. } in &section.entries {
+			let out = dir.join(format!("{id}.md"));
+			if out.exists() {
+				continue;
 			}
-			None => mute.push(id.clone()),
+			eprintln!("pulling {}/{id}", section.who);
+			// a video youtube never captioned is a real absence, not a broken run — the rest of the
+			// channel is still worth having, so it is named at the end rather than aborting here
+			match video(id, &tmp, &dir.join(id)) {
+				Some(doc) => {
+					std::fs::write(&out, doc).expect("ref/youtube is ours to write");
+					write(root, &index);
+					println!("{}", out.display());
+				}
+				None => mute.push(id.clone()),
+			}
 		}
 	}
 	if !mute.is_empty() {
@@ -95,31 +135,117 @@ fn repo_root() -> PathBuf {
 	}
 }
 
-/// The registry is `ref/README.md` and nothing else — a capture quotes its own source URL, and a
-/// transcript quotes every link that was said out loud, so scanning the tree would make the
-/// pullers feed on their own output.
-fn links_in(readme: &Path) -> BTreeSet<String> {
+/// `[<who>](<channel>)` for every youtube link in the registry. The registry is `ref/README.md` and
+/// nothing else — a capture quotes its own source URL, and a transcript quotes every link that was
+/// said out loud, so scanning the tree would make the pullers feed on their own output.
+fn channels_in(readme: &Path) -> Vec<(String, String)> {
 	let text = std::fs::read_to_string(readme).unwrap_or_else(|e| panic!("reading {}: {e}", readme.display()));
-	let mut found = BTreeSet::new();
+	let mut found = Vec::new();
 	//LOOP: bounded by the number of occurrences in a finite file
-	for (at, _) in text.match_indices("https://www.youtube.com/") {
-		let link = text[at..].split_whitespace().next().expect("split yields at least once");
-		let link = link.trim_end_matches([')', ']', ',', '.', '"', '`', '>']);
-		if !link.is_empty() {
-			found.insert(link.to_string());
-		}
+	for (at, _) in text.match_indices("](https://www.youtube.com/") {
+		let who = &text[text[..at].rfind('[').expect("a markdown link opens its text with `[`") + 1..at];
+		assert!(
+			!who.is_empty() && who.chars().all(|c| c.is_ascii_lowercase()),
+			"a youtube link in ref/README.md names the directory its videos go in, as its text, and reads `{who}`"
+		);
+		let channel = &text[at + 2..];
+		found.push((who.to_string(), channel[..channel.find(')').expect("a markdown link closes with `)`")].to_string()));
 	}
 	found
 }
 
-/// A channel or playlist is the ids under it; a watch link is itself. The flat listing is one
-/// request and carries no per-video metadata, which is why it is only ever used for the ids.
+/// The flat listing is one request and carries no per-video metadata, which is why it is only ever
+/// used for the ids.
 fn expand(source: &str) -> Vec<String> {
-	if let Some(id) = source.split("watch?v=").nth(1) {
-		return vec![id.split('&').next().expect("split yields at least once").to_string()];
-	}
 	let out = yt_dlp(&["--flat-playlist", "--print", "%(id)s", source]);
 	out.lines().map(str::trim).filter(|l| !l.is_empty()).map(str::to_string).collect()
+}
+
+fn captured(dir: &Path) -> Vec<String> {
+	if !dir.exists() {
+		return Vec::new();
+	}
+	std::fs::read_dir(dir)
+		.unwrap_or_else(|e| panic!("reading {}: {e}", dir.display()))
+		.map(|e| e.expect("a directory entry is readable").path())
+		.filter(|p| p.extension().is_some_and(|e| e == "md"))
+		.map(|p| p.file_stem().expect("filtered on an extension").to_str().expect("a video id is ascii").to_string())
+		.collect()
+}
+
+fn metadata(ids: &[&str]) -> Vec<Entry> {
+	if ids.is_empty() {
+		return Vec::new();
+	}
+	let urls: Vec<String> = ids.iter().map(|id| format!("{WATCH}{id}")).collect();
+	let mut args = vec!["--skip-download", "--print", "%(id)s\u{1f}%(upload_date)s\u{1f}%(title)s"];
+	args.extend(urls.iter().map(String::as_str));
+	let out = yt_dlp(&args);
+	let entries: Vec<Entry> = out
+		.lines()
+		.map(|line| {
+			let [id, upload, title]: [&str; 3] = line.split('\u{1f}').collect::<Vec<_>>().try_into().unwrap_or_else(|v| panic!("yt-dlp was asked for three fields, and answered {v:?}"));
+			Entry { id: id.to_string(), uploaded: dashed(upload), title: title.to_string() }
+		})
+		.collect();
+	assert_eq!(entries.len(), ids.len(), "yt-dlp was asked about {ids:?}, and answered:\n{out}");
+	entries
+}
+
+/// Every tick is read off the disk, so a capture pulled or deleted is reflected on the next write.
+fn write(root: &Path, index: &Index) {
+	let mut out = format!(
+		"# YouTube, as the channels serve it\n\
+		 \n\
+		 - checked: {}\n\
+		 - written by: `scripts/yt-pull.rs sync`, which lists every video; `transcribe` ticks each it captures\n\
+		 \n\
+		 A directory per person, named by the text of their channel's link in `../README.md`. In it,\n\
+		 `<id>.md` is a video's capture — summary, chapters, description, then the captions in citable\n\
+		 blocks — and `<id>/<secs>.jpg` are the frames its chapters show.\n\
+		 \n\
+		 A line per video, newest first: the day youtube says it was uploaded, linked to the video, then\n\
+		 its title — linked to the capture once there is one. `scripts/yt-pull.rs transcribe` captures\n\
+		 every unticked line.\n",
+		index.checked
+	);
+	for Section { who, channel, entries } in &index.sections {
+		out.push_str(&format!("\n## {who} — <{channel}>\n\n"));
+		for Entry { id, uploaded, title } in entries {
+			match root.join("ref/youtube").join(who).join(format!("{id}.md")).exists() {
+				true => out.push_str(&format!("- [x] [{uploaded}]({WATCH}{id}) [{title}]({who}/{id}.md)\n")),
+				false => out.push_str(&format!("- [ ] [{uploaded}]({WATCH}{id}) {title}\n")),
+			}
+		}
+	}
+	std::fs::write(root.join(INDEX), out).expect("ref/youtube is ours to write");
+}
+
+fn parse(root: &Path) -> Index {
+	let path = root.join(INDEX);
+	let text = std::fs::read_to_string(&path).unwrap_or_else(|e| panic!("reading {}: {e} — run `yt-pull.rs sync` first", path.display()));
+	let mut checked = None;
+	let mut sections: Vec<Section> = Vec::new();
+	for line in text.lines() {
+		if let Some(day) = line.strip_prefix("- checked: ") {
+			checked = Some(day.to_string());
+		} else if let Some(header) = line.strip_prefix("## ") {
+			let (who, channel) = header.split_once(" — ").unwrap_or_else(|| panic!("{INDEX}: a header is `<who> — <channel>`, and reads {header:?}"));
+			sections.push(Section { who: who.to_string(), channel: channel.trim_matches(['<', '>']).to_string(), entries: Vec::new() });
+		} else if let Some(rest) = line.strip_prefix("- [x] [").or_else(|| line.strip_prefix("- [ ] [")) {
+			let section = sections.last_mut().unwrap_or_else(|| panic!("{INDEX}: {line:?} sits under no channel's header"));
+			let bad = format!("{INDEX}: a video's line is `- [ ] [<uploaded>]({WATCH}<id>) <title>`, and reads {line:?}");
+			let (uploaded, rest) = rest.split_once("](").unwrap_or_else(|| panic!("{bad}"));
+			let (url, title) = rest.split_once(") ").unwrap_or_else(|| panic!("{bad}"));
+			let id = url.strip_prefix(WATCH).unwrap_or_else(|| panic!("{bad}")).to_string();
+			let title = match line.starts_with("- [x]") {
+				true => title.strip_prefix('[').and_then(|t| t.strip_suffix(&format!("]({}/{id}.md)", section.who))).unwrap_or_else(|| panic!("{bad}")),
+				false => title,
+			};
+			section.entries.push(Entry { id, uploaded: uploaded.to_string(), title: title.to_string() });
+		}
+	}
+	Index { checked: checked.unwrap_or_else(|| panic!("{INDEX} states no `checked:` day")), sections }
 }
 
 fn yt_dlp(args: &[&str]) -> String {

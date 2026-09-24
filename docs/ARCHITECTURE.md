@@ -53,7 +53,9 @@ ref/
 │   └── frames/<secs>.jpg         # the frame each line of `shown.md` was read off — LFS
 ├── docs/<title>.md               # google docs, exported as markdown
 ├── research/<id>.md              # chatgpt shares, one `## user` / `## assistant` section per turn
-├── youtube/<id>.md               # channel videos, and `<id>/` the frames it cites
+├── youtube/                      # channel videos
+│   ├── README.md                 # every video each channel lists, dated, ticked once captured — `yt-pull.rs sync`
+│   └── <who>/<id>.md             # a video, and `<id>/` the frames it cites
 └── skool_<group>/                # a classroom, via `social_networks` — `gmbpp`, and the `cheap` group
     ├── README.md                 # what upstream holds, and the day it was last compared to this
     └── course/<NN-module>/       # a directory per module, a file per lesson, both in upstream's order
@@ -187,6 +189,9 @@ sources of equal base, this is newest-wins.
 anywhere inside the checkout. Each one takes source URLs as arguments, or with no
 arguments reads `ref/README.md` for links of its platform and fetches the ones missing
 from disk. So adding a source is pasting its link into `ref/README.md` and re-running.
+`yt-pull.rs` alone goes through an index: `sync` lists every video of the channels
+`ref/README.md` links into `ref/youtube/README.md`, and `transcribe` captures what that
+list has unticked.
 
 `ref/README.md` is the only registry. A capture quotes its own source URL and a
 transcript quotes every link that was said out loud, so a puller that scanned the tree
@@ -200,7 +205,7 @@ scripts/
 ├── call-watch.rs      # not a puller: a kept recording's frames, where the picture changes, through `ask_llm` → `shown.md`
 ├── doc-pull.rs        # google doc → its markdown export
 ├── chatgpt-pull.rs    # headless chromium → the DOM's turns
-├── yt-pull.rs         # yt-dlp → captions in citable blocks, chapters, frames, description
+├── yt-pull.rs         # sync: channels → the dated list of their videos; transcribe: yt-dlp → captions in citable blocks, chapters, frames, description
 ├── skool-pull.rs      # recon classroom → the course tree, module by module and lesson by lesson
 └── cite-check.rs      # not a puller: holds every citation in structured/ to its capture in ref/
 ```
