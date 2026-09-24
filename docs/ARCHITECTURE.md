@@ -205,6 +205,12 @@ scripts/
 └── cite-check.rs      # not a puller: holds every citation in structured/ to its capture in ref/
 ```
 
+What spends money goes through the `playbook` crate at the root of the cargo workspace, which
+drives the scripts rather than duplicating them. `cargo r -- re-transcribe <audio|picture> <path>...`
+lists every call capture under the paths with the estimated cost of redoing it. It runs only with
+`--execute`, and asks first when the total is past $1. Audio is redone only for a whisper transcript
+that has no digest yet, since a re-pull drops the digest.
+
 Anything needing a session lives in
 [`social_networks`](https://github.com/valeratrades/social_networks), and a puller shells
 out to it rather than linking it — that crate's tree only resolves against its own lock.
