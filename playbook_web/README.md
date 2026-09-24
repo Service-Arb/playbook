@@ -1,4 +1,4 @@
-# mcp
+# playbook_web
 
 The playbook for members: a remote MCP server that answers from `skill/service-arb/`, `structured/`
 and `ref/**/*.md`, in slices, to the Google accounts on `members.toml`. `build.rs` bakes that text
@@ -6,7 +6,7 @@ into the binary, so the server reads nothing from disk per request and nothing e
 reaches the image. `ref/cases/` states no source and no date, so it stays out.
 
 ```
-claude mcp add --transport http service-arb https://<host>/mcp
+claude mcp add --transport http service-arb https://service-arb.valeratrades.com/playbook_mcp
 ```
 
 ## Tools
@@ -27,7 +27,7 @@ client ──/register (DCR) or a CIMD url──► /authorize ──► Google 
                                                                     │ email on members.toml? else 403
 client ◄── code ◄───────────────────────────────────────────────────┘
 client ──/token (PKCE S256)──► access token (1h) + refresh token (30d, rotated on use)
-client ──/mcp, Bearer──► guard: token live · still a member · under today's byte budget (else 429)
+client ──<base>, Bearer──► guard: token live · still a member · under today's byte budget (else 429)
 ```
 
 Tokens are opaque; only their sha256 is stored. A member removed from `members.toml` is refused from
@@ -38,7 +38,7 @@ the next deploy on.
 | env | |
 |---|---|
 | `PORT` | set by the image |
-| `PUBLIC_URL` | where members reach it, e.g. `https://mcp.<domain>`; issuer, resource, and Google's redirect `<PUBLIC_URL>/callback` |
+| `PUBLIC_URL` | where members reach it, `https://service-arb.valeratrades.com/playbook_mcp`: the MCP endpoint, the issuer and the resource. Its path is `<base>`: `/authorize`, `/callback` (Google's redirect), `/token` and `/register` sit under it, the metadata at `/.well-known/oauth-{protected-resource,authorization-server}<base>` (RFC 9728, 8414), `/health` at the root |
 | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | a Google OAuth web client |
 
 Missing any of them fails the start. The database is `mcp.db` in the working directory, `/data` in
@@ -47,7 +47,7 @@ the image.
 ## Reading the log
 
 ```sh
-kubectl -n service-arb exec deploy/service-arb-mcp -- sqlite3 /data/mcp.db \
+kubectl -n personal exec deploy/playbook-web -- sqlite3 /data/mcp.db \
   "SELECT datetime(at, 'unixepoch'), email, tool, args, ids, bytes FROM calls ORDER BY at DESC LIMIT 50"
 ```
 

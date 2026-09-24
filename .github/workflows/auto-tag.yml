@@ -9,7 +9,7 @@ on:
       - "skill/**"
       - "structured/**"
       - "ref/**/*.md"
-      - "mcp/**"
+      - "playbook_web/**"
       - "Cargo.lock"
 concurrency:
   group: auto-tag

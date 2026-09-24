@@ -13,6 +13,7 @@ use sha2::{Digest, Sha256};
 
 const MEMBER: &str = "member@example.com";
 const TOKEN: &str = "test-token";
+const BASE: &str = "/playbook_mcp";
 
 #[derive(Deserialize)]
 struct Golden {
@@ -88,7 +89,7 @@ async fn quota_overrun_is_429() {
 		let client = connect(&url, TOKEN).await;
 		call(&client, "guide", json!({ "section": "reviews" })).await;
 		let res = reqwest::Client::new()
-			.post(format!("{url}/mcp"))
+			.post(format!("{url}{BASE}"))
 			.bearer_auth(TOKEN)
 			.header("accept", "application/json, text/event-stream")
 			.json(&json!({ "jsonrpc": "2.0", "id": 1, "method": "ping" }))
@@ -102,20 +103,31 @@ async fn quota_overrun_is_429() {
 	.await;
 }
 
+/// A client with nothing but the MCP url finds the authorization server through the path-inserted
+/// metadata of RFC 9728 and RFC 8414.
 #[tokio::test]
-async fn no_token_points_at_the_resource_metadata() {
+async fn no_token_leads_to_the_authorization_server() {
 	serve("unauthorized", i64::MAX, async |url| {
-		let res = reqwest::Client::new().post(format!("{url}/mcp")).json(&json!({})).send().await.unwrap();
+		let http = reqwest::Client::new();
+		let res = http.post(format!("{url}{BASE}")).json(&json!({})).send().await.unwrap();
 		assert_eq!(res.status(), 401);
 		let challenge = res.headers()["www-authenticate"].to_str().unwrap();
-		assert!(challenge.contains(&format!("{url}/.well-known/oauth-protected-resource")), "{challenge}");
+		let metadata = format!("{url}/.well-known/oauth-protected-resource{BASE}");
+		assert_eq!(challenge, format!("Bearer resource_metadata=\"{metadata}\""));
+		let resource: Value = http.get(metadata).send().await.unwrap().json().await.unwrap();
+		assert_eq!(resource["resource"], format!("{url}{BASE}"));
+		let issuer = resource["authorization_servers"][0].as_str().unwrap();
+		let server: Value = http.get(format!("{url}/.well-known/oauth-authorization-server{BASE}")).send().await.unwrap().json().await.unwrap();
+		assert_eq!(server["issuer"], issuer);
+		assert_eq!(server["token_endpoint"], format!("{url}{BASE}/token"));
 	})
 	.await;
 }
 
-/// Runs `body` against a fresh server that knows one member, holding the access token `TOKEN`.
+/// Runs `body` against a fresh server, served under `BASE`, that knows one member, holding the access
+/// token `TOKEN`. `body` gets the origin.
 async fn serve(name: &str, daily_bytes: i64, body: impl AsyncFnOnce(String) -> ()) {
-	let dir = std::env::temp_dir().join(format!("service-arb-mcp-test-{}", std::process::id()));
+	let dir = std::env::temp_dir().join(format!("playbook_web-test-{}", std::process::id()));
 	std::fs::create_dir_all(&dir).unwrap();
 	let db = dir.join(format!("{name}.db"));
 	if db.exists() {
@@ -123,8 +135,8 @@ async fn serve(name: &str, daily_bytes: i64, body: impl AsyncFnOnce(String) -> (
 	}
 	let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
 	let url = format!("http://127.0.0.1:{}", listener.local_addr().unwrap().port());
-	let app = mcp::app(mcp::Config {
-		public_url: url.clone(),
+	let app = playbook_web::app(playbook_web::Config {
+		public_url: format!("{url}{BASE}"),
 		google_client_id: "unused".into(),
 		google_client_secret: "unused".into(),
 		members: [MEMBER.to_owned()].into(),
@@ -145,7 +157,7 @@ async fn serve(name: &str, daily_bytes: i64, body: impl AsyncFnOnce(String) -> (
 }
 
 async fn connect(url: &str, token: &str) -> RunningService<RoleClient, ()> {
-	let transport = StreamableHttpClientTransport::from_config(StreamableHttpClientTransportConfig::with_uri(format!("{url}/mcp")).auth_header(token));
+	let transport = StreamableHttpClientTransport::from_config(StreamableHttpClientTransportConfig::with_uri(format!("{url}{BASE}")).auth_header(token));
 	().serve(transport).await.unwrap()
 }
 

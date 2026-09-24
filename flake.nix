@@ -17,14 +17,14 @@
           enable = true;
           lfs = true;
           jobs.errors.augment = [{ name = "flake-app"; args.app = "check"; }];
-          containerRelease = { registry = "ghcr.io/service-arb"; };
+          containerRelease = { registry = "ghcr.io/service-arb"; lfs = false; }; # the image takes only markdown; the media is 17G
         };
         combined = v_flakes.utils.combine { inherit rust; modules = [ github ]; };
 
-        mcpPort = "59082";
+        port = "59082";
         # the member surface; build.rs bakes in skill/, structured/ and ref/**/*.md, and nothing else of the tree reaches the image
-        mcp = (pkgs.makeRustPlatform { rustc = rust; cargo = rust; }).buildRustPackage {
-          pname = "mcp";
+        playbook_web = (pkgs.makeRustPlatform { rustc = rust; cargo = rust; }).buildRustPackage {
+          pname = "playbook_web";
           version = "0.1.0";
           src = pkgs.lib.fileset.toSource {
             root = ./.;
@@ -32,15 +32,15 @@
               ./Cargo.toml
               ./Cargo.lock
               ./playbook # a workspace member, so cargo reads its manifest
-              ./mcp
+              ./playbook_web
               ./skill
               ./structured
               (pkgs.lib.fileset.fileFilter (f: f.hasExt "md") ./ref)
             ];
           };
           cargoLock.lockFile = ./Cargo.lock;
-          cargoBuildFlags = [ "-p" "mcp" ];
-          cargoTestFlags = [ "-p" "mcp" ];
+          cargoBuildFlags = [ "-p" "playbook_web" ];
+          cargoTestFlags = [ "-p" "playbook_web" ];
           nativeBuildInputs = [ pkgs.cmake ]; # aws-lc, under reqwest's rustls
           # std's panic locations name its source inside the toolchain, which would pull all of it into the image
           RUSTFLAGS = "--remap-path-prefix=${rust}=/rust";
@@ -49,20 +49,20 @@
         };
         containerStd = v_flakes.container.implement {
           inherit pkgs;
-          pname = "service-arb-mcp";
+          pname = "playbook_web";
           containers."" = {
-            port = pkgs.lib.toInt mcpPort;
+            port = pkgs.lib.toInt port;
             mounts = [ "/data" ];
             healthPath = "/health";
             criticality = "normal";
-            entrypoint = [ "${mcp}/bin/mcp" ];
+            entrypoint = [ "${playbook_web}/bin/playbook_web" ];
             workingDir = "/data";
-            imageEnv = [ "HOME=/data" "PORT=${mcpPort}" ];
+            imageEnv = [ "HOME=/data" "PORT=${port}" ];
           };
         };
       in
       {
-        packages = containerStd.packages // { inherit mcp; };
+        packages = containerStd.packages // { inherit playbook_web; };
         containers = containerStd.containers;
 
         apps.check = {
@@ -77,7 +77,7 @@
         devShells.default = pkgs.mkShell {
           shellHook = combined.shellHook;
           packages = [ rust pkgs.sqlite ] ++ combined.enabledPackages;
-          env.PORT = mcpPort;
+          env.PORT = port;
         };
       }
     );

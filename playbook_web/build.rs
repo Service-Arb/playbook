@@ -10,7 +10,7 @@ use std::{
 const INSTRUCTIONS_MAX: usize = 2048; // Claude Code truncates server instructions past this
 
 fn main() {
-	let root = Path::new(env!("CARGO_MANIFEST_DIR")).parent().expect("mcp/ sits in the workspace root").to_path_buf();
+	let root = Path::new(env!("CARGO_MANIFEST_DIR")).parent().expect("playbook_web/ sits in the workspace root").to_path_buf();
 	let mut files = Vec::new();
 	for dir in ["skill/service-arb/sections", "structured/approved", "structured/suggested", "ref"] {
 		println!("cargo:rerun-if-changed={}", root.join(dir).display());
