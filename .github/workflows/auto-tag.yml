@@ -1,0 +1,36 @@
+# What members read is baked into the image, so a change to it is a release. The tag goes out over a
+# deploy key because a tag pushed with GITHUB_TOKEN starts no workflow, and release-container.yml
+# starts on the tag.
+name: Auto-tag
+on:
+  push:
+    branches: [main]
+    paths:
+      - "skill/**"
+      - "structured/**"
+      - "ref/**/*.md"
+      - "mcp/**"
+      - "Cargo.lock"
+concurrency:
+  group: auto-tag
+  cancel-in-progress: false
+jobs:
+  tag:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ssh-key: ${{ secrets.TAG_DEPLOY_KEY }}
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Push the next patch tag
+        shell: bash
+        run: |
+          set -euo pipefail
+          last="$(git tag -l 'v*' --sort=-v:refname | head -n1)"
+          ver="${last#v}"; [ -n "$ver" ] || ver="0.0.0"
+          IFS=. read -r ma mi pa <<<"$ver"
+          next="v$ma.$mi.$((pa + 1))"
+          echo "${last:-<no tag>} → $next"
+          git -c user.name=github-actions -c user.email=github-actions@github.com tag -a "$next" -m "$next: corpus or server changed at ${GITHUB_SHA::7}"
+          git push origin "$next"

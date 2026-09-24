@@ -1,0 +1,522 @@
+{
+ "built": "2026-09-24",
+ "corpus_commit": "df47950",
+ "questions": [
+  {
+   "id": "A1",
+   "question": "How many GBPs can I safely park under one Google account before it gets too risky?",
+   "answerable": true,
+   "essential": [
+    {
+     "path": "structured/suggested/infra.md",
+     "quote": "(!) 3–5 profiles per gmail, at most — Eric"
+    },
+    {
+     "path": "structured/suggested/profile/suspension.md",
+     "quote": "a banned gmail takes every profile verified on it with it, and winning the gmail appeal does not bring them back"
+    }
+   ],
+   "calls": [
+    {
+     "tool": "search",
+     "args": {
+      "pattern": "profiles? (per|on one|on a) (gmail|google account|account)|banned gmail"
+     }
+    }
+   ]
+  },
+  {
+   "id": "A2",
+   "question": "Can I reuse the same company name and one website across my plumbing listings in different cities, or does that link them for a ban?",
+   "answerable": true,
+   "essential": [
+    {
+     "path": "structured/approved/profile/suspension.md",
+     "quote": "Eric says that brand names matching is fine, but website matching could technically become problematic"
+    },
+    {
+     "path": "structured/suggested/profile/suspension.md",
+     "quote": "so: duplicate the same site, buy a new domain, swap the name"
+    }
+   ],
+   "calls": [
+    {
+     "tool": "search",
+     "args": {
+      "pattern": "brand names?|same (name|website|site|domain)|website matching"
+     }
+    }
+   ]
+  },
+  {
+   "id": "A3",
+   "question": "What is the Google rep going to want to see when I do the live video verification call?",
+   "answerable": true,
+   "essential": [
+    {
+     "path": "structured/suggested/profile/verification/live.md",
+     "quote": "the reviewer asks for: permanent signage outside, signage inside, signage on the vehicles, and the door being unlocked"
+    },
+    {
+     "path": "structured/suggested/profile/verification/live.md",
+     "quote": "a logo printed and hung in a picture frame gets rejected"
+    }
+   ],
+   "calls": [
+    {
+     "tool": "search",
+     "args": {
+      "pattern": "signage|picture frame",
+      "scope": "structured"
+     }
+    }
+   ]
+  },
+  {
+   "id": "A4",
+   "question": "What does an offshore call-answering assistant cost, and how many calls should they turn into booked jobs?",
+   "answerable": true,
+   "essential": [
+    {
+     "path": "structured/suggested/conversion.md",
+     "quote": "$3/hr for a 3-day trial, $4/hr after — filipino VA, taking calls and dispatching"
+    },
+    {
+     "path": "structured/suggested/conversion.md",
+     "quote": "VA budget ≤$1,500/mo full-time; part-time 8–3 to cover your day job comes in under $1k"
+    },
+    {
+     "path": "structured/suggested/conversion.md",
+     "quote": "a VA should convert ~50% of calls to booked jobs — Eric, *plumbing*"
+    }
+   ],
+   "calls": [
+    {
+     "tool": "search",
+     "args": {
+      "pattern": "\\bVA\\b|virtual assistant|/hr\\b"
+     }
+    },
+    {
+     "tool": "read",
+     "args": {
+      "path": "structured/suggested/conversion.md",
+      "header": "## info"
+     }
+    },
+    {
+     "tool": "read",
+     "args": {
+      "path": "structured/suggested/conversion.md",
+      "header": "## facts"
+     }
+    }
+   ]
+  },
+  {
+   "id": "B1",
+   "question": "What are the realistic odds of getting a listing verified instantly, and what makes an account more likely to pass?",
+   "answerable": true,
+   "essential": [
+    {
+     "path": "ref/loom/2025-12-09-mastering-instant-page-verification-techniques.md",
+     "quote": "around one out of seven, so if you try seven accounts, one will get verified"
+    },
+    {
+     "path": "ref/loom/2025-12-09-mastering-instant-page-verification-techniques.md",
+     "quote": "rainbow circle around your profile picture, that's a good sign"
+    }
+   ],
+   "calls": [
+    {
+     "tool": "search",
+     "args": {
+      "pattern": "instant(ly)? verif|one (out )?of (seven|7)|rainbow"
+     }
+    }
+   ]
+  },
+  {
+   "id": "B2",
+   "question": "I just got a listing through — how long should I leave it alone before editing it or pushing reviews?",
+   "answerable": true,
+   "essential": [
+    {
+     "path": "ref/loom/2025-12-15-avoiding-suspensions-best-practices-for-your-gmb.md",
+     "quote": "do not touch it for the first five days, and try not to get any reviews on it for the first five days"
+    },
+    {
+     "path": "ref/skool_gmbpp/course/03-module-3-gmb-seo-ranking-system/02-review-methods.md",
+     "quote": "I recommend waiting 5 days from when your business is publicly visible"
+    }
+   ],
+   "calls": [
+    {
+     "tool": "search",
+     "args": {
+      "pattern": "first (five|5) days|(wait|waiting) (five|5) days|don't touch it"
+     }
+    }
+   ]
+  },
+  {
+   "id": "B3",
+   "question": "Rather than splitting every job, can I just lease a ranked listing to a contractor for a flat monthly fee? What does that go for?",
+   "answerable": true,
+   "essential": [
+    {
+     "path": "ref/loom/2026-07-17-group-call.md",
+     "quote": "renting verified profiles to contractors for ~$2K/month each for around $50K/month recurring profit"
+    },
+    {
+     "path": "ref/loom/2026-07-17-group-call.md",
+     "quote": "So, the contractor pays him, like, 2k a month, for example, and he's on all the calls"
+    }
+   ],
+   "calls": [
+    {
+     "tool": "search",
+     "args": {
+      "pattern": "\\brank.and.rent|\\brent(ing)? (out )?(verified |the )?profiles?"
+     }
+    },
+    {
+     "tool": "read",
+     "args": {
+      "path": "ref/loom/2026-07-17-group-call.md",
+      "header": "[35:49]"
+     }
+    }
+   ]
+  },
+  {
+   "id": "B4",
+   "question": "What's the cheapest physical place to film an address verification video, and how well does it work?",
+   "answerable": true,
+   "essential": [
+    {
+     "path": "ref/loom/2025-12-07-effective-strategies-for-recording-and-verifying-google-my-business-addresses.md",
+     "quote": "can I get a refund? They'll just let you refund it"
+    },
+    {
+     "path": "ref/loom/2025-12-07-effective-strategies-for-recording-and-verifying-google-my-business-addresses.md",
+     "quote": "I've had a pretty much 100% success rate on these storage mites. The co-working spaces were a little bit worse."
+    }
+   ],
+   "calls": [
+    {
+     "tool": "search",
+     "args": {
+      "pattern": "storage (unit|mart|mite)s?|co.?working"
+     }
+    },
+    {
+     "tool": "read",
+     "args": {
+      "path": "ref/loom/2025-12-07-effective-strategies-for-recording-and-verifying-google-my-business-addresses.md",
+      "header": "[06:56]"
+     }
+    }
+   ]
+  },
+  {
+   "id": "C1",
+   "question": "For faking GPS on a rooted Android, which root manager do people install to get the app store for location spoofers?",
+   "answerable": true,
+   "essential": [
+    {
+     "path": "ref/loom/2026-09-18-group-call.md",
+     "quote": "Once you get Majestic, there's, like, an app interface, just the same as, like, uh, the Apple Store"
+    },
+    {
+     "path": "structured/approved/infra.md",
+     "quote": "`Magisk` // transcribed as \"Majestic\"; its module store is the app interface he describes"
+    }
+   ],
+   "calls": [
+    {
+     "tool": "search",
+     "args": {
+      "pattern": "magisk|majestic|root(ed)? (android|phone)"
+     }
+    }
+   ]
+  },
+  {
+   "id": "C2",
+   "question": "What does Eric use for keyword search-volume research — does he actually pay for SEMrush?",
+   "answerable": true,
+   "essential": [
+    {
+     "path": "ref/loom/2025-12-08-mastering-seo-for-your-business-boosting-visibility-and-leads.md",
+     "quote": "It's called Sam Rush. Um, so I, I just get a free trial on a new account each time."
+    },
+    {
+     "path": "ref/loom/2025-12-08-mastering-seo-for-your-business-boosting-visibility-and-leads.md",
+     "quote": "It's like two hundred bucks a month. So I wouldn't recommend."
+    }
+   ],
+   "calls": [
+    {
+     "tool": "search",
+     "args": {
+      "pattern": "sem ?rush|sam ?rush|search volume"
+     }
+    },
+    {
+     "tool": "read",
+     "args": {
+      "path": "ref/loom/2025-12-08-mastering-seo-for-your-business-boosting-visibility-and-leads.md",
+      "header": "[02:08]"
+     }
+    }
+   ]
+  },
+  {
+   "id": "C3",
+   "question": "Has anyone had Claude's computer-use agent fill out the products and services on a Business Profile?",
+   "answerable": true,
+   "essential": [
+    {
+     "path": "ref/fathom/2026-03-31-impromptu-google-meet-meeting.md",
+     "quote": "specifically use Cloud Cowork, to take control of your computer one night"
+    }
+   ],
+   "calls": [
+    {
+     "tool": "search",
+     "args": {
+      "pattern": "claude|cloud co.?work|computer use"
+     }
+    }
+   ]
+  },
+  {
+   "id": "D1",
+   "question": "On a plumbing job, what cut should I keep versus the plumber?",
+   "answerable": true,
+   "essential": [
+    {
+     "path": "structured/suggested/fulfilment.md",
+     "quote": "60/40 in your favour is the normal ask, and plumbers accept it off a cold call to their own business profile"
+    },
+    {
+     "path": "ref/youtube/eric/-CEcwNS-c5E.md",
+     "quote": "He'll do it, keep five grand, I keep three grand"
+    },
+    {
+     "path": "structured/approved/fulfilment.md",
+     "quote": "qualification level is equally important as the split percentage"
+    }
+   ],
+   "calls": [
+    {
+     "tool": "search",
+     "args": {
+      "pattern": "60/40|40/60|keep (five|three) grand"
+     }
+    },
+    {
+     "tool": "search",
+     "args": {
+      "pattern": "split",
+      "scope": "structured"
+     }
+    }
+   ]
+  },
+  {
+   "id": "D2",
+   "question": "I'm getting calls I can't service — can I sell them, who buys them, and what do they pay?",
+   "answerable": true,
+   "essential": [
+    {
+     "path": "structured/suggested/conversion.md",
+     "quote": "sells off-niche calls to an affiliate network at $5–10/call via a tracking number"
+    },
+    {
+     "path": "ref/fathom/2026-03-31-impromptu-google-meet-meeting.md",
+     "quote": "pay-per-call publishers (elocal.com, ServiceDirect.com, Ringba.com), which pay per qualified call"
+    },
+    {
+     "path": "ref/fathom/2026-03-31-impromptu-google-meet-meeting.md",
+     "quote": "~$30-50/plumbing call, ~$100/water-damage call"
+    }
+   ],
+   "calls": [
+    {
+     "tool": "search",
+     "args": {
+      "pattern": "sell(s|ing)? (off-niche )?(the )?(calls|leads)|pay.per.call|per (qualified )?call"
+     }
+    }
+   ]
+  },
+  {
+   "id": "D3",
+   "question": "If I open a service-area listing and later convert it to an address, how long should it age first, and how many conversions can one phone handle?",
+   "answerable": true,
+   "essential": [
+    {
+     "path": "ref/loom/2026-07-31-group-call.md",
+     "quote": "only two switches per location/device before the verification rate drops sharply (90%,"
+    },
+    {
+     "path": "ref/loom/2026-07-31-group-call.md",
+     "quote": "a listing needs to be aged at least a month and trusted by"
+    },
+    {
+     "path": "ref/loom/2026-09-18-group-call.md",
+     "quote": "there's no point to do a live video when waiting three weeks"
+    }
+   ],
+   "calls": [
+    {
+     "tool": "search",
+     "args": {
+      "pattern": "switch(es|ing)? .{0,60}address|service.area.{0,60}(convert|switch)|aged at least a month"
+     }
+    },
+    {
+     "tool": "search",
+     "args": {
+      "pattern": "live video when waiting|no point .{0,30}wait"
+     }
+    }
+   ]
+  },
+  {
+   "id": "E1",
+   "question": "Should I set up my listings as service-area (no address shown) or with a physical address?",
+   "answerable": true,
+   "essential": [
+    {
+     "path": "ref/loom/2025-12-07-creating-effective-service-area-gmb-profiles-step-by-step.md",
+     "quote": "I emphasize that creating service area pages is a safer option compared to address pages, with a success rate of around 70%"
+    },
+    {
+     "path": "ref/loom/2026-08-11-aidan-dorau-coaching-call.md",
+     "quote": "The service area is going to be useless, so you might as well just try adding an address to it"
+    }
+   ],
+   "calls": [
+    {
+     "tool": "search",
+     "args": {
+      "pattern": "service.area.{0,80}(safer|useless|superior|outrank)|(safer|useless|superior|outrank).{0,80}service.area"
+     }
+    }
+   ]
+  },
+  {
+   "id": "E2",
+   "question": "How many reviews can I push onto a new listing per day without them getting wiped?",
+   "answerable": true,
+   "essential": [
+    {
+     "path": "structured/suggested/ranking/reviews/rate_limits.md",
+     "quote": "(!) one review a day per profile, at most — Eric, repeatedly"
+    },
+    {
+     "path": "ref/loom/2026-06-12-meeting-recording-june-12-2026.md",
+     "quote": "one to two reviews per day per account and spread across accounts"
+    },
+    {
+     "path": "ref/loom/2026-07-17-group-call.md",
+     "quote": "the safe rule is one review per Gmail account total, spaced at least two weeks apart, max two reviews per account ever"
+    }
+   ],
+   "calls": [
+    {
+     "tool": "search",
+     "args": {
+      "pattern": "reviews? (a|per) day|per day per|one review per"
+     }
+    },
+    {
+     "tool": "search",
+     "args": {
+      "pattern": "reviews? per (gmail|account)|per day per account",
+      "scope": "ref"
+     }
+    }
+   ]
+  },
+  {
+   "id": "E3",
+   "question": "Should I list my business as open 24/7?",
+   "answerable": true,
+   "essential": [
+    {
+     "path": "ref/skool_gmbpp/course/03-module-3-gmb-seo-ranking-system/10-full-gmb-optimization-follow-along.md",
+     "quote": "Open 24hrs"
+    },
+    {
+     "path": "ref/loom/2025-12-07-creating-effective-service-area-gmb-profiles-step-by-step.md",
+     "quote": "I usually do 7-11 just because Google can flag 24 hours as kind of like spammy"
+    },
+    {
+     "path": "ref/loom/2026-01-10-call-with-zach.md",
+     "quote": "when I first make the profile, put it as 7am to 11pm"
+    }
+   ],
+   "calls": [
+    {
+     "tool": "search",
+     "args": {
+      "pattern": "24 ?(hours|hrs|/7)|7 ?(am)? ?(-|to) ?11"
+     }
+    },
+    {
+     "tool": "read",
+     "args": {
+      "path": "ref/loom/2026-01-10-call-with-zach.md",
+      "header": "[35:25]"
+     }
+    }
+   ]
+  },
+  {
+   "id": "F1",
+   "question": "Do my German profiles' websites need an Impressum page for Google to accept them?",
+   "answerable": false,
+   "essential": [],
+   "calls": [
+    {
+     "tool": "search",
+     "args": {
+      "pattern": "impressum|legal notice"
+     }
+    }
+   ]
+  },
+  {
+   "id": "F2",
+   "question": "When buying or selling a ranked GBP, what escrow service do people use to transfer it safely?",
+   "answerable": false,
+   "essential": [],
+   "calls": [
+    {
+     "tool": "search",
+     "args": {
+      "pattern": "escrow"
+     }
+    }
+   ]
+  },
+  {
+   "id": "F3",
+   "question": "Does adding LocalBusiness schema markup to the website help my map-pack ranking?",
+   "answerable": false,
+   "essential": [],
+   "calls": [
+    {
+     "tool": "search",
+     "args": {
+      "pattern": "schema|json-ld|structured data"
+     }
+    }
+   ]
+  }
+ ]
+}
