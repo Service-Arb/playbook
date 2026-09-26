@@ -201,7 +201,13 @@ async fn client_redirects_to(state: &State, client_id: &str, redirect_uri: &str)
 			state.db.lock().unwrap().query_row("SELECT redirect_uris FROM clients WHERE id = ?1", [client_id], |r| r.get(0)).optional().unwrap();
 		serde_json::from_str(&stored.ok_or("unknown client_id; register first")?).expect("written by /register")
 	};
-	match uris.iter().any(|u| u == redirect_uri) {
+	// RFC 8252 §7.3: a loopback redirect is registered without the port the client ends up listening on
+	let portless = |u: &str| {
+		let mut u = reqwest::Url::parse(u).ok()?;
+		(u.scheme() == "http" && matches!(u.host_str(), Some("localhost" | "127.0.0.1" | "[::1]"))).then(|| u.set_port(None).expect("http takes a port"))?;
+		Some(u)
+	};
+	match uris.iter().any(|u| u == redirect_uri || portless(u).is_some_and(|u| Some(u) == portless(redirect_uri))) {
 		true => Ok(()),
 		false => Err(format!("{redirect_uri} is not a redirect_uri of this client")),
 	}
