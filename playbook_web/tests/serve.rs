@@ -124,6 +124,35 @@ async fn no_token_leads_to_the_authorization_server() {
 	.await;
 }
 
+/// A native client registers its loopback redirect without a port and listens on whichever it gets
+/// (RFC 8252 §7.3); Claude Code's client metadata does exactly that.
+#[tokio::test]
+async fn loopback_redirect_takes_any_port() {
+	serve("loopback", i64::MAX, async |url| {
+		let http = reqwest::Client::builder().redirect(reqwest::redirect::Policy::none()).build().unwrap();
+		let reg: Value = http
+			.post(format!("{url}{BASE}/register"))
+			.json(&json!({ "redirect_uris": ["http://localhost/callback"] }))
+			.send()
+			.await
+			.unwrap()
+			.json()
+			.await
+			.unwrap();
+		let authorize = reqwest::Url::parse_with_params(&format!("{url}{BASE}/authorize"), [
+			("response_type", "code"),
+			("client_id", reg["client_id"].as_str().unwrap()),
+			("redirect_uri", "http://localhost:64461/callback"),
+			("code_challenge", "x"),
+			("code_challenge_method", "S256"),
+		])
+		.unwrap();
+		let res = http.get(authorize).send().await.unwrap();
+		assert!(res.status().is_redirection(), "{}: {}", res.status(), res.text().await.unwrap());
+	})
+	.await;
+}
+
 /// Runs `body` against a fresh server, served under `BASE`, that knows one member, holding the access
 /// token `TOKEN`. `body` gets the origin.
 async fn serve(name: &str, daily_bytes: i64, body: impl AsyncFnOnce(String) -> ()) {
