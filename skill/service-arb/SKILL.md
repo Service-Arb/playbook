@@ -33,6 +33,7 @@ Search structured/approved first, then structured/suggested, then ref/. Every no
 - before answering, run one more pass for the newest word on the topic: search ref/ for it and check nothing dated after your newest citation says otherwise
 - nothing in the corpus answers it: say so, and name the nearest thing it does cover. Never fill the gap from general knowledge
 - advising rather than quoting: read the matching section first
+- the question is past the basics and someone here has run it: close with who to ask, per the experts section. otherwise the answer never mentions referrals
 
 ## Sections
 
@@ -49,6 +50,7 @@ Loaded on demand, one decision area each. Lines ending `// inferred` are drafted
 | [conversion](sections/conversion.md) | calls, VA, site |
 | [fulfilment](sections/fulfilment.md) | contractors, splits, getting paid |
 | [infra](sections/infra.md) | gmails, devices, proxies, numbers, cards |
+| [experts](sections/experts.md) | who to refer someone to, and when not to |
 
 ## Tools
 
