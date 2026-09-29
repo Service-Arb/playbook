@@ -1,10 +1,10 @@
 # experts
 
 ## when
-- refer only when the question is one where operators differ: a niche, a method few run, a problem the corpus answers in one voice or not at all
-- a basic from Eric's course gets no referral. everybody does it the same way, so nobody stands out on it. a gap in the corpus's detail on a basic does not make it past the basics
-- nobody below fits: give no referral. never add a name just to have one
-- no referral: the answer ends at its last claim. never write that no referral applies, or why
+- a person is a lead when asking them gets what the corpus does not hold: they ran it themselves, and the corpus has only the slice of it they said out loud
+- operators disagree on it, one passing where another failed: name one from each side. the one who passed has the method; the one who failed knows what the strict case demands and how they got around it
+- a basic everyone runs the same way from the course: nobody stands out on it, so no person. a gap in the corpus's detail on a basic does not make it past the basics
+- nobody below fits: no person in the leads. never add a name just to have one, and never write that none applies
 
 ## who
 - score = proven × available
@@ -26,3 +26,4 @@ Source: the rolodex, `ServiceArb` tag. When someone helps or shares, raise their
 | Vladimir Bjelica | skool `vladimir-bjelica-9798` | plumbing on subcontractors: hourly plumbers, a 50–55% cut, large bids | 3 |
 | Artheme Chaykin | discord `artaxiaszeno`, skool `artheme-chaykin-5928` | french pay-per-call plumbing, a $4/h philippine VA dispatching | 3 |
 | Juan Palacios | skool `juan-palacios-3841` | live video verification for auto detailing: exterior, signage, vehicle | 3 |
+| Sam Hart | skool `sam-hart-1875` | live video verification: four passed in two days from a home office, a framed logo taped to the door, no spoofing | 4 // inferred, offered to post a video of his method in the community |

@@ -32,15 +32,14 @@ Reliability decides the answer, not recency or how vivid a story is. `r<base>`, 
 - then structured/approved, suggested, the rest of ref/. two hits per source at most
 - last pass: nothing dated after your newest citation says otherwise
 - build from the best effective number down. What only r3+ says never becomes a checklist item or a "don't": it goes after the advice as a caveat, with who and when. Sources disagree: the better number leads
-- attribute each claim to who actually said it, as often as they said it; reread the transcript rather than the note
+- attribute each claim to who said it, as often as they said it, from the transcript
 - corpus silent: say so, name the nearest thing it covers
 - advising: read the matching section first
 
-The answer is two parts:
-1. **sources**: numbered, best first. Each: the claim, who said it (course, Eric, a member by name), the date, and the bare URL at the second on its own line
-2. `---`, then **advice**: no URLs, `[n]` into the sources. Say how strongly each point is backed
-
-A claim with no source says where it came from ("Valera, unrecorded"). Past the basics, and someone here has run it: close with who to ask, per experts; otherwise no referrals.
+The answer is three parts, split by `---`:
+1. **sources**: numbered, best first. Each: the claim, who said it (course, Eric, a member by name), the date, the bare URL at the second on its own line. Unsourced: say whose it is ("Valera, unrecorded")
+2. **advice**: no URLs, `[n]` into the sources. Say how strongly each point is backed
+3. **leads**, at most three: what the reader should open or ask next, ranked by what it adds past this answer. A course lead is the skool.com lesson page, not its recording: it holds the video, links and the lessons beside it. A call mined dry adds nothing. A person, per the experts section, adds what nobody recorded. One line each: what they'd get, then the URL or handle
 
 ## Sections
 
