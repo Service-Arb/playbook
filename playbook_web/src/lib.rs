@@ -36,6 +36,8 @@ struct Member(String);
 pub fn app(config: Config) -> Router {
 	LazyLock::force(&corpus::CORPUS); // a malformed capture fails the start, not a member's call
 	let db = rusqlite::Connection::open(&config.db).unwrap_or_else(|e| panic!("{}: {e}", config.db.display()));
+	db.pragma_update(None, "journal_mode", "WAL").unwrap();
+	db.busy_timeout(std::time::Duration::from_secs(5)).unwrap();
 	db.execute_batch(include_str!("schema.sql")).unwrap();
 	let url = reqwest::Url::parse(&config.public_url).expect("PUBLIC_URL is a url");
 	let (host, base) = (url.authority().to_owned(), url.path().to_owned());

@@ -53,6 +53,7 @@
           containers."" = {
             port = pkgs.lib.toInt port;
             mounts = [ "/data" ];
+            sqlite = [ "/data/mcp.db" ];
             healthPath = "/health";
             criticality = "normal";
             entrypoint = [ "${playbook_web}/bin/playbook_web" ];
