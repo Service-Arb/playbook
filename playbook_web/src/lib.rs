@@ -18,6 +18,8 @@ pub struct Config {
 	pub members: HashSet<String>,
 	pub db: PathBuf,
 	pub daily_bytes: i64,
+	/// what resource servers asking `{base}/introspect` authenticate with; unset, none may
+	pub introspect_secret: Option<String>,
 }
 
 struct State {

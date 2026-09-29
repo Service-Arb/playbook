@@ -37,6 +37,7 @@ pub(crate) fn routes(base: &str) -> Router<Arc<State>> {
 		.route(&format!("{base}/authorize"), get(authorize))
 		.route(&format!("{base}/callback"), get(callback))
 		.route(&format!("{base}/token"), post(token))
+		.route(&format!("{base}/introspect"), post(introspect))
 }
 
 /// Admits a request to the MCP endpoint only with a live access token of a member under their daily budget.
@@ -72,6 +73,33 @@ pub(crate) async fn guard(Axum(state): S, mut req: Request, next: Next) -> Respo
 	}
 	req.extensions_mut().insert(Member(email));
 	next.run(req).await
+}
+
+#[derive(Deserialize)]
+struct Introspection {
+	token: String,
+}
+
+/// RFC 7662 for the resource servers that take members' tokens too (review_archive), holding `INTROSPECT_SECRET`:
+/// `active` only for a live access token of someone still on the member list.
+async fn introspect(Axum(state): S, headers: header::HeaderMap, Form(q): Form<Introspection>) -> Response {
+	let Some(secret) = &state.config.introspect_secret else { return StatusCode::NOT_FOUND.into_response() };
+	let given = headers.get(header::AUTHORIZATION).and_then(|h| h.to_str().ok()).and_then(|h| h.strip_prefix("Bearer "));
+	if !given.is_some_and(|g| Sha256::digest(g) == Sha256::digest(secret)) {
+		return (StatusCode::UNAUTHORIZED, [(header::WWW_AUTHENTICATE, "Bearer")]).into_response();
+	}
+	let row: Option<(String, i64)> = state
+		.db
+		.lock()
+		.unwrap()
+		.query_row("SELECT email, expires FROM tokens WHERE hash = ?1 AND kind = 'access' AND expires > ?2", (hash(&q.token), now()), |r| Ok((r.get(0)?, r.get(1)?)))
+		.optional()
+		.unwrap();
+	let body = match row {
+		Some((email, exp)) if state.config.members.contains(&email) => json!({ "active": true, "email": email, "exp": exp }),
+		_ => json!({ "active": false }),
+	};
+	([(header::CACHE_CONTROL, "no-store")], Json(body)).into_response()
 }
 
 async fn resource_metadata(Axum(state): S) -> Json<Value> {

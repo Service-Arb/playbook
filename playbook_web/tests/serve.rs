@@ -14,6 +14,7 @@ use sha2::{Digest, Sha256};
 const MEMBER: &str = "member@example.com";
 const TOKEN: &str = "test-token";
 const BASE: &str = "/playbook_mcp";
+const INTROSPECT_SECRET: &str = "introspect-secret";
 
 #[derive(Deserialize)]
 struct Golden {
@@ -124,6 +125,25 @@ async fn no_token_leads_to_the_authorization_server() {
 	.await;
 }
 
+/// A resource server holding the secret learns whose a live member token is — spent budget or
+/// not, it is not an MCP call — and nothing about any other token.
+#[tokio::test]
+async fn introspection_vouches_for_live_member_tokens_only() {
+	serve("introspect", 0, async |url| {
+		let http = reqwest::Client::new();
+		let ask = async |secret: &str, token: &str| {
+			let res = http.post(format!("{url}{BASE}/introspect")).bearer_auth(secret).form(&[("token", token)]).send().await.unwrap();
+			(res.status().as_u16(), res.json::<Value>().await.unwrap_or(Value::Null))
+		};
+		let (status, body) = ask(INTROSPECT_SECRET, TOKEN).await;
+		assert_eq!((status, &body["active"], &body["email"]), (200, &json!(true), &json!(MEMBER)));
+		assert!(body["exp"].as_i64().is_some());
+		assert_eq!(ask(INTROSPECT_SECRET, "no-such-token").await, (200, json!({ "active": false })));
+		assert_eq!(ask("wrong-secret", TOKEN).await.0, 401);
+	})
+	.await;
+}
+
 /// A native client registers its loopback redirect without a port and listens on whichever it gets
 /// (RFC 8252 §7.3); Claude Code's client metadata does exactly that.
 #[tokio::test]
@@ -171,6 +191,7 @@ async fn serve(name: &str, daily_bytes: i64, body: impl AsyncFnOnce(String) -> (
 		members: [MEMBER.to_owned()].into(),
 		db: db.clone(),
 		daily_bytes,
+		introspect_secret: Some(INTROSPECT_SECRET.into()),
 	});
 	rusqlite::Connection::open(&db)
 		.unwrap()

@@ -21,6 +21,7 @@ async fn main() {
 		members,
 		db: "mcp.db".into(),
 		daily_bytes: DAILY_BYTES,
+		introspect_secret: std::env::var("INTROSPECT_SECRET").ok(),
 	};
 	let addr = format!("0.0.0.0:{}", env("PORT"));
 	let listener = tokio::net::TcpListener::bind(&addr).await.unwrap_or_else(|e| panic!("{addr}: {e}"));

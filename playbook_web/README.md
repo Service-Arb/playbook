@@ -28,7 +28,12 @@ client ──/register (DCR) or a CIMD url──► /authorize ──► Google 
 client ◄── code ◄───────────────────────────────────────────────────┘
 client ──/token (PKCE S256)──► access token (1h) + refresh token (30d, rotated on use)
 client ──<base>, Bearer──► guard: token live · still a member · under today's byte budget (else 429)
+resource server ──<base>/introspect, Bearer INTROSPECT_SECRET──► {active, email, exp} (RFC 7662)
 ```
+
+Other services take members' tokens too (review_archive's dashboard): they ask `/introspect`, which
+says `active` only for a live access token of someone still on the list, and counts nothing against
+the byte budget.
 
 Tokens are opaque; only their sha256 is stored. A member removed from `members.toml` is refused from
 the next deploy on.
@@ -40,8 +45,9 @@ the next deploy on.
 | `PORT` | set by the image |
 | `PUBLIC_URL` | where members reach it, `https://service-arb.valeratrades.com/playbook_mcp`: the MCP endpoint, the issuer and the resource. Its path is `<base>`: `/authorize`, `/callback` (Google's redirect), `/token` and `/register` sit under it, the metadata at `/.well-known/oauth-{protected-resource,authorization-server}<base>` (RFC 9728, 8414), `/health` at the root |
 | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | a Google OAuth web client |
+| `INTROSPECT_SECRET` | optional: the bearer resource servers ask `/introspect` with; unset, it answers 404 |
 
-Missing any of them fails the start. The database is `mcp.db` in the working directory, `/data` in
+Missing any of the others fails the start. The database is `mcp.db` in the working directory, `/data` in
 the image.
 
 ## Reading the log
