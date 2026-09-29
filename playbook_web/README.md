@@ -1,12 +1,12 @@
 # playbook_web
 
 The playbook for members: a remote MCP server that answers from `skill/service-arb/`, `structured/`
-and `ref/**/*.md`, in slices, to the Google accounts on `members.toml`. `build.rs` bakes that text
+and `ref/**/*.md`, in slices, to the `service-arb` members of valeratrades.com. `build.rs` bakes that text
 into the binary, so the server reads nothing from disk per request and nothing else of the repo
 reaches the image. `ref/cases/` states no source and no date, so it stays out.
 
 ```
-claude mcp add --transport http service-arb https://service-arb.valeratrades.com/playbook_mcp
+claude mcp add --transport http service-arb https://sa.valeratrades.com/playbook_mcp
 ```
 
 ## Tools
@@ -23,31 +23,30 @@ build time. The rules that matter most are repeated in `search`'s description.
 ## Sign-in
 
 ```
-client ──/register (DCR) or a CIMD url──► /authorize ──► Google ──► /callback
-                                                                    │ email on members.toml? else 403
-client ◄── code ◄───────────────────────────────────────────────────┘
-client ──/token (PKCE S256)──► access token (1h) + refresh token (30d, rotated on use)
-client ──<base>, Bearer──► guard: token live · still a member · under today's byte budget (else 429)
-resource server ──<base>/introspect, Bearer INTROSPECT_SECRET──► {active, email, exp} (RFC 7662)
+client ──/register (DCR) or a CIMD url──► /authorize
+   browser's va_access cookie (valeratrades.com's sign-in, `va_sso`):
+     none or expired ──► valeratrades.com/auth/refresh?return_to=<this /authorize> ──► back here
+     not in service-arb (nor admin) ──► 403
+     a member ──► code, at once
+client ──/token (PKCE S256)──► access token (1h) + refresh token (rotated on use, 7d from /authorize)
+client ──<base>, Bearer──► guard: token live · under today's byte budget (else 429)
 ```
 
-Other services take members' tokens too (review_archive's dashboard): they ask `/introspect`, which
-says `active` only for a live access token of someone still on the list, and counts nothing against
-the byte budget.
-
-Tokens are opaque; only their sha256 is stored. A member removed from `members.toml` is refused from
-the next deploy on.
+Membership is decided at `/authorize`, from the cookie. Rotating a refresh token keeps the
+deadline its `/authorize` set, so someone removed from the group on valeratrades.com is out
+within 7 days, when their client has to authorize again. Tokens are opaque; only their
+sha256 is stored.
 
 ## Configuration
 
 | env | |
 |---|---|
 | `PORT` | set by the image |
-| `PUBLIC_URL` | where members reach it, `https://service-arb.valeratrades.com/playbook_mcp`: the MCP endpoint, the issuer and the resource. Its path is `<base>`: `/authorize`, `/callback` (Google's redirect), `/token` and `/register` sit under it, the metadata at `/.well-known/oauth-{protected-resource,authorization-server}<base>` (RFC 9728, 8414), `/health` at the root |
-| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | a Google OAuth web client |
-| `INTROSPECT_SECRET` | optional: the bearer resource servers ask `/introspect` with; unset, it answers 404 |
+| `PUBLIC_URL` | where members reach it, `https://sa.valeratrades.com/playbook_mcp`: the MCP endpoint, the issuer and the resource. Its path is `<base>`: `/authorize`, `/token` and `/register` sit under it, the metadata at `/.well-known/oauth-{protected-resource,authorization-server}<base>` (RFC 9728, 8414), `/health` at the root |
+| `SSO_PUBLIC_KEY` | valeratrades.com's Ed25519 public key (PEM), for the `va_access` cookie |
+| `SSO_REFRESH_URL` | `https://valeratrades.com/auth/refresh` |
 
-Missing any of the others fails the start. The database is `mcp.db` in the working directory, `/data` in
+Missing any fails the start. The database is `mcp.db` in the working directory, `/data` in
 the image.
 
 ## Reading the log

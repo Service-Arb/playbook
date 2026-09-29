@@ -45,7 +45,7 @@
           # std's panic locations name its source inside the toolchain, which would pull all of it into the image
           RUSTFLAGS = "--remap-path-prefix=${rust}=/rust";
           disallowedReferences = [ rust ];
-          SSL_CERT_FILE = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"; # the tests build the Google client; the image sets its own
+          SSL_CERT_FILE = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"; # the tests build an HTTP client; the image sets its own
         };
         containerStd = v_flakes.container.implement {
           inherit pkgs;

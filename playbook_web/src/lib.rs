@@ -1,11 +1,11 @@
 //! The member surface: the playbook's `skill/`, `structured/` and `ref/` text, served as slices over
-//! MCP to the Google accounts on `members.toml`. See `README.md`.
+//! MCP to the `service-arb` members of valeratrades.com. See `README.md`.
 
 mod auth;
 mod corpus;
 mod tools;
 
-use std::{collections::HashSet, path::PathBuf, sync::{Arc, LazyLock, Mutex}};
+use std::{path::PathBuf, sync::{Arc, LazyLock, Mutex}};
 
 use axum::{Router, middleware, routing::get};
 use rmcp::transport::streamable_http_server::{StreamableHttpServerConfig, StreamableHttpService, session::local::LocalSessionManager};
@@ -13,13 +13,12 @@ use rmcp::transport::streamable_http_server::{StreamableHttpServerConfig, Stream
 pub struct Config {
 	/// where members reach the server, e.g. `https://<host>/playbook_mcp`; the OAuth issuer, the resource, and the path it is served under
 	pub public_url: String,
-	pub google_client_id: String,
-	pub google_client_secret: String,
-	pub members: HashSet<String>,
+	/// valeratrades.com's sign-in cookie
+	pub sso: va_sso::Verifier,
+	/// the site's `/auth/refresh`, where a browser without a live cookie is sent
+	pub sso_refresh_url: String,
 	pub db: PathBuf,
 	pub daily_bytes: i64,
-	/// what resource servers asking `{base}/introspect` authenticate with; unset, none may
-	pub introspect_secret: Option<String>,
 }
 
 struct State {

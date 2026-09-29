@@ -1,12 +1,12 @@
-//! OAuth 2.1 authorization server for the MCP clients, federated to Google for who the member is.
-//! The flow and the tables are in `README.md`.
+//! OAuth 2.1 authorization server for the MCP clients. Who the member is comes from
+//! valeratrades.com's `va_access` cookie ([`va_sso`]). The flow and the tables are in `README.md`.
 
 use std::sync::Arc;
 
 use axum::{
 	Form, Json, Router,
-	extract::{Query, Request, State as Axum},
-	http::{HeaderValue, StatusCode, header},
+	extract::{Query, RawQuery, Request, State as Axum},
+	http::{HeaderMap, HeaderValue, StatusCode, header},
 	middleware::Next,
 	response::{Html, IntoResponse, Redirect, Response},
 	routing::{get, post},
@@ -21,10 +21,10 @@ use crate::{Member, State, now};
 
 type S = Axum<Arc<State>>;
 
-const LOGIN_TTL: i64 = 10 * 60;
 const CODE_TTL: i64 = 60;
 const ACCESS_TTL: i64 = 60 * 60;
-const REFRESH_TTL: i64 = 30 * 24 * 60 * 60;
+const REFRESH_TTL: i64 = 7 * 24 * 60 * 60; // from authorize: rotation does not extend it, so membership is re-checked weekly
+const GROUP: &str = "service-arb";
 const DAY: i64 = 24 * 60 * 60;
 const CIMD_MAX_BYTES: usize = 64 * 1024;
 
@@ -35,9 +35,7 @@ pub(crate) fn routes(base: &str) -> Router<Arc<State>> {
 		.route(&format!("/.well-known/oauth-authorization-server{base}"), get(server_metadata))
 		.route(&format!("{base}/register"), post(register))
 		.route(&format!("{base}/authorize"), get(authorize))
-		.route(&format!("{base}/callback"), get(callback))
 		.route(&format!("{base}/token"), post(token))
-		.route(&format!("{base}/introspect"), post(introspect))
 }
 
 /// Admits a request to the MCP endpoint only with a live access token of a member under their daily budget.
@@ -57,9 +55,6 @@ pub(crate) async fn guard(Axum(state): S, mut req: Request, next: Next) -> Respo
 		.optional()
 		.unwrap();
 	let Some(email) = email else { return unauthorized() };
-	if !state.config.members.contains(&email) {
-		return (StatusCode::FORBIDDEN, format!("{email} is no longer on the service-arb member list")).into_response();
-	}
 	let today = now() - now() % DAY;
 	let spent: i64 = state
 		.db
@@ -73,33 +68,6 @@ pub(crate) async fn guard(Axum(state): S, mut req: Request, next: Next) -> Respo
 	}
 	req.extensions_mut().insert(Member(email));
 	next.run(req).await
-}
-
-#[derive(Deserialize)]
-struct Introspection {
-	token: String,
-}
-
-/// RFC 7662 for the resource servers that take members' tokens too (review_archive), holding `INTROSPECT_SECRET`:
-/// `active` only for a live access token of someone still on the member list.
-async fn introspect(Axum(state): S, headers: header::HeaderMap, Form(q): Form<Introspection>) -> Response {
-	let Some(secret) = &state.config.introspect_secret else { return StatusCode::NOT_FOUND.into_response() };
-	let given = headers.get(header::AUTHORIZATION).and_then(|h| h.to_str().ok()).and_then(|h| h.strip_prefix("Bearer "));
-	if !given.is_some_and(|g| Sha256::digest(g) == Sha256::digest(secret)) {
-		return (StatusCode::UNAUTHORIZED, [(header::WWW_AUTHENTICATE, "Bearer")]).into_response();
-	}
-	let row: Option<(String, i64)> = state
-		.db
-		.lock()
-		.unwrap()
-		.query_row("SELECT email, expires FROM tokens WHERE hash = ?1 AND kind = 'access' AND expires > ?2", (hash(&q.token), now()), |r| Ok((r.get(0)?, r.get(1)?)))
-		.optional()
-		.unwrap();
-	let body = match row {
-		Some((email, exp)) if state.config.members.contains(&email) => json!({ "active": true, "email": email, "exp": exp }),
-		_ => json!({ "active": false }),
-	};
-	([(header::CACHE_CONTROL, "no-store")], Json(body)).into_response()
 }
 
 async fn resource_metadata(Axum(state): S) -> Json<Value> {
@@ -174,7 +142,9 @@ struct AuthorizeQuery {
 	resource: Option<String>,
 }
 
-async fn authorize(Axum(state): S, Query(q): Query<AuthorizeQuery>) -> Response {
+/// A browser signed in on valeratrades.com as a member gets its code at once; one that is not
+/// goes to the site's `/auth/refresh`, which signs it in and sends it back here.
+async fn authorize(Axum(state): S, headers: HeaderMap, RawQuery(raw): RawQuery, Query(q): Query<AuthorizeQuery>) -> Response {
 	if q.response_type != "code" || q.code_challenge_method != "S256" {
 		return (StatusCode::BAD_REQUEST, "response_type=code with code_challenge_method=S256 only").into_response();
 	}
@@ -186,26 +156,37 @@ async fn authorize(Axum(state): S, Query(q): Query<AuthorizeQuery>) -> Response 
 	if let Err(e) = client_redirects_to(&state, &q.client_id, &q.redirect_uri).await {
 		return (StatusCode::BAD_REQUEST, e).into_response();
 	}
-	let login = random();
+	let cookie = headers
+		.get_all(header::COOKIE)
+		.iter()
+		.filter_map(|v| v.to_str().ok())
+		.flat_map(|v| v.split(';'))
+		.find_map(|c| c.trim().strip_prefix(va_sso::COOKIE)?.strip_prefix('='));
+	let Some(claims) = cookie.and_then(|c| state.config.sso.verify(c).ok()) else {
+		let here = format!("{}/authorize?{}", state.config.public_url, raw.expect("parsed into AuthorizeQuery above"));
+		let refresh = reqwest::Url::parse_with_params(&state.config.sso_refresh_url, [("return_to", &here)]).expect("SSO_REFRESH_URL is a url");
+		return Redirect::to(refresh.as_str()).into_response();
+	};
+	if !claims.member_of(GROUP) {
+		let page = format!("<!doctype html><title>Not a member</title><p><b>{}</b> is not a {GROUP} member. Ask Valera to add it, then connect again.</p>", claims.email);
+		return (StatusCode::FORBIDDEN, Html(page)).into_response();
+	}
+	let code = random();
 	state
 		.db
 		.lock()
 		.unwrap()
 		.execute(
-			"INSERT INTO logins (state, client_id, redirect_uri, client_state, challenge, expires) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
-			(&login, &q.client_id, &q.redirect_uri, &q.state, &q.code_challenge, now() + LOGIN_TTL),
+			"INSERT INTO codes (hash, client_id, redirect_uri, challenge, email, expires) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
+			(hash(&code), &q.client_id, &q.redirect_uri, &q.code_challenge, claims.email.to_lowercase(), now() + CODE_TTL),
 		)
 		.unwrap();
-	let google = reqwest::Url::parse_with_params("https://accounts.google.com/o/oauth2/v2/auth", [
-		("client_id", state.config.google_client_id.as_str()),
-		("redirect_uri", &format!("{}/callback", state.config.public_url)),
-		("response_type", "code"),
-		("scope", "openid email"),
-		("state", &login),
-		("prompt", "select_account"),
-	])
-	.unwrap();
-	Redirect::to(google.as_str()).into_response()
+	let mut back = reqwest::Url::parse(&q.redirect_uri).expect("a registered redirect_uri");
+	back.query_pairs_mut().append_pair("code", &code);
+	if let Some(s) = &q.state {
+		back.query_pairs_mut().append_pair("state", s);
+	}
+	Redirect::to(back.as_str()).into_response()
 }
 
 /// A `client_id` is either a CIMD document's https URL, or an id `/register` handed out.
@@ -242,98 +223,6 @@ async fn client_redirects_to(state: &State, client_id: &str, redirect_uri: &str)
 }
 
 #[derive(Deserialize)]
-struct CallbackQuery {
-	state: String,
-	code: Option<String>,
-	error: Option<String>,
-}
-
-async fn callback(Axum(state): S, Query(q): Query<CallbackQuery>) -> Response {
-	if let Some(error) = q.error {
-		return (StatusCode::BAD_REQUEST, format!("Google sign-in failed: {error}")).into_response();
-	}
-	let login = {
-		let db = state.db.lock().unwrap();
-		let row = db
-			.query_row("SELECT client_id, redirect_uri, client_state, challenge FROM logins WHERE state = ?1 AND expires > ?2", (&q.state, now()), |r| {
-				Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?, r.get::<_, Option<String>>(2)?, r.get::<_, String>(3)?))
-			})
-			.optional()
-			.unwrap();
-		db.execute("DELETE FROM logins WHERE state = ?1 OR expires <= ?2", (&q.state, now())).unwrap();
-		row
-	};
-	let Some((client_id, redirect_uri, client_state, challenge)) = login else {
-		return (StatusCode::BAD_REQUEST, "this sign-in expired; start again from your MCP client").into_response();
-	};
-	let Some(code) = q.code else {
-		return (StatusCode::BAD_REQUEST, "Google returned no code").into_response();
-	};
-	let email = match google_email(&state, &code).await {
-		Ok(email) => email,
-		Err(e) => return (StatusCode::BAD_GATEWAY, format!("asking Google who you are: {e}")).into_response(),
-	};
-	if !state.config.members.contains(&email) {
-		let page = format!("<!doctype html><title>Not a member</title><p><b>{email}</b> is not on the service-arb member list. Ask Valera to add it, then sign in again.</p>");
-		return (StatusCode::FORBIDDEN, Html(page)).into_response();
-	}
-	let ours = random();
-	state
-		.db
-		.lock()
-		.unwrap()
-		.execute(
-			"INSERT INTO codes (hash, client_id, redirect_uri, challenge, email, expires) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
-			(hash(&ours), &client_id, &redirect_uri, &challenge, &email, now() + CODE_TTL),
-		)
-		.unwrap();
-	let mut back = reqwest::Url::parse(&redirect_uri).expect("validated at /authorize");
-	back.query_pairs_mut().append_pair("code", &ours);
-	if let Some(s) = &client_state {
-		back.query_pairs_mut().append_pair("state", s);
-	}
-	Redirect::to(back.as_str()).into_response()
-}
-
-async fn google_email(state: &State, code: &str) -> Result<String, String> {
-	let c = &state.config;
-	let tokens: Value = state
-		.http
-		.post("https://oauth2.googleapis.com/token")
-		.form(&[
-			("code", code),
-			("client_id", &c.google_client_id),
-			("client_secret", &c.google_client_secret),
-			("redirect_uri", &format!("{}/callback", c.public_url)),
-			("grant_type", "authorization_code"),
-		])
-		.send()
-		.await
-		.and_then(|r| r.error_for_status())
-		.map_err(|e| e.to_string())?
-		.json()
-		.await
-		.map_err(|e| e.to_string())?;
-	let access = tokens["access_token"].as_str().ok_or("no access_token")?;
-	// straight from Google over TLS, so the userinfo endpoint stands in for verifying an id_token
-	let info: Value = state
-		.http
-		.get("https://openidconnect.googleapis.com/v1/userinfo")
-		.bearer_auth(access)
-		.send()
-		.await
-		.and_then(|r| r.error_for_status())
-		.map_err(|e| e.to_string())?
-		.json()
-		.await
-		.map_err(|e| e.to_string())?;
-	if info["email_verified"] != true {
-		return Err("the Google account's email is unverified".into());
-	}
-	Ok(info["email"].as_str().ok_or("no email")?.to_lowercase())
-}
-
-#[derive(Deserialize)]
 struct TokenForm {
 	grant_type: String,
 	client_id: String,
@@ -344,7 +233,7 @@ struct TokenForm {
 }
 
 async fn token(Axum(state): S, Form(f): Form<TokenForm>) -> Response {
-	let email = match f.grant_type.as_str() {
+	let (email, chain_ends) = match f.grant_type.as_str() {
 		"authorization_code" => {
 			let (Some(code), Some(verifier), Some(redirect_uri)) = (&f.code, &f.code_verifier, &f.redirect_uri) else {
 				return oauth_error("invalid_request", "code, code_verifier and redirect_uri");
@@ -360,40 +249,37 @@ async fn token(Axum(state): S, Form(f): Form<TokenForm>) -> Response {
 			match row {
 				Some((client, redirect, challenge, email))
 					if client == f.client_id && &redirect == redirect_uri && URL_SAFE_NO_PAD.encode(Sha256::digest(verifier)) == challenge =>
-					email,
+					(email, now() + REFRESH_TTL),
 				_ => return oauth_error("invalid_grant", "the code is spent, expired, or not this client's"),
 			}
 		}
 		"refresh_token" => {
 			let Some(refresh) = &f.refresh_token else { return oauth_error("invalid_request", "refresh_token") };
 			let db = state.db.lock().unwrap();
-			let email: Option<String> = db
+			let row: Option<(String, i64)> = db
 				.query_row(
-					"DELETE FROM tokens WHERE hash = ?1 AND kind = 'refresh' AND client_id = ?2 AND expires > ?3 RETURNING email",
+					"DELETE FROM tokens WHERE hash = ?1 AND kind = 'refresh' AND client_id = ?2 AND expires > ?3 RETURNING email, expires",
 					(hash(refresh), &f.client_id, now()),
-					|r| r.get(0),
+					|r| Ok((r.get(0)?, r.get(1)?)),
 				)
 				.optional()
 				.unwrap();
-			match email {
-				Some(email) => email,
+			match row {
+				Some(row) => row,
 				None => return oauth_error("invalid_grant", "the refresh token is spent, expired, or not this client's"),
 			}
 		}
 		_ => return oauth_error("unsupported_grant_type", "authorization_code or refresh_token"),
 	};
-	if !state.config.members.contains(&email) {
-		return oauth_error("invalid_grant", "no longer on the member list");
-	}
 	let (access, refresh) = (random(), random());
 	{
 		let db = state.db.lock().unwrap();
 		db.execute("DELETE FROM tokens WHERE expires <= ?1", [now()]).unwrap();
 		let insert = "INSERT INTO tokens (hash, kind, email, client_id, expires) VALUES (?1, ?2, ?3, ?4, ?5)";
-		db.execute(insert, (hash(&access), "access", &email, &f.client_id, now() + ACCESS_TTL)).unwrap();
-		db.execute(insert, (hash(&refresh), "refresh", &email, &f.client_id, now() + REFRESH_TTL)).unwrap();
+		db.execute(insert, (hash(&access), "access", &email, &f.client_id, (now() + ACCESS_TTL).min(chain_ends))).unwrap();
+		db.execute(insert, (hash(&refresh), "refresh", &email, &f.client_id, chain_ends)).unwrap();
 	}
-	let body = json!({ "access_token": access, "token_type": "Bearer", "expires_in": ACCESS_TTL, "refresh_token": refresh });
+	let body = json!({ "access_token": access, "token_type": "Bearer", "expires_in": ACCESS_TTL.min(chain_ends - now()), "refresh_token": refresh });
 	([(header::CACHE_CONTROL, HeaderValue::from_static("no-store"))], Json(body)).into_response()
 }
 
