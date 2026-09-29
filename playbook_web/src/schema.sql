@@ -4,15 +4,7 @@ CREATE TABLE IF NOT EXISTS clients (
 	redirect_uris TEXT NOT NULL, -- json array
 	created INTEGER NOT NULL
 );
--- a member between /authorize and Google's /callback
-CREATE TABLE IF NOT EXISTS logins (
-	state TEXT PRIMARY KEY,
-	client_id TEXT NOT NULL,
-	redirect_uri TEXT NOT NULL,
-	client_state TEXT,
-	challenge TEXT NOT NULL,
-	expires INTEGER NOT NULL
-);
+DROP TABLE IF EXISTS logins; -- Google's /callback, gone
 CREATE TABLE IF NOT EXISTS codes (
 	hash TEXT PRIMARY KEY,
 	client_id TEXT NOT NULL,

@@ -14,7 +14,9 @@ use sha2::{Digest, Sha256};
 const MEMBER: &str = "member@example.com";
 const TOKEN: &str = "test-token";
 const BASE: &str = "/playbook_mcp";
-const INTROSPECT_SECRET: &str = "introspect-secret";
+const REFRESH: &str = "https://site.test/auth/refresh";
+const SSO_PRIVATE: &str = "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIA3bBKSXvm87i5bc706Y1QG1uj5EmbgUZygHJGfO1XYj\n-----END PRIVATE KEY-----\n";
+const SSO_PUBLIC: &str = "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAws8sYuYGZt4/OjCm05rzUQYOTAWBxVHPL1Fdg74KyV4=\n-----END PUBLIC KEY-----\n";
 
 #[derive(Deserialize)]
 struct Golden {
@@ -125,30 +127,13 @@ async fn no_token_leads_to_the_authorization_server() {
 	.await;
 }
 
-/// A resource server holding the secret learns whose a live member token is — spent budget or
-/// not, it is not an MCP call — and nothing about any other token.
+/// A browser signed in on the site as a member is handed its code at once; one that is not
+/// signed in goes to the site and comes back to this very request; someone outside the group
+/// is refused. A native client's loopback redirect is registered without a port and matches
+/// whichever it listens on (RFC 8252 §7.3), as Claude Code's client metadata does.
 #[tokio::test]
-async fn introspection_vouches_for_live_member_tokens_only() {
-	serve("introspect", 0, async |url| {
-		let http = reqwest::Client::new();
-		let ask = async |secret: &str, token: &str| {
-			let res = http.post(format!("{url}{BASE}/introspect")).bearer_auth(secret).form(&[("token", token)]).send().await.unwrap();
-			(res.status().as_u16(), res.json::<Value>().await.unwrap_or(Value::Null))
-		};
-		let (status, body) = ask(INTROSPECT_SECRET, TOKEN).await;
-		assert_eq!((status, &body["active"], &body["email"]), (200, &json!(true), &json!(MEMBER)));
-		assert!(body["exp"].as_i64().is_some());
-		assert_eq!(ask(INTROSPECT_SECRET, "no-such-token").await, (200, json!({ "active": false })));
-		assert_eq!(ask("wrong-secret", TOKEN).await.0, 401);
-	})
-	.await;
-}
-
-/// A native client registers its loopback redirect without a port and listens on whichever it gets
-/// (RFC 8252 §7.3); Claude Code's client metadata does exactly that.
-#[tokio::test]
-async fn loopback_redirect_takes_any_port() {
-	serve("loopback", i64::MAX, async |url| {
+async fn authorize_follows_the_sites_sign_in() {
+	serve("authorize", i64::MAX, async |url| {
 		let http = reqwest::Client::builder().redirect(reqwest::redirect::Policy::none()).build().unwrap();
 		let reg: Value = http
 			.post(format!("{url}{BASE}/register"))
@@ -159,16 +144,60 @@ async fn loopback_redirect_takes_any_port() {
 			.json()
 			.await
 			.unwrap();
+		let verifier = "a-verifier-long-enough-to-be-one-0123456789";
 		let authorize = reqwest::Url::parse_with_params(&format!("{url}{BASE}/authorize"), [
 			("response_type", "code"),
 			("client_id", reg["client_id"].as_str().unwrap()),
 			("redirect_uri", "http://localhost:64461/callback"),
-			("code_challenge", "x"),
+			("code_challenge", &URL_SAFE_NO_PAD.encode(Sha256::digest(verifier))),
 			("code_challenge_method", "S256"),
+			("state", "s1"),
 		])
 		.unwrap();
-		let res = http.get(authorize).send().await.unwrap();
-		assert!(res.status().is_redirection(), "{}: {}", res.status(), res.text().await.unwrap());
+		let cookie = |groups: &[&str]| {
+			let claims = va_sso::Claims {
+				sub: "u1".into(),
+				email: MEMBER.into(),
+				username: "m".into(),
+				admin: false,
+				groups: groups.iter().map(|g| (*g).to_owned()).collect(),
+				exp: i64::try_from(std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs()).unwrap() + 900,
+			};
+			format!("{}={}", va_sso::COOKIE, va_sso::mint(SSO_PRIVATE, claims).unwrap())
+		};
+
+		let res = http.get(authorize.clone()).send().await.unwrap();
+		assert!(res.status().is_redirection(), "{}", res.status());
+		let to = reqwest::Url::parse(res.headers()["location"].to_str().unwrap()).unwrap();
+		assert_eq!(to.as_str().split('?').next(), Some(REFRESH));
+		assert_eq!(to.query_pairs().find(|(k, _)| k == "return_to").unwrap().1, authorize.as_str());
+
+		let res = http.get(authorize.clone()).header("cookie", cookie(&["other"])).send().await.unwrap();
+		assert_eq!(res.status(), 403);
+
+		let res = http.get(authorize.clone()).header("cookie", cookie(&["service-arb"])).send().await.unwrap();
+		let back = reqwest::Url::parse(res.headers()["location"].to_str().unwrap()).unwrap();
+		assert_eq!(back.as_str().split('?').next(), Some("http://localhost:64461/callback"));
+		assert_eq!(back.query_pairs().find(|(k, _)| k == "state").unwrap().1, "s1");
+		let code = back.query_pairs().find(|(k, _)| k == "code").unwrap().1.into_owned();
+		let tokens: Value = http
+			.post(format!("{url}{BASE}/token"))
+			.form(&[
+				("grant_type", "authorization_code"),
+				("client_id", reg["client_id"].as_str().unwrap()),
+				("code", &code),
+				("code_verifier", verifier),
+				("redirect_uri", "http://localhost:64461/callback"),
+			])
+			.send()
+			.await
+			.unwrap()
+			.json()
+			.await
+			.unwrap();
+		let client = connect(&url, tokens["access_token"].as_str().unwrap()).await;
+		let (text, error) = call(&client, "guide", json!({ "section": "reviews" })).await;
+		assert!(!error, "{text}");
 	})
 	.await;
 }
@@ -186,12 +215,10 @@ async fn serve(name: &str, daily_bytes: i64, body: impl AsyncFnOnce(String) -> (
 	let url = format!("http://127.0.0.1:{}", listener.local_addr().unwrap().port());
 	let app = playbook_web::app(playbook_web::Config {
 		public_url: format!("{url}{BASE}"),
-		google_client_id: "unused".into(),
-		google_client_secret: "unused".into(),
-		members: [MEMBER.to_owned()].into(),
+		sso: va_sso::Verifier::try_new(SSO_PUBLIC).unwrap(),
+		sso_refresh_url: REFRESH.into(),
 		db: db.clone(),
 		daily_bytes,
-		introspect_secret: Some(INTROSPECT_SECRET.into()),
 	});
 	rusqlite::Connection::open(&db)
 		.unwrap()

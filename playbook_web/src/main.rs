@@ -1,27 +1,14 @@
-use std::collections::HashSet;
-
-use serde::Deserialize;
-
 const DAILY_BYTES: i64 = 2_000_000; // ~500k tokens a member a day
-
-#[derive(Deserialize)]
-struct Members {
-	members: Vec<String>,
-}
 
 #[tokio::main]
 async fn main() {
 	let env = |k: &str| std::env::var(k).unwrap_or_else(|_| panic!("{k} is unset"));
-	let Members { members } = toml::from_str(include_str!("../members.toml")).expect("members.toml is `members = [\"<email>\", …]`");
-	let members: HashSet<String> = members.into_iter().map(|m| m.to_lowercase()).collect();
 	let config = playbook_web::Config {
 		public_url: env("PUBLIC_URL").trim_end_matches('/').to_owned(),
-		google_client_id: env("GOOGLE_CLIENT_ID"),
-		google_client_secret: env("GOOGLE_CLIENT_SECRET"),
-		members,
+		sso: va_sso::Verifier::try_new(&env("SSO_PUBLIC_KEY")).expect("SSO_PUBLIC_KEY is an Ed25519 public key PEM"),
+		sso_refresh_url: env("SSO_REFRESH_URL"),
 		db: "mcp.db".into(),
 		daily_bytes: DAILY_BYTES,
-		introspect_secret: std::env::var("INTROSPECT_SECRET").ok(),
 	};
 	let addr = format!("0.0.0.0:{}", env("PORT"));
 	let listener = tokio::net::TcpListener::bind(&addr).await.unwrap_or_else(|e| panic!("{addr}: {e}"));
