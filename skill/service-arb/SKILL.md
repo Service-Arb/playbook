@@ -5,17 +5,20 @@ description: Answer a service-arbitrage question out of the playbook — Google 
 
 # service-arb
 
-A knowledge base on running Google Business Profiles into subcontracted trade work. Every claim in it
-links the second someone said it, and the date. The boundary broken first: answering from general
-knowledge where the corpus is silent.
+A knowledge base on running Google Business Profiles into subcontracted trade work. Every claim links
+the second someone said it, and the date. Never fill a gap from general knowledge.
+
+> **The record tilts to the unusual.** What works goes unsaid as common knowledge; a failure gets
+> told. One rejection story is an anecdote, never a requirement.
 
 ## Sources
 
 | path | what it is | read it |
 |---|---|---|
-| `structured/approved/` | notes the owner vetted, by topic | **first** |
+| `ref/skool_*/course/` | the courses, and the recordings their lessons link | **first** |
+| `structured/approved/` | notes the owner vetted, by topic | next |
 | `structured/suggested/` | an agent's reading of the sources, unvetted | when approved has nothing |
-| `ref/` | the raw captures: calls, course lessons, videos, chats | for what the notes never distilled, and to check the newest word |
+| `ref/` | the raw captures: calls, videos, chats | for what the notes never distilled, and the newest word |
 | [sections/](sections/) | how to decide, per area | before advising, not just quoting |
 
 The topics under `structured/` are `market` (niches, cities), `profile` (creation, verification,
@@ -23,17 +26,21 @@ suspension), `ranking` (naming, categories, reviews), `conversion`, `fulfilment`
 
 ## Answering
 
-Search structured/approved first, then structured/suggested, then ref/. Every note already links its source, so the notes find it fast and the source is what you cite.
+Reliability decides the answer, not recency or how vivid a story is. `r<base>`, lower is better: 0 we tested, 1 course, 2 Eric, 3-4 a gmbpp member, 5-7 the cheap group. effective = base + age in days / 180: a course lesson a year old beats yesterday's member call.
 
-- cite under the claim it backs, one line, the bare URL at the second: `https://www.loom.com/share/<id>?t=3302`. Not `[r3 2026-09-18](…)`: link text is lost when the answer is copied out, and `r3` means nothing to the reader
-- a claim with no source gets no citation. Say where it came from ("Valera, unrecorded")
-- reliability: a citation's `r<base>` is 0–7, lower is better (0 tested ourselves, 1 skool course, 2 Eric, 3–4 a gmbpp member, 5–7 the cheap group). effective = base + age in days / 180. Cite the best first, the others under it as secondary
-- sources disagree: the better effective number leads, the other stays beneath it, demoted, with its date. Between equal bases, newest wins
-- take at most two hits per source, so one long call does not drown the rest
-- before answering, run one more pass for the newest word on the topic: search ref/ for it and check nothing dated after your newest citation says otherwise
-- nothing in the corpus answers it: say so, and name the nearest thing it does cover. Never fill the gap from general knowledge
-- advising rather than quoting: read the matching section first
-- the question is past the basics and someone here has run it: close with who to ask, per the experts section. otherwise the answer never mentions referrals
+- read the course first: `ref/skool_*/course/`, then the captures its lessons link (`video:` and inline URLs, found in ref/ by id). Those are course material too
+- then structured/approved, suggested, the rest of ref/. two hits per source at most
+- last pass: nothing dated after your newest citation says otherwise
+- build from the best effective number down. What only r3+ says never becomes a checklist item or a "don't": it goes after the advice as a caveat, with who and when. Sources disagree: the better number leads
+- attribute each claim to who actually said it, as often as they said it; reread the transcript rather than the note
+- corpus silent: say so, name the nearest thing it covers
+- advising: read the matching section first
+
+The answer is two parts:
+1. **sources**: numbered, best first. Each: the claim, who said it (course, Eric, a member by name), the date, and the bare URL at the second on its own line
+2. `---`, then **advice**: no URLs, `[n]` into the sources. Say how strongly each point is backed
+
+A claim with no source says where it came from ("Valera, unrecorded"). Past the basics, and someone here has run it: close with who to ask, per experts; otherwise no referrals.
 
 ## Sections
 

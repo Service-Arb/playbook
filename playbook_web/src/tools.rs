@@ -18,7 +18,7 @@ use crate::{
 };
 
 /// claude.ai reportedly drops server `instructions`, so the rules that matter most ride here too
-const SEARCH_DESCRIPTION: &str = "Case-insensitive regex over the service-arb playbook: structured/approved notes, then structured/suggested, then ref/ captures (calls, course lessons, videos, chats), at most two hits per file, captures newest first. Each hit gives path:line, its header, the date and reliability, the source URL and the lines around it. Search the words a speaker would say, alternated: `review(s)? (a|per) day|reviews? daily`. Cite under each claim the bare source URL at the second, newest wins between equal sources, and when nothing answers, say the corpus does not cover it.";
+const SEARCH_DESCRIPTION: &str = "Case-insensitive regex over the service-arb playbook: structured/approved notes, then structured/suggested, then ref/ captures (calls, course lessons, videos, chats), at most two hits per file, captures newest first. Each hit gives path:line, its header, the date and reliability, the source URL and the lines around it. Search the words a speaker would say, alternated: `review(s)? (a|per) day|reviews? daily`. Search `ref/skool_` course lessons first: they outrank any call. A member's failure story is an anecdote, not a rule. Newest wins only between equal sources. When nothing answers, say the corpus does not cover it.";
 
 #[derive(Deserialize, Serialize, schemars::JsonSchema)]
 pub struct SearchArgs {
