@@ -19,7 +19,15 @@
           jobs.errors.augment = [{ name = "flake-app"; args.app = "check"; }];
           containerRelease = { registry = "ghcr.io/service-arb"; lfs = false; }; # the image takes only markdown; the media is 17G
         };
-        combined = v_flakes.utils.combine { inherit rust; modules = [ github ]; };
+        readme = v_flakes.readme-fw {
+          inherit pkgs;
+          pname = "playbook";
+          defaults = true;
+          lastSupportedVersion = null;
+          rootDir = ./.;
+          badges = [ "ci" ];
+        };
+        combined = v_flakes.utils.combine { inherit rust; modules = [ github readme ]; };
 
         port = "59082";
         # the member surface; build.rs bakes in skill/, structured/ and ref/**/*.md, and nothing else of the tree reaches the image

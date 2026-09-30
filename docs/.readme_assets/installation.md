@@ -1,5 +1,3 @@
-# Installing the playbook in Claude Code
-
 The playbook is a remote MCP server at `https://sa.valeratrades.com/playbook_mcp`. Anyone
 added to the `service-arb` group on valeratrades.com can connect it to Claude Code on any
 machine. Nothing is installed locally, and there is no key to copy between devices: each
@@ -47,7 +45,6 @@ get access.
    account. If you are already signed in there, this step passes by itself.
 4. The browser says you can return to Claude Code; `/mcp` now shows `service-arb` connected.
 
-Ask things as usual: Claude uses the playbook's `search`, `read` and `guide` tools on its own.
 Repeat the same steps on each device.
 
 ## When something goes wrong

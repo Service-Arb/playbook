@@ -1,0 +1,1 @@
+A knowledge base on service arbitrage — running Google Business Profiles into subcontracted trade work — where every claim traces back to a dated source. Members read it from Claude Code through an MCP server; see Installation.
