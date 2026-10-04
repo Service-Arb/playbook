@@ -23,17 +23,16 @@ member: claude mcp add … ──► /mcp → Authenticate ──► browser: va
 
 ### For the owner: giving someone access
 
-1. Add their **Gmail address** to `service-arb` in `~/s/site/flake.nix` (`prodConfig.groups`):
+1. Open the Deployments dashboard at `https://devops.evinvest.ltd`, select Deployment `site`, and
+   edit `site.toml` in **Config files**. Add their **Gmail address** to `service-arb`:
 
-   ```nix
-   groups = {
-     admin = [ … ];
-     service-arb = [ "v79166789533@gmail.com" "them@gmail.com" ];
-   };
+   ```toml
+   [groups]
+   service-arb = ["v79166789533@gmail.com", "them@gmail.com"]
    ```
 
-2. Commit, push, release the site. Access starts once the new site is serving.
-3. Send them the section below, as is. Nothing else needs sharing: no token, no file, no invite.
+   Access starts within a minute. No release is necessary.
+2. Send them the section below, as is. Nothing else needs sharing: no token, no file, no invite.
 
 Removing someone is the same edit in reverse. They lose access within 7 days at most, when their
 Claude Code next has to sign in again.
