@@ -27,7 +27,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          last="$(git tag -l 'v*' --sort=-v:refname | head -n1)"
+          last="$(git tag -l 'v*' --sort=-v:refname | grep -vFe - | head -n1)"
           ver="${last#v}"; [ -n "$ver" ] || ver="0.0.0"
           IFS=. read -r ma mi pa <<<"$ver"
           next="v$ma.$mi.$((pa + 1))"
