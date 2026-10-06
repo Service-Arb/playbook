@@ -10,50 +10,40 @@ A knowledge base on service arbitrage — running Google Business Profiles into 
 <h2>Installation</h2>
 </summary>
 
-The playbook is a remote MCP server at `https://sa.valeratrades.com/playbook_mcp`. Anyone
-added to the `service-arb` group on valeratrades.com can connect it to Claude Code on any
-machine. Nothing is installed locally, and there is no key to copy between devices: each
-device signs in through valeratrades.com in the browser.
+The playbook is a remote MCP server at `https://sa.evinvest.ltd/playbook_mcp`, behind the
+Service-Arb panel. Any member granted `sa:playbook:mcp:use` can connect it to Claude Code on any
+machine. Nothing is installed locally, and there is no key to copy between devices: each device
+signs in through the panel in the browser.
 
 ```
-owner: add their Gmail to the group ──► send them the steps under "For members"
-member: claude mcp add … ──► /mcp → Authenticate ──► browser: valeratrades.com, "Continue with Google"
+owner: grant sa:playbook:mcp:use ──► send them the steps under "For members"
+member: claude mcp add … ──► /mcp → Authenticate ──► browser: sa.evinvest.ltd sign-in, then "Allow"
                                                     └─► back in Claude Code, connected
 ```
 
 ### For the owner: giving someone access
 
-1. Open the Deployments dashboard at `https://devops.evinvest.ltd`, select Deployment `site`, and
-   edit `site.toml` in **Config files**. Add their **Gmail address** to `service-arb`:
-
-   ```toml
-   [groups]
-   service-arb = ["v79166789533@gmail.com", "them@gmail.com"]
-   ```
-
-   Access starts within a minute. No release is necessary.
+1. In the banking cabinet's **Access** tab, grant the member `sa:playbook:mcp:use` (`sa:admin`
+   holds it already). No release, and no site config.
 2. Send them the section below, as is. Nothing else needs sharing: no token, no file, no invite.
 
-Removing someone is the same edit in reverse. They lose access within 7 days at most, when their
+Revoking the permission stops new sign-ins at once, but a client already connected keeps working
+for up to 7 days: refreshing its token does not re-check the permission, so it bites when their
 Claude Code next has to sign in again.
 
 ### For members: connecting Claude Code
 
-You need the Google account the owner added. Use **"Continue with Google"** when signing in:
-it is how valeratrades.com knows the address is yours. An account made with a password does not
-get access.
-
 1. In a terminal:
 
    ```sh
-   claude mcp add --scope user --transport http service-arb https://sa.valeratrades.com/playbook_mcp
+   claude mcp add --scope user --transport http service-arb https://sa.evinvest.ltd/playbook_mcp
    ```
 
    `--scope user` makes it available in every project on this machine.
 
 2. Start Claude Code, type `/mcp`, pick `service-arb`, choose **Authenticate**.
-3. The browser opens valeratrades.com. Sign in with **Continue with Google**, using the added
-   account. If you are already signed in there, this step passes by itself.
+3. The browser opens `sa.evinvest.ltd`. Sign in if asked, then press **Allow** on the page naming
+   Claude Code.
 4. The browser says you can return to Claude Code; `/mcp` now shows `service-arb` connected.
 
 Repeat the same steps on each device.
@@ -62,10 +52,11 @@ Repeat the same steps on each device.
 
 | what you see | what it means |
 |---|---|
-| "…is not a service-arb member" | you signed in with an address the owner has not added, or with a password account. Sign out on valeratrades.com, then sign in with Google using the added account |
+| "…has no access to the playbook" (403) | you are signed in, but not granted `sa:playbook:mcp:use`. Ask the owner, then step 2 again |
+| "this consent form is spent, expired, or someone else's" | the page sat open over 10 minutes, or was submitted twice. Run step 2 again |
 | `/mcp` shows it needs authentication again | normal: sign-in lasts 7 days. Run step 2 again |
 | "…has used today's … bytes" (429) | the daily reading budget is spent; it resets at 00:00 UTC |
-| an old `service-arb.valeratrades.com` entry | that address is gone: `claude mcp remove service-arb`, then step 1 |
+| an old `sa.valeratrades.com` or `service-arb.valeratrades.com` entry | that address is gone: `claude mcp remove service-arb`, then step 1 |
 
 </details>
 <!-- markdownlint-restore -->

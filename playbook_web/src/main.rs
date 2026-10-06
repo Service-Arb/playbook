@@ -5,8 +5,7 @@ async fn main() {
 	let env = |k: &str| std::env::var(k).unwrap_or_else(|_| panic!("{k} is unset"));
 	let config = playbook_web::Config {
 		public_url: env("PUBLIC_URL").trim_end_matches('/').to_owned(),
-		sso: va_sso::Verifier::try_new(&env("SSO_PUBLIC_KEY")).expect("SSO_PUBLIC_KEY is an Ed25519 public key PEM"),
-		sso_refresh_url: env("SSO_REFRESH_URL"),
+		panel_keys: env("PANEL_ASSERTION_KEYS").parse().unwrap_or_else(|e| panic!("PANEL_ASSERTION_KEYS: {e}")),
 		db: "mcp.db".into(),
 		daily_bytes: DAILY_BYTES,
 	};

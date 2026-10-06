@@ -231,7 +231,7 @@ rolodex's `venues/` tree; nothing here duplicates that.
 skill/service-arb/         SKILL.md routes a question to the sources; sections/*.md say how to decide, per area
   ├─ symlinked to .claude/skills/service-arb — the owner's agent reads the tree directly
   └─ baked into playbook_web/ with structured/ and ref/**/*.md — members' agents get slices over MCP
-playbook_web/              the member surface over MCP: search · read · guide, behind valeratrades.com sign-in, every call logged
+playbook_web/              the member surface over MCP: search · read · guide, behind the Service-Arb panel (`sa:playbook:mcp:use`), every call logged
 ```
 
 Members use the knowledge on their own tokens and never get the repo. What the server does, and how,

@@ -46,7 +46,10 @@
               (pkgs.lib.fileset.fileFilter (f: f.hasExt "md") ./ref)
             ];
           };
-          cargoLock.lockFile = ./Cargo.lock;
+          cargoLock = {
+            lockFile = ./Cargo.lock;
+            outputHashes."sa_auth-0.1.0" = "sha256-hxDAZwZNpOA3C5OqY5rcuStGTKG9gsCDMdpipWQNQu8=";
+          };
           cargoBuildFlags = [ "-p" "playbook_web" ];
           cargoTestFlags = [ "-p" "playbook_web" ];
           nativeBuildInputs = [ pkgs.cmake ]; # aws-lc, under reqwest's rustls

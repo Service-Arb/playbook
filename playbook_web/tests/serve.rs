@@ -14,9 +14,9 @@ use sha2::{Digest, Sha256};
 const MEMBER: &str = "member@example.com";
 const TOKEN: &str = "test-token";
 const BASE: &str = "/playbook_mcp";
-const REFRESH: &str = "https://site.test/auth/refresh";
-const SSO_PRIVATE: &str = "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIA3bBKSXvm87i5bc706Y1QG1uj5EmbgUZygHJGfO1XYj\n-----END PRIVATE KEY-----\n";
-const SSO_PUBLIC: &str = "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAws8sYuYGZt4/OjCm05rzUQYOTAWBxVHPL1Fdg74KyV4=\n-----END PUBLIC KEY-----\n";
+const PUBLIC_URL: &str = "https://sa.evinvest.ltd/playbook_mcp";
+const PANEL: &str = "k1:BwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwc=";
+const STRANGER: &str = "k1:CAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg=";
 
 #[derive(Deserialize)]
 struct Golden {
@@ -115,67 +115,64 @@ async fn no_token_leads_to_the_authorization_server() {
 		let res = http.post(format!("{url}{BASE}")).json(&json!({})).send().await.unwrap();
 		assert_eq!(res.status(), 401);
 		let challenge = res.headers()["www-authenticate"].to_str().unwrap();
-		let metadata = format!("{url}/.well-known/oauth-protected-resource{BASE}");
-		assert_eq!(challenge, format!("Bearer resource_metadata=\"{metadata}\""));
-		let resource: Value = http.get(metadata).send().await.unwrap().json().await.unwrap();
-		assert_eq!(resource["resource"], format!("{url}{BASE}"));
-		let issuer = resource["authorization_servers"][0].as_str().unwrap();
+		assert_eq!(challenge, format!("Bearer resource_metadata=\"https://sa.evinvest.ltd/.well-known/oauth-protected-resource{BASE}\""));
+		let resource: Value = http.get(format!("{url}/.well-known/oauth-protected-resource{BASE}")).send().await.unwrap().json().await.unwrap();
+		assert_eq!(resource["resource"], PUBLIC_URL);
+		assert_eq!(resource["authorization_servers"], json!([PUBLIC_URL]));
 		let server: Value = http.get(format!("{url}/.well-known/oauth-authorization-server{BASE}")).send().await.unwrap().json().await.unwrap();
-		assert_eq!(server["issuer"], issuer);
-		assert_eq!(server["token_endpoint"], format!("{url}{BASE}/token"));
+		assert_eq!(server["issuer"], PUBLIC_URL);
+		assert_eq!(server["authorization_endpoint"], format!("{PUBLIC_URL}/authorize"));
+		assert_eq!(server["token_endpoint"], format!("{PUBLIC_URL}/token"));
 	})
 	.await;
 }
 
-/// A browser signed in on the site as a member is handed its code at once; one that is not
-/// signed in goes to the site and comes back to this very request; someone outside the group
-/// is refused. A native client's loopback redirect is registered without a port and matches
-/// whichever it listens on (RFC 8252 §7.3), as Claude Code's client metadata does.
+/// `/authorize` answers only a request the panel signed, for this very method and path, and
+/// only a holder of `sa:playbook:mcp:use` gets the consent page.
 #[tokio::test]
-async fn authorize_follows_the_sites_sign_in() {
-	serve("authorize", i64::MAX, async |url| {
-		let http = reqwest::Client::builder().redirect(reqwest::redirect::Policy::none()).build().unwrap();
-		let reg: Value = http
-			.post(format!("{url}{BASE}/register"))
-			.json(&json!({ "redirect_uris": ["http://localhost/callback"] }))
-			.send()
-			.await
-			.unwrap()
-			.json()
-			.await
-			.unwrap();
-		let verifier = "a-verifier-long-enough-to-be-one-0123456789";
-		let authorize = reqwest::Url::parse_with_params(&format!("{url}{BASE}/authorize"), [
-			("response_type", "code"),
-			("client_id", reg["client_id"].as_str().unwrap()),
-			("redirect_uri", "http://localhost:64461/callback"),
-			("code_challenge", &URL_SAFE_NO_PAD.encode(Sha256::digest(verifier))),
-			("code_challenge_method", "S256"),
-			("state", "s1"),
-		])
-		.unwrap();
-		let cookie = |groups: &[&str]| {
-			let claims = va_sso::Claims {
-				sub: "u1".into(),
-				email: MEMBER.into(),
-				username: "m".into(),
-				admin: false,
-				groups: groups.iter().map(|g| (*g).to_owned()).collect(),
-				exp: i64::try_from(std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs()).unwrap() + 900,
-			};
-			format!("{}={}", va_sso::COOKIE, va_sso::mint(SSO_PRIVATE, claims).unwrap())
+async fn authorize_takes_the_panels_word_for_who_is_asking() {
+	serve("assertion", i64::MAX, async |url| {
+		let http = reqwest::Client::new();
+		let (client_id, _) = register(&url, "Claude Code").await;
+		let authorize = authorize_url(&url, &client_id);
+		let get = |assertion: Option<String>| {
+			let req = http.get(authorize.clone());
+			async move { if let Some(a) = assertion { req.header(sa_auth::HEADER, a) } else { req }.send().await.unwrap().status() }
 		};
+		assert_eq!(get(None).await, 401);
+		assert_eq!(get(Some("not.a.jws".into())).await, 401);
+		assert_eq!(get(Some(assertion(STRANGER, "u1", "GET", true))).await, 401);
+		assert_eq!(get(Some(assertion(PANEL, "u1", "POST", true))).await, 401);
+		assert_eq!(get(Some(assertion(PANEL, "u1", "GET", false))).await, 403);
+		assert_eq!(get(Some(assertion(PANEL, "u1", "GET", true))).await, 200);
+	})
+	.await;
+}
 
-		let res = http.get(authorize.clone()).send().await.unwrap();
+/// The code comes only from the consent form's POST, by the member it was shown to, once. A
+/// native client's loopback redirect is registered without a port and matches whichever it
+/// listens on (RFC 8252 §7.3), as Claude Code's client metadata does.
+#[tokio::test]
+async fn a_code_is_issued_only_on_consent() {
+	serve("consent", i64::MAX, async |url| {
+		let http = reqwest::Client::builder().redirect(reqwest::redirect::Policy::none()).build().unwrap();
+		let (client_id, verifier) = register(&url, "<b>Claude</b> & co").await;
+		let res = http.get(authorize_url(&url, &client_id)).header(sa_auth::HEADER, assertion(PANEL, "u1", "GET", true)).send().await.unwrap();
+		assert_eq!(res.status(), 200);
+		assert!(res.headers().get("location").is_none());
+		let page = res.text().await.unwrap();
+		assert!(page.contains("&lt;b&gt;Claude&lt;/b&gt; &amp; co") && page.contains("<b>localhost</b>"), "{page}");
+		let nonce = page.split(r#"name="nonce" value=""#).nth(1).unwrap().split('"').next().unwrap().to_owned();
+
+		let post = |sub: &str, nonce: &str| {
+			http.post(format!("{url}{BASE}/authorize")).header(sa_auth::HEADER, assertion(PANEL, sub, "POST", true)).form(&[("nonce", nonce)]).send()
+		};
+		assert_eq!(post("u1", "made-up").await.unwrap().status(), 400);
+		assert_eq!(post("u2", &nonce).await.unwrap().status(), 400);
+		let res = post("u1", &nonce).await.unwrap();
 		assert!(res.status().is_redirection(), "{}", res.status());
-		let to = reqwest::Url::parse(res.headers()["location"].to_str().unwrap()).unwrap();
-		assert_eq!(to.as_str().split('?').next(), Some(REFRESH));
-		assert_eq!(to.query_pairs().find(|(k, _)| k == "return_to").unwrap().1, authorize.as_str());
+		assert_eq!(post("u1", &nonce).await.unwrap().status(), 400);
 
-		let res = http.get(authorize.clone()).header("cookie", cookie(&["other"])).send().await.unwrap();
-		assert_eq!(res.status(), 403);
-
-		let res = http.get(authorize.clone()).header("cookie", cookie(&["service-arb"])).send().await.unwrap();
 		let back = reqwest::Url::parse(res.headers()["location"].to_str().unwrap()).unwrap();
 		assert_eq!(back.as_str().split('?').next(), Some("http://localhost:64461/callback"));
 		assert_eq!(back.query_pairs().find(|(k, _)| k == "state").unwrap().1, "s1");
@@ -184,9 +181,9 @@ async fn authorize_follows_the_sites_sign_in() {
 			.post(format!("{url}{BASE}/token"))
 			.form(&[
 				("grant_type", "authorization_code"),
-				("client_id", reg["client_id"].as_str().unwrap()),
+				("client_id", &client_id),
 				("code", &code),
-				("code_verifier", verifier),
+				("code_verifier", &verifier),
 				("redirect_uri", "http://localhost:64461/callback"),
 			])
 			.send()
@@ -202,6 +199,48 @@ async fn authorize_follows_the_sites_sign_in() {
 	.await;
 }
 
+/// a DCR client with a portless loopback redirect, and the PKCE verifier for `authorize_url`
+async fn register(url: &str, name: &str) -> (String, String) {
+	let reg: Value = reqwest::Client::new()
+		.post(format!("{url}{BASE}/register"))
+		.json(&json!({ "redirect_uris": ["http://localhost/callback"], "client_name": name }))
+		.send()
+		.await
+		.unwrap()
+		.json()
+		.await
+		.unwrap();
+	(reg["client_id"].as_str().unwrap().to_owned(), "a-verifier-long-enough-to-be-one-0123456789".to_owned())
+}
+
+fn authorize_url(url: &str, client_id: &str) -> reqwest::Url {
+	reqwest::Url::parse_with_params(&format!("{url}{BASE}/authorize"), [
+		("response_type", "code"),
+		("client_id", client_id),
+		("redirect_uri", "http://localhost:64461/callback"),
+		("code_challenge", &URL_SAFE_NO_PAD.encode(Sha256::digest("a-verifier-long-enough-to-be-one-0123456789"))),
+		("code_challenge_method", "S256"),
+		("state", "s1"),
+	])
+	.unwrap()
+}
+
+/// what the panel puts on a request to `<BASE>/authorize`, signed with `key`
+fn assertion(key: &str, sub: &str, method: &str, may_use: bool) -> String {
+	let signer: sa_auth::Signer = key.parse().unwrap();
+	signer.sign(&sa_auth::Assertion {
+		aud: sa_auth::Service::Playbook,
+		sub: sub.into(),
+		email: MEMBER.into(),
+		email_verified: true,
+		name: "M".into(),
+		permissions: may_use.then(|| sa_auth::Mcp::Use.as_str()).into_iter().collect(),
+		method: method.into(),
+		path: format!("{BASE}/authorize"),
+		exp: i64::try_from(std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs()).unwrap() + sa_auth::TTL,
+	})
+}
+
 /// Runs `body` against a fresh server, served under `BASE`, that knows one member, holding the access
 /// token `TOKEN`. `body` gets the origin.
 async fn serve(name: &str, daily_bytes: i64, body: impl AsyncFnOnce(String) -> ()) {
@@ -214,16 +253,15 @@ async fn serve(name: &str, daily_bytes: i64, body: impl AsyncFnOnce(String) -> (
 	let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
 	let url = format!("http://127.0.0.1:{}", listener.local_addr().unwrap().port());
 	let app = playbook_web::app(playbook_web::Config {
-		public_url: format!("{url}{BASE}"),
-		sso: va_sso::Verifier::try_new(SSO_PUBLIC).unwrap(),
-		sso_refresh_url: REFRESH.into(),
+		public_url: PUBLIC_URL.into(),
+		panel_keys: PANEL.parse::<sa_auth::Signer>().unwrap().public().parse().unwrap(),
 		db: db.clone(),
 		daily_bytes,
 	});
 	rusqlite::Connection::open(&db)
 		.unwrap()
 		.execute(
-			"INSERT INTO tokens (hash, kind, email, client_id, expires) VALUES (?1, 'access', ?2, 'test', ?3)",
+			"INSERT INTO tokens (hash, kind, sub, email, client_id, expires) VALUES (?1, 'access', 'u0', ?2, 'test', ?3)",
 			(URL_SAFE_NO_PAD.encode(Sha256::digest(TOKEN)), MEMBER, i64::MAX),
 		)
 		.unwrap();
