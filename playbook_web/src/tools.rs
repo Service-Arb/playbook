@@ -75,7 +75,7 @@ impl Playbook {
 
 	fn answer(&self, ctx: &RequestContext<RoleServer>, tool: &str, args: &impl Serialize, found: Result<Found, String>) -> CallToolResult {
 		let parts = ctx.extensions.get::<Parts>().expect("served over streamable http only");
-		let Member(email) = parts.extensions.get::<Member>().expect("the guard admits members only");
+		let Member { sub, email } = parts.extensions.get::<Member>().expect("the guard admits members only");
 		let (text, ids, error) = match found {
 			Ok(Found { text, ids }) => (text, ids, false),
 			Err(e) => (e, vec![], true),
@@ -85,8 +85,8 @@ impl Playbook {
 			.lock()
 			.unwrap()
 			.execute(
-				"INSERT INTO calls (at, email, tool, args, ids, bytes, error) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
-				(now(), email, tool, serde_json::to_string(args).unwrap(), ids.join(" "), text.len() as i64, error),
+				"INSERT INTO calls (at, sub, email, tool, args, ids, bytes, error) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
+				(now(), sub, email, tool, serde_json::to_string(args).unwrap(), ids.join(" "), text.len() as i64, error),
 			)
 			.expect("the calls table is created on start");
 		match error {
