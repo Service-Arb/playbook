@@ -30,8 +30,9 @@ Claude Code next has to sign in again.
    `--scope user` makes it available in every project on this machine.
 
 2. Start Claude Code, type `/mcp`, pick `service-arb`, choose **Authenticate**.
-3. The browser opens `sa.evinvest.ltd`. Sign in if asked, then press **Allow** on the page naming
-   Claude Code.
+3. The browser opens `sa.evinvest.ltd`. Sign in with Google if asked (any account; the first sign-in
+   creates it), then press **Allow** on the page naming Claude Code. Without access yet, the page
+   says so: send the owner the email it shows, then repeat this step.
 4. The browser says you can return to Claude Code; `/mcp` now shows `service-arb` connected.
 
 Repeat the same steps on each device.
