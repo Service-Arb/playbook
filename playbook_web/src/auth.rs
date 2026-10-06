@@ -286,6 +286,9 @@ async fn client(state: &State, client_id: &str, redirect_uri: &str) -> Result<Op
 		(u.scheme() == "http" && matches!(u.host_str(), Some("localhost" | "127.0.0.1" | "[::1]"))).then(|| u.set_port(None).expect("http takes a port"))?;
 		Some(u)
 	};
+	if !redirect_allowed(redirect_uri) {
+		return Err(format!("{redirect_uri}: https, or http on loopback")); // a CIMD document's uris are not checked on /register
+	}
 	match uris.iter().any(|u| u == redirect_uri || portless(u).is_some_and(|u| Some(u) == portless(redirect_uri))) {
 		true => Ok(name),
 		false => Err(format!("{redirect_uri} is not a redirect_uri of this client")),

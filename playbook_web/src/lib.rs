@@ -38,6 +38,7 @@ pub fn app(config: Config) -> Router {
 	let db = rusqlite::Connection::open(&config.db).unwrap_or_else(|e| panic!("{}: {e}", config.db.display()));
 	db.pragma_update(None, "journal_mode", "WAL").unwrap();
 	db.busy_timeout(std::time::Duration::from_secs(5)).unwrap();
+	db.execute_batch("BEGIN IMMEDIATE").unwrap(); // a start that dies mid-migration leaves the old schema whole
 	match db.pragma_query_value(None, "user_version", |r| r.get::<_, i64>(0)).unwrap() {
 		0 => {
 			let va_sso: bool = db.query_row("SELECT EXISTS (SELECT 1 FROM sqlite_master WHERE name = 'clients')", [], |r| r.get(0)).unwrap();
@@ -49,6 +50,7 @@ pub fn app(config: Config) -> Router {
 		v => panic!("{} is at schema version {v}, newer than this server", config.db.display()),
 	}
 	db.execute_batch(include_str!("schema.sql")).unwrap();
+	db.execute_batch("COMMIT").unwrap();
 	let url = reqwest::Url::parse(&config.public_url).expect("PUBLIC_URL is a url");
 	let (host, base) = (url.authority().to_owned(), url.path().to_owned());
 	assert!(base.len() > 1, "PUBLIC_URL names the path the server is served under: {}", config.public_url);
