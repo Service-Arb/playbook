@@ -12,7 +12,7 @@ tokio = { version = "1", features = ["rt"] }
 //! whose recording has a picture and nobody has watched yet: what is on screen that the speech does
 //! not say, each line at the frame it was read off, and that frame kept beside it. With no arguments
 //! it takes every capture under `ref/`. `--legacy` reads frames wherever the picture changes; `--smart`
-//! only where the transcript says something is shown.
+//! only where the speech says something is shown, timed line by line by local whisper.
 //!
 //! The reading is `ask_llm`'s `Client::watch`; this decides which recordings, and how `shown.md` reads.
 
@@ -114,10 +114,12 @@ async fn watch(path: &Path, pick: Pick) -> Option<f64> {
 		true => Footage::Filmed,
 		false => Footage::Screen,
 	};
-	let speech = capture.chapters.iter().map(|(secs, title, text)| Said { secs: *secs as f64, text: format!("{title}\n{text}") }).collect();
 	let spec = Watch {
 		title: capture.title.clone(),
-		speech: Some(speech),
+		speech: match pick {
+			Pick::Changes => Some(capture.chapters.iter().map(|(secs, title, text)| Said { secs: *secs as f64, text: format!("{title}\n{text}") }).collect()),
+			Pick::Likely { .. } => None, // the pick places a span by each line's second, and a capture stamps only its chapters, so whisper times them
+		},
 		footage,
 		pick,
 		about: capture.summary.clone(),
