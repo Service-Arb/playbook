@@ -4,7 +4,7 @@
 edition = "2024"
 
 [dependencies]
-ask_llm = { path = "/home/v/s/ask_llm", default-features = false }
+ask_llm = { version = "3.7", default-features = false }
 tokio = { version = "1", features = ["rt"] }
 ---
 

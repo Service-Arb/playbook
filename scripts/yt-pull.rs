@@ -4,7 +4,7 @@
 edition = "2024"
 
 [dependencies]
-ask_llm = { path = "/home/v/s/ask_llm", default-features = false }
+ask_llm = { version = "3.7", default-features = false }
 jiff = "0.2"
 social_networks_adapters = { version = "=0.5.0", features = ["youtube-reads"] }
 tokio = { version = "1", features = ["full"] }
