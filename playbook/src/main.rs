@@ -29,6 +29,15 @@ enum Cmd {
 		paths: Vec<PathBuf>,
 		#[arg(long)]
 		execute: bool,
+		/// `picture`: frames wherever the picture changes
+		#[arg(long, conflicts_with = "smart")]
+		legacy: bool,
+		/// `picture`: frames only where the transcript says something is shown
+		#[arg(long)]
+		smart: bool,
+		/// `--smart`: least seconds between frames, call-watch.rs's own where unset
+		#[arg(long, requires = "smart")]
+		every: Option<f64>,
 	},
 }
 
@@ -50,7 +59,14 @@ struct Capture {
 }
 
 fn main() {
-	let Cmd::ReTranscribe { what, paths, execute } = Cli::parse().command;
+	let Cmd::ReTranscribe { what, paths, execute, legacy, smart, every } = Cli::parse().command;
+	let pick: Vec<String> = match (what, legacy, smart) {
+		(What::Picture, true, false) => vec!["--legacy".into()],
+		(What::Picture, false, true) => ["--smart".to_string()].into_iter().chain(every.into_iter().flat_map(|e| ["--every".to_string(), e.to_string()])).collect(),
+		(What::Picture, ..) => panic!("re-transcribe picture takes --legacy or --smart"),
+		(What::Audio, false, false) => Vec::new(),
+		(What::Audio, ..) => panic!("--legacy and --smart pick frames, and audio has none"),
+	};
 	let root = repo_root();
 	let captures: Vec<Capture> = paths.iter().flat_map(|p| captures_under(&root, p)).map(|p| read(&p)).collect();
 
@@ -58,7 +74,7 @@ fn main() {
 	let mut usd = 0.;
 	for c in &captures {
 		let rel = c.path.strip_prefix(&root).expect("captures are found under the root").display();
-		match plan(what, c) {
+		match plan(what, smart, c) {
 			Ok((cost, why)) => {
 				println!("{:>8} {rel} — {why}", format!("${cost:.3}"));
 				usd += cost;
@@ -85,7 +101,7 @@ fn main() {
 					std::fs::remove_dir_all(kept.join("frames")).expect("the capture's dir is ours");
 				}
 			}
-			run(Command::new(root.join("scripts/call-watch.rs")).args(todo.iter().map(|c| &c.path)));
+			run(Command::new(root.join("scripts/call-watch.rs")).args(&pick).args(todo.iter().map(|c| &c.path)));
 		}
 		What::Audio => {
 			// the kept recording waits where call-pull.rs stages a fetch, which it then finds already there
@@ -104,7 +120,7 @@ fn main() {
 }
 
 /// `Ok((usd, what it is))` for a capture this would redo, `Err(why not)` for one it leaves.
-fn plan(what: What, c: &Capture) -> Result<(f64, String), String> {
+fn plan(what: What, smart: bool, c: &Capture) -> Result<(f64, String), String> {
 	match what {
 		What::Audio => {
 			if !c.transcribed_by.starts_with("whisper") {
@@ -135,7 +151,9 @@ fn plan(what: What, c: &Capture) -> Result<(f64, String), String> {
 				true => ("phone clip", PHONE_CENTS_PER_MIN),
 				false => ("screen", SCREEN_CENTS_PER_MIN),
 			};
-			Ok((c.minutes * rate / 100., format!("{:.1} min of {kind} at {rate}¢/min", c.minutes)))
+			// the pick decides what `--smart` reads, so its cost is known only once it ran
+			let legacy = if smart { "the legacy rate, " } else { "" };
+			Ok((c.minutes * rate / 100., format!("{:.1} min of {kind} at {legacy}{rate}¢/min", c.minutes)))
 		}
 	}
 }

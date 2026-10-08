@@ -4,14 +4,15 @@
 edition = "2024"
 
 [dependencies]
-ask_llm = { version = "3.4", default-features = false }
+ask_llm = { path = "/home/v/s/ask_llm", default-features = false }
 tokio = { version = "1", features = ["rt"] }
 ---
 
-//! `./scripts/call-watch.rs [<capture.md>...]` — write `<capture>/shown.md` for every call capture
+//! `./scripts/call-watch.rs (--legacy | --smart [--every <secs>]) [<capture.md>...]` — write `<capture>/shown.md` for every call capture
 //! whose recording has a picture and nobody has watched yet: what is on screen that the speech does
 //! not say, each line at the frame it was read off, and that frame kept beside it. With no arguments
-//! it takes every capture under `ref/`.
+//! it takes every capture under `ref/`. `--legacy` reads frames wherever the picture changes; `--smart`
+//! only where the transcript says something is shown.
 //!
 //! The reading is `ask_llm`'s `Client::watch`; this decides which recordings, and how `shown.md` reads.
 
@@ -21,7 +22,7 @@ use std::{
 	sync::Mutex,
 };
 
-use ask_llm::{Client, Footage, Model, Said, Shown, Watch};
+use ask_llm::{Client, Footage, Model, Pick, Said, Shown, Watch};
 
 const WORKERS: usize = 4;
 const PLATFORMS: [&str; 5] = ["ref/loom", "ref/fathom", "ref/drive", "ref/vimeo", "ref/vocaroo"];
@@ -32,13 +33,27 @@ const TOTALS: &str = "- what the recordings show, as `scripts/call-watch.rs` rea
 struct Capture {
 	title: String,
 	source: String,
+	summary: Option<String>,
 	/// `(start secs, header's title, text under it)`
 	chapters: Vec<(u64, String, String)>,
 }
 
 fn main() {
 	let root = repo_root();
-	let args: Vec<PathBuf> = std::env::args().skip(1).map(PathBuf::from).collect();
+	let args: Vec<String> = std::env::args().skip(1).collect();
+	let usage = "usage: call-watch.rs (--legacy | --smart [--every <secs>]) [<capture.md>...]";
+	let (pick, args) = match args.as_slice() {
+		[mode, rest @ ..] if mode == "--legacy" => (Pick::Changes, rest),
+		[mode, flag, secs, rest @ ..] if mode == "--smart" && flag == "--every" => (
+			Pick::Likely {
+				every: secs.parse().unwrap_or_else(|e| panic!("--every `{secs}`: {e}")),
+			},
+			rest,
+		),
+		[mode, rest @ ..] if mode == "--smart" => (Pick::Likely { every: 0.5 }, rest),
+		_ => panic!("{usage}"),
+	};
+	let args: Vec<PathBuf> = args.iter().map(PathBuf::from).collect();
 	let captures: Vec<PathBuf> = match args.is_empty() {
 		true => PLATFORMS
 			.iter()
@@ -62,7 +77,7 @@ fn main() {
 				//LOOP: bounded by the queue, which only drains
 				loop {
 					let Some(path) = queue.lock().expect("no worker panics holding it").next() else { break };
-					if let Some(cost) = rt.block_on(watch(&path)) {
+					if let Some(cost) = rt.block_on(watch(&path, pick)) {
 						let mut spent = spent.lock().expect("no worker panics holding it");
 						*spent += cost;
 						eprintln!("${cost:.4} {} — ${:.4} this run", path.display(), *spent);
@@ -87,7 +102,7 @@ fn repo_root() -> PathBuf {
 }
 
 /// Watch one recording into its `shown.md`, returning what it cost; `None` for one with no picture.
-async fn watch(path: &Path) -> Option<f64> {
+async fn watch(path: &Path, pick: Pick) -> Option<f64> {
 	let kept = path.with_extension("");
 	let media = std::fs::read_dir(&kept)
 		.unwrap_or_else(|e| panic!("{}: {e} — run call-pull.rs to fetch the recording", kept.display()))
@@ -100,13 +115,25 @@ async fn watch(path: &Path) -> Option<f64> {
 		false => Footage::Screen,
 	};
 	let speech = capture.chapters.iter().map(|(secs, title, text)| Said { secs: *secs as f64, text: format!("{title}\n{text}") }).collect();
-	let spec = Watch { title: capture.title.clone(), speech: Some(speech), footage, frames: kept.join("frames") };
+	let spec = Watch {
+		title: capture.title.clone(),
+		speech: Some(speech),
+		footage,
+		pick,
+		about: capture.summary.clone(),
+		frames: kept.join("frames"),
+	};
 	let watched = Client::default().model(Model::Video).watch(&media, spec).await.unwrap_or_else(|e| panic!("{}: {e:?}", path.display()));
 	let Some(model) = watched.model else {
 		eprintln!("audio only, nothing shown — {}", path.display());
 		return None;
 	};
 	let cost = watched.cost_cents as f64 / 100.;
+	let picked = match (pick, &watched.picked_by) {
+		(Pick::Changes, None) => format!("as `ask_llm`'s `Footage::{footage:?}` picks them"),
+		(Pick::Likely { every }, Some(by)) => format!("`{by}` picking where, `Pick::Likely` every {every}s"),
+		_ => unreachable!("`picked_by` is set by `Pick::Likely` alone"),
+	};
 
 	let seek = match capture.source.contains("vimeo.com") {
 		true => "#t=",
@@ -118,7 +145,7 @@ async fn watch(path: &Path) -> Option<f64> {
 	let mut out = format!(
 		"# shown: {}\n\n\
 		 - capture: [{name}](../{name})\n\
-		 - watched by: `{model}`, over {} frames, as `ask_llm`'s `Footage::{footage:?}` picks them · `scripts/call-watch.rs`\n\
+		 - watched by: `{model}`, over {} frames, {picked} · `scripts/call-watch.rs`\n\
 		 - watched: {}\n\
 		 - cost: ${cost:.4}\n",
 		capture.title,
@@ -159,7 +186,11 @@ fn read(path: &Path) -> Capture {
 		}
 	}
 	assert!(chapters.windows(2).all(|w| w[0].0 < w[1].0), "{}: chapters out of order — run call-pull.rs --check", path.display());
-	Capture { title: title.to_string(), source: field("source").trim_matches(['<', '>']).to_string(), chapters }
+	let summary = text
+		.split_once("\n## summary\n")
+		.map(|(_, rest)| rest.split("\n## ").next().expect("split yields at least once").trim().to_string())
+		.filter(|s| !s.is_empty());
+	Capture { title: title.to_string(), source: field("source").trim_matches(['<', '>']).to_string(), summary, chapters }
 }
 
 /// `MM:SS` under an hour, `H:MM:SS` past it, as call-pull.rs writes a chapter's start.

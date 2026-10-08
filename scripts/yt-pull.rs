@@ -4,18 +4,17 @@
 edition = "2024"
 
 [dependencies]
-ask_llm = { version = "3.4", default-features = false }
-glass_pumpkin = "=2.0.0-rc0" # social_networks' lock; rc1 breaks grammers-crypto, which asks for `2.0.0-rc0`
+ask_llm = { path = "/home/v/s/ask_llm", default-features = false }
 jiff = "0.2"
-social_networks_adapters = { version = "=0.3.23", features = ["youtube-reads"] }
+social_networks_adapters = { version = "=0.5.0", features = ["youtube-reads"] }
 tokio = { version = "1", features = ["full"] }
-v_utils_macros = "=2.12.5" # social_networks' lock; later ones call into a v_utils newer than 2.17.6
 ---
 
 //! `./scripts/yt-pull.rs sync` — list every video of every channel `ref/README.md` links, in
 //! `ref/youtube/README.md`, under a header per person: the link text names their directory.
-//! `./scripts/yt-pull.rs transcribe` — capture every video that list has unticked, into
-//! `ref/youtube/<who>/<id>.md`, ticking it as it goes.
+//! `./scripts/yt-pull.rs transcribe (--legacy | --smart [--every <secs>])` — capture every video that
+//! list has unticked, into `ref/youtube/<who>/<id>.md`, ticking it as it goes. `--legacy` reads frames
+//! wherever the picture changes; `--smart` only where the captions say something is shown.
 //!
 //! Youtube is read by `social_networks_adapters`, linked; this only decides how a capture is filed.
 //!
@@ -36,7 +35,7 @@ use std::{
 	path::{Path, PathBuf},
 };
 
-use ask_llm::{Client, Footage, Model, Said, Shown, Watch};
+use ask_llm::{Client, Footage, Model, Pick, Said, Shown, Watch};
 use jiff::civil::Date;
 use social_networks_adapters::youtube::{self, Chapter, Cue};
 
@@ -69,8 +68,21 @@ async fn main() {
 	let root = repo_root();
 	match std::env::args().skip(1).collect::<Vec<_>>().as_slice() {
 		[cmd] if cmd == "sync" => sync(&root).await,
-		[cmd] if cmd == "transcribe" => transcribe(&root).await,
-		_ => panic!("usage: yt-pull.rs <sync|transcribe>"),
+		[cmd, pick @ ..] if cmd == "transcribe" => transcribe(&root, picked(pick)).await,
+		_ => panic!("usage: {USAGE}"),
+	}
+}
+
+const USAGE: &str = "yt-pull.rs <sync | transcribe (--legacy | --smart [--every <secs>])>";
+
+fn picked(args: &[String]) -> Pick {
+	match args {
+		[mode] if mode == "--legacy" => Pick::Changes,
+		[mode] if mode == "--smart" => Pick::Likely { every: 0.5 },
+		[mode, flag, secs] if mode == "--smart" && flag == "--every" => Pick::Likely {
+			every: secs.parse().unwrap_or_else(|e| panic!("--every `{secs}`: {e}")),
+		},
+		_ => panic!("usage: {USAGE}"),
 	}
 }
 
@@ -97,7 +109,7 @@ async fn sync(root: &Path) {
 	write(root, &Index { checked: jiff::Zoned::now().date().to_string(), sections });
 }
 
-async fn transcribe(root: &Path) {
+async fn transcribe(root: &Path, pick: Pick) {
 	let index = parse(root);
 	let tmp = std::env::temp_dir().join("yt-pull");
 	let mut mute = Vec::new();
@@ -112,7 +124,7 @@ async fn transcribe(root: &Path) {
 			eprintln!("pulling {}/{id}", section.who);
 			// a video youtube never captioned is a real absence, not a broken run — the rest of the
 			// channel is still worth having, so it is named at the end rather than aborting here
-			match video(id, &tmp, &dir.join(id)).await {
+			match video(id, &tmp, &dir.join(id), pick).await {
 				Some(doc) => {
 					std::fs::write(&out, doc).expect("ref/youtube is ours to write");
 					write(root, &index);
@@ -247,7 +259,7 @@ fn hms(secs: f64) -> String {
 	format!("{:02}:{:02}:{:02}", s / 3600, (s % 3600) / 60, s % 60)
 }
 
-async fn video(id: &str, tmp: &Path, shots: &Path) -> Option<String> {
+async fn video(id: &str, tmp: &Path, shots: &Path, pick: Pick) -> Option<String> {
 	let video = youtube::video(id).await.unwrap_or_else(|e| panic!("reading {id}: {e:?}"));
 	let blocks = blocks(&video.captions?);
 	assert!(!blocks.is_empty(), "{id} has a caption track that carries no words");
@@ -273,11 +285,18 @@ async fn video(id: &str, tmp: &Path, shots: &Path) -> Option<String> {
 		title: video.title.clone(),
 		speech: Some(blocks.iter().map(|(secs, text)| Said { secs: *secs, text: text.clone() }).collect()),
 		footage: Footage::Screen,
+		pick,
+		about: video.description.clone(),
 		frames: shots.to_path_buf(),
 	};
 	let watched = Client::default().model(Model::Video).watch(&media, spec).await.unwrap_or_else(|e| panic!("watching {id}: {e:?}"));
 	std::fs::remove_dir_all(tmp).unwrap_or_else(|e| panic!("removing {}: {e}", tmp.display()));
 	let watched_by = watched.model.as_deref().unwrap_or_else(|| panic!("{id} downloaded with no picture"));
+	let picked = match (pick, &watched.picked_by) {
+		(Pick::Changes, None) => "as `ask_llm`'s `Footage::Screen` picks them".to_string(),
+		(Pick::Likely { every }, Some(by)) => format!("`{by}` picking where, `Pick::Likely` every {every}s"),
+		_ => unreachable!("`picked_by` is set by `Pick::Likely` alone"),
+	};
 
 	let mut out = format!(
 		"# {}\n\
@@ -287,7 +306,7 @@ async fn video(id: &str, tmp: &Path, shots: &Path) -> Option<String> {
 		 - uploaded: {}\n\
 		 - duration: {}\n\
 		 - pulled by: `scripts/yt-pull.rs`\n\
-		 - read by: `{}` summary and chapters, `{watched_by}` what is shown, over {} frames, as `ask_llm`'s `Footage::Screen` picks them\n\
+		 - read by: `{}` summary and chapters, `{watched_by}` what is shown, over {} frames, {picked}\n\
 		 - cost: ${:.4}\n\
 		 \n\
 		 ## summary\n\
