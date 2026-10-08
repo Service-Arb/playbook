@@ -106,6 +106,24 @@ async fn quota_overrun_is_429() {
 	.await;
 }
 
+/// The panel forwards to the in-cluster address, so the Host it sends is that one, not `PUBLIC_URL`'s.
+#[tokio::test]
+async fn any_host_is_served() {
+	serve("host", i64::MAX, async |url| {
+		let res = reqwest::Client::new()
+			.post(format!("{url}{BASE}"))
+			.bearer_auth(TOKEN)
+			.header("host", "playbook-web.personal:59082")
+			.header("accept", "application/json, text/event-stream")
+			.json(&json!({ "jsonrpc": "2.0", "id": 1, "method": "initialize", "params": { "protocolVersion": "2025-06-18", "capabilities": {}, "clientInfo": { "name": "t", "version": "0" } } }))
+			.send()
+			.await
+			.unwrap();
+		assert_eq!(res.status(), 200, "{}", res.text().await.unwrap());
+	})
+	.await;
+}
+
 /// A client with nothing but the MCP url finds the authorization server through the path-inserted
 /// metadata of RFC 9728 and RFC 8414.
 #[tokio::test]

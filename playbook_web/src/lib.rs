@@ -52,7 +52,7 @@ pub fn app(config: Config) -> Router {
 	db.execute_batch(include_str!("schema.sql")).unwrap();
 	db.execute_batch("COMMIT").unwrap();
 	let url = reqwest::Url::parse(&config.public_url).expect("PUBLIC_URL is a url");
-	let (host, base) = (url.authority().to_owned(), url.path().to_owned());
+	let base = url.path().to_owned();
 	assert!(base.len() > 1, "PUBLIC_URL names the path the server is served under: {}", config.public_url);
 	let state = Arc::new(State {
 		resource_metadata: format!("{}/.well-known/oauth-protected-resource{base}", url.origin().ascii_serialization()),
@@ -66,7 +66,7 @@ pub fn app(config: Config) -> Router {
 		StreamableHttpService::new(
 			move || Ok(tools::Playbook::new(state.clone())),
 			LocalSessionManager::default().into(),
-			StreamableHttpServerConfig::default().with_allowed_hosts([host, "localhost".into(), "127.0.0.1".into()]),
+			StreamableHttpServerConfig::default().disable_allowed_hosts(), // the panel forwards with the in-cluster Host; every request needs a bearer token, which DNS rebinding cannot carry
 		)
 	};
 	Router::new()
