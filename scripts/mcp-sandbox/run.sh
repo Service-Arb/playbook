@@ -1,7 +1,7 @@
 # What a new member sees adding the MCP: a Claude config with your Claude login but no MCP tokens, and a Chrome with no sessions.
-# State persists in tmp/ between runs; `--fresh` wipes it.
+# Wiped every run; `--keep` resumes the last one.
 s="$(git rev-parse --show-toplevel)/scripts/mcp-sandbox/tmp"
-if [ "${1:-}" = "--fresh" ]; then rm -rf "$s"; shift; fi
+if [ "${1:-}" = "--keep" ]; then shift; else rm -rf "$s"; fi
 mkdir -p "$s/cfg" "$s/chrome" "$s/bin"
 
 if [ ! -f "$s/cfg/.credentials.json" ]; then
