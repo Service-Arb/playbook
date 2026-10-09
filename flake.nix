@@ -86,6 +86,15 @@
           }}/bin/check";
         };
 
+        apps.mcp-sandbox = {
+          type = "app";
+          program = "${pkgs.writeShellApplication {
+            name = "mcp-sandbox";
+            runtimeInputs = [ pkgs.git pkgs.jq pkgs.chromium ]; # claude comes from the caller's PATH
+            text = builtins.readFile ./scripts/mcp-sandbox/run.sh;
+          }}/bin/mcp-sandbox";
+        };
+
         devShells.default = pkgs.mkShell {
           shellHook = combined.shellHook;
           packages = [ rust pkgs.sqlite ] ++ combined.enabledPackages;
