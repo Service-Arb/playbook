@@ -207,7 +207,7 @@ async fn authorize(Axum(state): S, method: Method, uri: Uri, headers: HeaderMap,
 		u.to_string()
 	};
 	if !member.permissions.may(sa_auth::Mcp::Use) {
-		return Redirect::to(&panel("/access", &[("need", sa_auth::Mcp::Use.as_str()), ("continue", here)])).into_response();
+		return Redirect::to(&panel("/access/", &[("need", sa_auth::Mcp::Use.as_str()), ("continue", here)])).into_response();
 	}
 	let nonce = random();
 	{

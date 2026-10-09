@@ -30,7 +30,7 @@ is asking and what of the playbook they may do (`sa_auth`), bound to that method
 client ──/register (DCR) or a CIMD url──► GET /authorize
    client or redirect_uri unknown ──► 400 page, nothing redirected
    decision=deny (Cancel) ──► redirect_uri?error=access_denied
-   assertion: missing or refused ──► 401 page · without sa:playbook:mcp:use ──► panel /access?need=…&continue=<this url>
+   assertion: missing or refused ──► 401 page · without sa:playbook:mcp:use ──► panel /access/?need=…&continue=<this url>
    ok ──► consent page: client, account (switch), redirect, form with a nonce (10 min, single use, bound to sub + this request)
 browser ──POST /authorize, nonce──► assertion again, nonce spent for the same sub ──► code ──► redirect_uri
 client ──/token (PKCE S256)──► access token (1h) + refresh token (rotated on use, 7d from /authorize)

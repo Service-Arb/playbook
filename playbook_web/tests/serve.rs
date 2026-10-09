@@ -169,7 +169,7 @@ async fn authorize_takes_the_panels_word_for_who_is_asking() {
 		let res = get(Some(assertion(PANEL, "u1", "GET", false))).await;
 		assert_eq!(res.status(), 303);
 		let to = reqwest::Url::parse("https://sa.evinvest.ltd").unwrap().join(res.headers()["location"].to_str().unwrap()).unwrap();
-		assert_eq!(to.path(), "/access");
+		assert_eq!(to.path(), "/access/");
 		let q: std::collections::HashMap<_, _> = to.query_pairs().into_owned().collect();
 		assert_eq!(q["need"], sa_auth::Mcp::Use.as_str());
 		assert_eq!(q["continue"], format!("{}?{}", authorize.path(), authorize.query().unwrap()));
