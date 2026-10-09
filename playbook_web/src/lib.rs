@@ -3,6 +3,7 @@
 
 mod auth;
 mod corpus;
+mod pages;
 mod tools;
 
 use std::{path::PathBuf, sync::{Arc, LazyLock, Mutex}};
@@ -73,6 +74,7 @@ pub fn app(config: Config) -> Router {
 		.route_service(&base, mcp)
 		.layer(middleware::from_fn_with_state(state.clone(), auth::guard))
 		.merge(auth::routes(&base))
+		.route(&format!("{base}/assets/{}", pages::CSS_FILE), get(pages::stylesheet))
 		.route("/health", get(|| async { "ok" }))
 		.with_state(state)
 }

@@ -5,10 +5,10 @@ use std::sync::Arc;
 
 use axum::{
 	Form, Json, Router,
-	extract::{Query, Request, State as Axum},
+	extract::{Query, Request, State as Axum, rejection::QueryRejection},
 	http::{HeaderMap, HeaderValue, Method, StatusCode, Uri, header},
 	middleware::Next,
-	response::{Html, IntoResponse, Redirect, Response},
+	response::{IntoResponse, Redirect, Response},
 	routing::{get, post},
 };
 use base64::{Engine, engine::general_purpose::URL_SAFE_NO_PAD};
@@ -17,7 +17,10 @@ use serde::Deserialize;
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 
-use crate::{Member, State, now};
+use crate::{
+	Member, State, now,
+	pages::{self, Trouble},
+};
 
 type S = Axum<Arc<State>>;
 
@@ -146,42 +149,66 @@ struct AuthorizeQuery {
 	code_challenge_method: String,
 	state: Option<String>,
 	resource: Option<String>,
+	decision: Option<Decision>,
 }
 
-/// The panel's assertion on this request, admitting only holders of `sa:playbook:mcp:use`.
+/// The consent page's Cancel; allowing is the form's POST.
+#[derive(Deserialize, PartialEq)]
+#[serde(rename_all = "lowercase")]
+enum Decision {
+	Deny,
+}
+
+/// The panel's assertion on this request.
 fn member(state: &State, headers: &HeaderMap, method: &Method, uri: &Uri) -> Result<sa_auth::Assertion, Response> {
-	let token = headers.get(sa_auth::HEADER).ok_or_else(|| (StatusCode::UNAUTHORIZED, "reach the playbook through https://sa.evinvest.ltd").into_response())?;
-	let token = token.to_str().map_err(|_| (StatusCode::UNAUTHORIZED, "the panel's assertion is not ascii").into_response())?;
-	let assertion = sa_auth::verify(&state.config.panel_keys, token, sa_auth::Service::Playbook, method.as_str(), uri.path(), now())
-		.map_err(|e| (StatusCode::UNAUTHORIZED, format!("the panel's assertion is refused: {e}")).into_response())?;
-	if !assertion.permissions.may(sa_auth::Mcp::Use) {
-		let page = format!(
-			"<!doctype html><title>No access</title><p><b>{}</b> has no access to the playbook. Ask an admin to grant it <code>sa:playbook:mcp:use</code>, then connect again.</p>",
-			escape(&assertion.email)
-		);
-		return Err((StatusCode::FORBIDDEN, Html(page)).into_response());
-	}
-	Ok(assertion)
+	let refused = |reason: &str| pages::trouble(StatusCode::UNAUTHORIZED, Trouble::Unverified, &state.config.public_url, reason);
+	let token = headers.get(sa_auth::HEADER).ok_or_else(|| refused("no assertion from the panel"))?;
+	let token = token.to_str().map_err(|_| refused("the panel's assertion is not ascii"))?;
+	sa_auth::verify(&state.config.panel_keys, token, sa_auth::Service::Playbook, method.as_str(), uri.path(), now()).map_err(|e| refused(&format!("the panel's assertion is refused: {e}")))
 }
 
-/// Asks the member to confirm; the code is issued by the form's POST, never here.
-async fn authorize(Axum(state): S, method: Method, uri: Uri, headers: HeaderMap, Query(q): Query<AuthorizeQuery>) -> Response {
+/// Asks the member to confirm; the code is issued by the form's POST, never here. The client is
+/// checked first, so that Cancel and every refusal know where they may send the browser.
+async fn authorize(Axum(state): S, method: Method, uri: Uri, headers: HeaderMap, q: Result<Query<AuthorizeQuery>, QueryRejection>) -> Response {
+	let base = &state.config.public_url;
+	let bad = |reason: &str| pages::trouble(StatusCode::BAD_REQUEST, Trouble::BadLink, base, reason);
+	let q = match q {
+		Ok(Query(q)) => q,
+		Err(e) => return bad(&e.body_text()),
+	};
+	if q.response_type != "code" || q.code_challenge_method != "S256" {
+		return bad("response_type=code with code_challenge_method=S256 only");
+	}
+	if let Some(resource) = &q.resource
+		&& resource.trim_end_matches('/') != *base
+	{
+		return bad(&format!("{resource} is not served here"));
+	}
+	let client = match client(&state, &q.client_id, &q.redirect_uri).await {
+		Ok(c) => c,
+		Err(e) => return bad(&e),
+	};
+	if q.decision == Some(Decision::Deny) {
+		let mut back = reqwest::Url::parse(&q.redirect_uri).expect("matched a registered redirect_uri");
+		back.query_pairs_mut().append_pair("error", "access_denied");
+		if let Some(s) = &q.state {
+			back.query_pairs_mut().append_pair("state", s);
+		}
+		return Redirect::to(back.as_str()).into_response();
+	}
 	let member = match member(&state, &headers, &method, &uri) {
 		Ok(m) => m,
 		Err(r) => return r,
 	};
-	if q.response_type != "code" || q.code_challenge_method != "S256" {
-		return (StatusCode::BAD_REQUEST, "response_type=code with code_challenge_method=S256 only").into_response();
-	}
-	if let Some(resource) = &q.resource
-		&& resource.trim_end_matches('/') != state.config.public_url
-	{
-		return (StatusCode::BAD_REQUEST, format!("{resource} is not served here")).into_response();
-	}
-	let name = match client(&state, &q.client_id, &q.redirect_uri).await {
-		Ok(name) => name,
-		Err(e) => return (StatusCode::BAD_REQUEST, e).into_response(),
+	let here = uri.path_and_query().expect("a request line has a path").as_str();
+	let panel = |path: &str, query: &[(&str, &str)]| {
+		let mut u = reqwest::Url::parse(base).expect("PUBLIC_URL is a url").join(path).expect("an absolute path");
+		u.query_pairs_mut().extend_pairs(query);
+		u.to_string()
 	};
+	if !member.permissions.may(sa_auth::Mcp::Use) {
+		return Redirect::to(&panel("/access/", &[("need", sa_auth::Mcp::Use.as_str()), ("continue", here)])).into_response();
+	}
 	let nonce = random();
 	{
 		let db = state.db.lock().unwrap();
@@ -192,18 +219,17 @@ async fn authorize(Axum(state): S, method: Method, uri: Uri, headers: HeaderMap,
 		)
 		.unwrap();
 	}
-	let host = reqwest::Url::parse(&q.redirect_uri).expect("matched a registered redirect_uri").host_str().expect("https or loopback http").to_owned();
-	let page = format!(
-		r#"<!doctype html><meta charset="utf-8"><title>Connect the playbook</title>
-<p>Signed in as <b>{email}</b>.</p>
-<p><b>{client}</b> asks to read the playbook as you, and will be sent back to <b>{host}</b>.</p>
-<form method="post" action="{action}"><input type="hidden" name="nonce" value="{nonce}"><button>Allow</button></form>"#,
-		email = escape(&member.email),
-		client = escape(name.as_deref().unwrap_or(&q.client_id)), // client_name is optional in RFC 7591 and CIMD
-		host = escape(&host),
-		action = escape(&format!("{}/authorize", state.config.public_url)),
-	);
-	([(header::CONTENT_SECURITY_POLICY, "frame-ancestors 'none'")], Html(page)).into_response()
+	pages::consent(pages::Consent {
+		base,
+		client: client.name.as_deref().unwrap_or(&q.client_id), // client_name is optional in RFC 7591 and CIMD
+		logo: client.logo.as_deref(),
+		name: &member.name,
+		email: &member.email,
+		switch: &panel("/auth/login", &[("prompt", "select_account"), ("return_to", here)]),
+		cancel: &format!("{here}&decision=deny"),
+		nonce: &nonce,
+		redirect: &reqwest::Url::parse(&q.redirect_uri).expect("matched a registered redirect_uri"),
+	})
 }
 
 #[derive(Deserialize)]
@@ -217,6 +243,9 @@ async fn consent(Axum(state): S, method: Method, uri: Uri, headers: HeaderMap, F
 		Ok(m) => m,
 		Err(r) => return r,
 	};
+	if !member.permissions.may(sa_auth::Mcp::Use) {
+		return pages::trouble(StatusCode::FORBIDDEN, Trouble::NoAccess, &state.config.public_url, &format!("{} lacks {}", member.email, sa_auth::Mcp::Use.as_str()));
+	}
 	let db = state.db.lock().unwrap();
 	let pending: Option<(String, String, String, Option<String>)> = db
 		.query_row(
@@ -227,7 +256,7 @@ async fn consent(Axum(state): S, method: Method, uri: Uri, headers: HeaderMap, F
 		.optional()
 		.unwrap();
 	let Some((client_id, redirect_uri, challenge, oauth_state)) = pending else {
-		return (StatusCode::BAD_REQUEST, "this consent form is spent, expired, or someone else's; connect again from Claude Code").into_response();
+		return pages::trouble(StatusCode::BAD_REQUEST, Trouble::Expired, &state.config.public_url, "the consent form is spent, expired, or someone else's");
 	};
 	let code = random();
 	db.execute(
@@ -243,13 +272,15 @@ async fn consent(Axum(state): S, method: Method, uri: Uri, headers: HeaderMap, F
 	Redirect::to(back.as_str()).into_response()
 }
 
-fn escape(s: &str) -> String {
-	s.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;").replace('"', "&quot;").replace('\'', "&#39;")
+/// What a client says of itself, for the consent page.
+struct Client {
+	name: Option<String>,
+	logo: Option<String>, // CIMD's `logo_uri`, when https; `/register` keeps none
 }
 
-/// A `client_id` is either a CIMD document's https URL, or an id `/register` handed out; its name, if it gave one.
-async fn client(state: &State, client_id: &str, redirect_uri: &str) -> Result<Option<String>, String> {
-	let (uris, name): (Vec<String>, Option<String>) = if client_id.starts_with("https://") {
+/// A `client_id` is either a CIMD document's https URL, or an id `/register` handed out.
+async fn client(state: &State, client_id: &str, redirect_uri: &str) -> Result<Client, String> {
+	let (uris, client): (Vec<String>, Client) = if client_id.starts_with("https://") {
 		let mut res = state.http.get(client_id).send().await.map_err(|e| format!("fetching the client metadata: {e}"))?;
 		let mut body = Vec::new();
 		while let Some(chunk) = res.chunk().await.map_err(|e| format!("reading the client metadata: {e}"))? {
@@ -268,7 +299,12 @@ async fn client(state: &State, client_id: &str, redirect_uri: &str) -> Result<Op
 			Value::String(n) => Some(n.clone()),
 			_ => return Err("the client metadata's client_name is not a string".into()),
 		};
-		(uris, name)
+		let logo = match &doc["logo_uri"] {
+			Value::Null => None,
+			Value::String(u) => u.starts_with("https://").then(|| u.clone()),
+			_ => return Err("the client metadata's logo_uri is not a string".into()),
+		};
+		(uris, Client { name, logo })
 	} else {
 		let stored: Option<(String, Option<String>)> = state
 			.db
@@ -278,7 +314,7 @@ async fn client(state: &State, client_id: &str, redirect_uri: &str) -> Result<Op
 			.optional()
 			.unwrap();
 		let (uris, name) = stored.ok_or("unknown client_id; register first")?;
-		(serde_json::from_str(&uris).expect("written by /register"), name)
+		(serde_json::from_str(&uris).expect("written by /register"), Client { name, logo: None })
 	};
 	// RFC 8252 §7.3: a loopback redirect is registered without the port the client ends up listening on
 	let portless = |u: &str| {
@@ -290,7 +326,7 @@ async fn client(state: &State, client_id: &str, redirect_uri: &str) -> Result<Op
 		return Err(format!("{redirect_uri}: https, or http on loopback")); // a CIMD document's uris are not checked on /register
 	}
 	match uris.iter().any(|u| u == redirect_uri || portless(u).is_some_and(|u| Some(u) == portless(redirect_uri))) {
-		true => Ok(name),
+		true => Ok(client),
 		false => Err(format!("{redirect_uri} is not a redirect_uri of this client")),
 	}
 }

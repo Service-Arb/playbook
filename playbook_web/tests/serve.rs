@@ -146,23 +146,80 @@ async fn no_token_leads_to_the_authorization_server() {
 }
 
 /// `/authorize` answers only a request the panel signed, for this very method and path, and
-/// only a holder of `sa:playbook:mcp:use` gets the consent page.
+/// only a holder of `sa:playbook:mcp:use` gets the consent page; anyone else is sent to the panel
+/// to ask for it, carrying the way back.
 #[tokio::test]
 async fn authorize_takes_the_panels_word_for_who_is_asking() {
 	serve("assertion", i64::MAX, async |url| {
 		let http = reqwest::Client::new();
 		let (client_id, _) = register(&url, "Claude Code").await;
 		let authorize = authorize_url(&url, &client_id);
+		let http = reqwest::Client::builder().redirect(reqwest::redirect::Policy::none()).build().unwrap();
 		let get = |assertion: Option<String>| {
 			let req = http.get(authorize.clone());
-			async move { if let Some(a) = assertion { req.header(sa_auth::HEADER, a) } else { req }.send().await.unwrap().status() }
+			async move { if let Some(a) = assertion { req.header(sa_auth::HEADER, a) } else { req }.send().await.unwrap() }
 		};
-		assert_eq!(get(None).await, 401);
-		assert_eq!(get(Some("not.a.jws".into())).await, 401);
-		assert_eq!(get(Some(assertion(STRANGER, "u1", "GET", true))).await, 401);
-		assert_eq!(get(Some(assertion(PANEL, "u1", "POST", true))).await, 401);
-		assert_eq!(get(Some(assertion(PANEL, "u1", "GET", false))).await, 403);
-		assert_eq!(get(Some(assertion(PANEL, "u1", "GET", true))).await, 200);
+		for bad in [None, Some("not.a.jws".into()), Some(assertion(STRANGER, "u1", "GET", true)), Some(assertion(PANEL, "u1", "POST", true))] {
+			let res = get(bad).await;
+			assert_eq!(res.status(), 401);
+			assert_eq!(res.headers()["content-type"], "text/html; charset=utf-8");
+		}
+		assert_eq!(get(Some(assertion(PANEL, "u1", "GET", true))).await.status(), 200);
+
+		let res = get(Some(assertion(PANEL, "u1", "GET", false))).await;
+		assert_eq!(res.status(), 303);
+		let to = reqwest::Url::parse("https://sa.evinvest.ltd").unwrap().join(res.headers()["location"].to_str().unwrap()).unwrap();
+		assert_eq!(to.path(), "/access/");
+		let q: std::collections::HashMap<_, _> = to.query_pairs().into_owned().collect();
+		assert_eq!(q["need"], sa_auth::Mcp::Use.as_str());
+		assert_eq!(q["continue"], format!("{}?{}", authorize.path(), authorize.query().unwrap()));
+	})
+	.await;
+}
+
+/// Cancel is a GET back to `/authorize`: the client learns `access_denied` at its own registered
+/// redirect, whoever is signed in, and nothing is issued.
+#[tokio::test]
+async fn cancel_tells_the_client_access_denied() {
+	serve("deny", i64::MAX, async |url| {
+		let http = reqwest::Client::builder().redirect(reqwest::redirect::Policy::none()).build().unwrap();
+		let (client_id, _) = register(&url, "Claude Code").await;
+		let mut deny = authorize_url(&url, &client_id);
+		deny.query_pairs_mut().append_pair("decision", "deny");
+		for assertion in [None, Some(assertion(PANEL, "u1", "GET", false))] {
+			let req = http.get(deny.clone());
+			let res = if let Some(a) = assertion { req.header(sa_auth::HEADER, a) } else { req }.send().await.unwrap();
+			assert_eq!(res.status(), 303);
+			assert_eq!(res.headers()["location"], "http://localhost:64461/callback?error=access_denied&state=s1");
+		}
+		let mut stranger = deny.clone();
+		stranger.query_pairs_mut().clear().extend_pairs(deny.query_pairs().map(|(k, v)| (k.clone(), if k == "redirect_uri" { "https://evil.example/cb".into() } else { v })));
+		let res = http.get(stranger).send().await.unwrap();
+		assert_eq!(res.status(), 400);
+		assert!(res.headers().get("location").is_none());
+	})
+	.await;
+}
+
+/// Whatever goes wrong on the browser's side of the flow is a page saying what to do next, with
+/// the reason in small print; the JSON endpoints stay JSON.
+#[tokio::test]
+async fn browser_errors_are_pages() {
+	serve("errors", i64::MAX, async |url| {
+		let http = reqwest::Client::new();
+		let (client_id, _) = register(&url, "Claude Code").await;
+		let mut unknown = authorize_url(&url, &client_id);
+		unknown.query_pairs_mut().clear().append_pair("client_id", "nobody");
+		let page = |res: reqwest::Response| async move {
+			assert_eq!(res.status(), 400);
+			assert_eq!(res.headers()["content-type"], "text/html; charset=utf-8");
+			res.text().await.unwrap()
+		};
+		insta::assert_snapshot!("missing_params", redact(&page(http.get(unknown).send().await.unwrap()).await));
+		let spent = http.post(format!("{url}{BASE}/authorize")).header(sa_auth::HEADER, assertion(PANEL, "u1", "POST", true)).form(&[("nonce", "made-up")]).send();
+		insta::assert_snapshot!("spent_nonce", redact(&page(spent.await.unwrap()).await));
+		let res = http.post(format!("{url}{BASE}/token")).form(&[("grant_type", "nope"), ("client_id", "x")]).send().await.unwrap();
+		assert_eq!(res.headers()["content-type"], "application/json");
 	})
 	.await;
 }
@@ -179,8 +236,12 @@ async fn a_code_is_issued_only_on_consent() {
 		assert_eq!(res.status(), 200);
 		assert!(res.headers().get("location").is_none());
 		let page = res.text().await.unwrap();
-		assert!(page.contains("&lt;b&gt;Claude&lt;/b&gt; &amp; co") && page.contains("<b>localhost</b>"), "{page}");
+		insta::assert_snapshot!("consent", redact(&page));
 		let nonce = page.split(r#"name="nonce" value=""#).nth(1).unwrap().split('"').next().unwrap().to_owned();
+		let css = page.split(r#"rel="stylesheet" href=""#).nth(1).unwrap().split('"').next().unwrap();
+		let res = http.get(format!("{url}{}", css.strip_prefix("https://sa.evinvest.ltd").unwrap())).send().await.unwrap();
+		assert_eq!((res.status().as_u16(), &res.headers()["content-type"]), (200, &"text/css".parse::<reqwest::header::HeaderValue>().unwrap()));
+		assert!(res.headers()["cache-control"].to_str().unwrap().contains("immutable"));
 
 		let post = |sub: &str, nonce: &str| {
 			http.post(format!("{url}{BASE}/authorize")).header(sa_auth::HEADER, assertion(PANEL, sub, "POST", true)).form(&[("nonce", nonce)]).send()
@@ -215,6 +276,13 @@ async fn a_code_is_issued_only_on_consent() {
 		assert!(!error, "{text}");
 	})
 	.await;
+}
+
+/// the page with what changes per run or per stylesheet held still
+fn redact(page: &str) -> String {
+	let page = regex::Regex::new(r#"name="nonce" value="[^"]+""#).unwrap().replace_all(page, r#"name="nonce" value="[nonce]""#);
+	let page = regex::Regex::new(r"client_id(=|%3D)[A-Za-z0-9_-]{43}").unwrap().replace_all(&page, "client_id$1[client]");
+	regex::Regex::new(r"connect\.[0-9a-f]+\.css").unwrap().replace_all(&page, "connect.[hash].css").into_owned()
 }
 
 /// a DCR client with a portless loopback redirect, and the PKCE verifier for `authorize_url`

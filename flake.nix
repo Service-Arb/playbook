@@ -52,7 +52,7 @@
           };
           cargoBuildFlags = [ "-p" "playbook_web" ];
           cargoTestFlags = [ "-p" "playbook_web" ];
-          nativeBuildInputs = [ pkgs.cmake ]; # aws-lc, under reqwest's rustls
+          nativeBuildInputs = [ pkgs.cmake pkgs.tailwindcss_4 ]; # aws-lc, under reqwest's rustls; the connect pages' stylesheet
           # std's panic locations name its source inside the toolchain, which would pull all of it into the image
           RUSTFLAGS = "--remap-path-prefix=${rust}=/rust";
           disallowedReferences = [ rust ];
@@ -97,7 +97,7 @@
 
         devShells.default = pkgs.mkShell {
           shellHook = combined.shellHook;
-          packages = [ rust pkgs.sqlite ] ++ combined.enabledPackages;
+          packages = [ rust pkgs.sqlite pkgs.tailwindcss_4 pkgs.cargo-insta ] ++ combined.enabledPackages;
           env.PORT = port;
         };
       }

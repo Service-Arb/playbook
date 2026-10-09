@@ -28,8 +28,10 @@ is asking and what of the playbook they may do (`sa_auth`), bound to that method
 
 ```
 client ──/register (DCR) or a CIMD url──► GET /authorize
-   assertion: missing or refused ──► 401 · without sa:playbook:mcp:use ──► 403
-   ok ──► consent page: client name, redirect host, form with a nonce (10 min, single use, bound to sub + this request)
+   client or redirect_uri unknown ──► 400 page, nothing redirected
+   decision=deny (Cancel) ──► redirect_uri?error=access_denied
+   assertion: missing or refused ──► 401 page · without sa:playbook:mcp:use ──► panel /access/?need=…&continue=<this url>
+   ok ──► consent page: client, account (switch), redirect, form with a nonce (10 min, single use, bound to sub + this request)
 browser ──POST /authorize, nonce──► assertion again, nonce spent for the same sub ──► code ──► redirect_uri
 client ──/token (PKCE S256)──► access token (1h) + refresh token (rotated on use, 7d from /authorize)
 client ──<base>, Bearer──► guard: token live · under today's byte budget (else 429)
@@ -39,6 +41,9 @@ A code is only ever issued by the POST. Who the member is (concierge's `sub`) an
 are decided at `/authorize`; a refresh does not re-check them, and rotating keeps the deadline its
 `/authorize` set, so revoking `sa:playbook:mcp:use` takes up to 7 days to bite. Tokens and nonces
 are opaque; only their sha256 is stored.
+
+The browser's pages are `src/pages.rs`, on `ev_lib_classes`' tables; `build.rs` runs `tailwindcss`
+over them into `<base>/assets/connect.<hash>.css`. Asking for access is the panel's `/access`.
 
 ## Configuration
 
