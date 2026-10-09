@@ -6,15 +6,15 @@ edition = "2024"
 [dependencies]
 ask_llm = { version = "3.7", default-features = false }
 jiff = "0.2"
-social_networks_adapters = { version = "=0.5.0", features = ["youtube-reads"] }
+social_networks_adapters = { git = "https://github.com/valeratrades/social_networks", tag = "v0.6.3", features = ["youtube-reads"] } # past 0.5 it is not on crates.io
 tokio = { version = "1", features = ["full"] }
 ---
 
 //! `./scripts/yt-pull.rs sync` — list every video of every channel `ref/README.md` links, in
 //! `ref/youtube/README.md`, under a header per person: the link text names their directory.
-//! `./scripts/yt-pull.rs transcribe (--legacy | --smart [--every <secs>])` — capture every video that
-//! list has unticked, into `ref/youtube/<who>/<id>.md`, ticking it as it goes. `--legacy` reads frames
-//! wherever the picture changes; `--smart` only where the captions say something is shown.
+//! `./scripts/yt-pull.rs transcribe [--legacy | --every <secs>]` — capture every video that list has
+//! unticked, into `ref/youtube/<who>/<id>.md`, ticking it as it goes. Frames are read only where the
+//! captions say something is shown; `--legacy` reads them wherever the picture changes.
 //!
 //! Youtube is read by `social_networks_adapters`, linked; this only decides how a capture is filed.
 //!
@@ -73,13 +73,13 @@ async fn main() {
 	}
 }
 
-const USAGE: &str = "yt-pull.rs <sync | transcribe (--legacy | --smart [--every <secs>])>";
+const USAGE: &str = "yt-pull.rs <sync | transcribe [--legacy | --every <secs>]>";
 
 fn picked(args: &[String]) -> Pick {
 	match args {
+		[] => Pick::Likely { every: 0.5 },
 		[mode] if mode == "--legacy" => Pick::Changes,
-		[mode] if mode == "--smart" => Pick::Likely { every: 0.5 },
-		[mode, flag, secs] if mode == "--smart" && flag == "--every" => Pick::Likely {
+		[flag, secs] if flag == "--every" => Pick::Likely {
 			every: secs.parse().unwrap_or_else(|e| panic!("--every `{secs}`: {e}")),
 		},
 		_ => panic!("usage: {USAGE}"),

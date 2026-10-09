@@ -29,14 +29,11 @@ enum Cmd {
 		paths: Vec<PathBuf>,
 		#[arg(long)]
 		execute: bool,
-		/// `picture`: frames wherever the picture changes
-		#[arg(long, conflicts_with = "smart")]
+		/// `picture`: frames wherever the picture changes, not only where the speech says something is shown
+		#[arg(long, conflicts_with = "every")]
 		legacy: bool,
-		/// `picture`: frames only where the transcript says something is shown
+		/// `picture`: least seconds between frames, call-watch.rs's own where unset
 		#[arg(long)]
-		smart: bool,
-		/// `--smart`: least seconds between frames, call-watch.rs's own where unset
-		#[arg(long, requires = "smart")]
 		every: Option<f64>,
 	},
 }
@@ -59,13 +56,12 @@ struct Capture {
 }
 
 fn main() {
-	let Cmd::ReTranscribe { what, paths, execute, legacy, smart, every } = Cli::parse().command;
-	let pick: Vec<String> = match (what, legacy, smart) {
-		(What::Picture, true, false) => vec!["--legacy".into()],
-		(What::Picture, false, true) => ["--smart".to_string()].into_iter().chain(every.into_iter().flat_map(|e| ["--every".to_string(), e.to_string()])).collect(),
-		(What::Picture, ..) => panic!("re-transcribe picture takes --legacy or --smart"),
-		(What::Audio, false, false) => Vec::new(),
-		(What::Audio, ..) => panic!("--legacy and --smart pick frames, and audio has none"),
+	let Cmd::ReTranscribe { what, paths, execute, legacy, every } = Cli::parse().command;
+	let pick: Vec<String> = match (what, legacy, every) {
+		(What::Picture, true, _) => vec!["--legacy".into()],
+		(What::Picture, false, every) => every.into_iter().flat_map(|e| ["--every".to_string(), e.to_string()]).collect(),
+		(What::Audio, false, None) => Vec::new(),
+		(What::Audio, ..) => panic!("--legacy and --every pick frames, and audio has none"),
 	};
 	let root = repo_root();
 	let captures: Vec<Capture> = paths.iter().flat_map(|p| captures_under(&root, p)).map(|p| read(&p)).collect();
@@ -74,7 +70,7 @@ fn main() {
 	let mut usd = 0.;
 	for c in &captures {
 		let rel = c.path.strip_prefix(&root).expect("captures are found under the root").display();
-		match plan(what, smart, c) {
+		match plan(what, legacy, c) {
 			Ok((cost, why)) => {
 				println!("{:>8} {rel} — {why}", format!("${cost:.3}"));
 				usd += cost;
@@ -120,7 +116,7 @@ fn main() {
 }
 
 /// `Ok((usd, what it is))` for a capture this would redo, `Err(why not)` for one it leaves.
-fn plan(what: What, smart: bool, c: &Capture) -> Result<(f64, String), String> {
+fn plan(what: What, legacy: bool, c: &Capture) -> Result<(f64, String), String> {
 	match what {
 		What::Audio => {
 			if !c.transcribed_by.starts_with("whisper") {
@@ -151,9 +147,9 @@ fn plan(what: What, smart: bool, c: &Capture) -> Result<(f64, String), String> {
 				true => ("phone clip", PHONE_CENTS_PER_MIN),
 				false => ("screen", SCREEN_CENTS_PER_MIN),
 			};
-			// the pick decides what `--smart` reads, so its cost is known only once it ran
-			let legacy = if smart { "the legacy rate, " } else { "" };
-			Ok((c.minutes * rate / 100., format!("{:.1} min of {kind} at {legacy}{rate}¢/min", c.minutes)))
+			// the pick decides what is read, so its cost is known only once it ran
+			let at = if legacy { "" } else { "the legacy rate, " };
+			Ok((c.minutes * rate / 100., format!("{:.1} min of {kind} at {at}{rate}¢/min", c.minutes)))
 		}
 	}
 }

@@ -8,11 +8,11 @@ ask_llm = { version = "3.7", default-features = false }
 tokio = { version = "1", features = ["rt"] }
 ---
 
-//! `./scripts/call-watch.rs (--legacy | --smart [--every <secs>]) [<capture.md>...]` — write `<capture>/shown.md` for every call capture
+//! `./scripts/call-watch.rs [--legacy | --every <secs>] [<capture.md>...]` — write `<capture>/shown.md` for every call capture
 //! whose recording has a picture and nobody has watched yet: what is on screen that the speech does
 //! not say, each line at the frame it was read off, and that frame kept beside it. With no arguments
-//! it takes every capture under `ref/`. `--legacy` reads frames wherever the picture changes; `--smart`
-//! only where the speech says something is shown, timed line by line by local whisper.
+//! it takes every capture under `ref/`. Frames are read only where the speech says something
+//! is shown, timed line by line by local whisper; `--legacy` reads them wherever the picture changes.
 //!
 //! The reading is `ask_llm`'s `Client::watch`; this decides which recordings, and how `shown.md` reads.
 
@@ -41,17 +41,15 @@ struct Capture {
 fn main() {
 	let root = repo_root();
 	let args: Vec<String> = std::env::args().skip(1).collect();
-	let usage = "usage: call-watch.rs (--legacy | --smart [--every <secs>]) [<capture.md>...]";
 	let (pick, args) = match args.as_slice() {
 		[mode, rest @ ..] if mode == "--legacy" => (Pick::Changes, rest),
-		[mode, flag, secs, rest @ ..] if mode == "--smart" && flag == "--every" => (
+		[flag, secs, rest @ ..] if flag == "--every" => (
 			Pick::Likely {
 				every: secs.parse().unwrap_or_else(|e| panic!("--every `{secs}`: {e}")),
 			},
 			rest,
 		),
-		[mode, rest @ ..] if mode == "--smart" => (Pick::Likely { every: 0.5 }, rest),
-		_ => panic!("{usage}"),
+		rest => (Pick::Likely { every: 0.5 }, rest),
 	};
 	let args: Vec<PathBuf> = args.iter().map(PathBuf::from).collect();
 	let captures: Vec<PathBuf> = match args.is_empty() {

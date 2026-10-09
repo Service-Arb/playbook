@@ -203,18 +203,18 @@ grows by hand.
 ```
 scripts/
 ├── call-pull.rs       # loom / fathom share page, drive folder → summary, chapters, and the platform's transcript, or whisper's where there is none; the recording itself
-├── call-watch.rs      # not a puller: a kept recording, through `ask_llm`'s `Client::watch`, frames picked `--legacy` or `--smart` → `shown.md`
+├── call-watch.rs      # not a puller: a kept recording, through `ask_llm`'s `Client::watch`, frames only where the speech says something is shown (`--legacy`: wherever the picture changes) → `shown.md`
 ├── doc-pull.rs        # google doc → its markdown export
 ├── chatgpt-pull.rs    # headless chromium → the DOM's turns
-├── yt-pull.rs         # sync: channels → the dated list of their videos; transcribe: captions in citable blocks, summary and chapters through `ask_llm`, the video through `Client::watch`, frames picked `--legacy` or `--smart` → `## shown`, description
+├── yt-pull.rs         # sync: channels → the dated list of their videos; transcribe: captions in citable blocks, summary and chapters through `ask_llm`, the video through `Client::watch`, frames only where the captions say something is shown (`--legacy`: wherever the picture changes) → `## shown`, description
 ├── skool-pull.rs      # skool's classroom → the course tree, module by module and lesson by lesson
 └── cite-check.rs      # not a puller: holds every citation in structured/ to its capture in ref/
 ```
 
 What spends money goes through the `playbook` crate at the root of the cargo workspace, which
 drives the scripts rather than duplicating them. `cargo r -- re-transcribe <audio|picture> <path>...`
-lists every call capture under the paths with the estimated cost of redoing it; `picture` takes
-`--legacy` or `--smart`, and estimates `--smart` at the legacy rate, as its cost is known only after the pick. It runs only with
+lists every call capture under the paths with the estimated cost of redoing it; `picture` is
+estimated at the `--legacy` rate either way, as the default's cost is known only after the pick. It runs only with
 `--execute`, and asks first when the total is past $1. Audio is redone only for a whisper transcript
 that has no digest yet, since a re-pull drops the digest.
 
