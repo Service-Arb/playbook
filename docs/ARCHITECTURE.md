@@ -177,7 +177,7 @@ it sets the base:
 | 7    | a cheap group member heard or thought of it                   |
 
 Then everything decays with age, up to 10 — a cheap group member having heard of it long ago, which
-is as good as nothing. How the decay is counted is defined below this level, not here.
+is as good as nothing. How the decay is counted lives in `scripts/cite-check.rs`, not here.
 
 A claim backed by several sources cites its best one first; the rest sit under it as secondary.
 Contradictions resolve the same way: the better effective reliability leads, and the other stays

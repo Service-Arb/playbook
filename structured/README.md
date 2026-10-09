@@ -34,9 +34,7 @@ A citation is a line that holds only a link, `[r<base> <date>](url)`:
 - every bullet is backed by a run, or by an `// unsourced: <who>` line, before its section ends
 
 ## Effective reliability
-effective = min(10, base + age in days / 180)
-
-The number is fractional, so two citations keep their order as both of them age. A run leads with its
+Counted by `effective` in `scripts/cite-check.rs`. The number is fractional, so two citations keep their order as both of them age. A run leads with its
 best effective reliability, and a tie goes to the newer one. When claims contradict, the better
 effective number leads. The other stays beneath it, demoted, with its date still on it.
 
