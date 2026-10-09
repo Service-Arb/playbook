@@ -130,10 +130,10 @@ fn plan(what: What, legacy: bool, c: &Capture) -> Result<(f64, String), String> 
 		What::Picture => {
 			let kept = c.path.with_extension("");
 			let media = std::fs::read_dir(&kept)
-				.unwrap_or_else(|e| panic!("{}: {e} — run call-pull.rs to fetch the recording", kept.display()))
+				.unwrap_or_else(|e| panic!("{}: {e} — run call-pull.rs <its source> to fetch the recording", kept.display()))
 				.map(|e| e.expect("a directory entry is readable").path())
 				.find(|p| p.file_stem().is_some_and(|s| s == "recording"))
-				.unwrap_or_else(|| panic!("{} holds no recording — run call-pull.rs to fetch it", kept.display()));
+				.unwrap_or_else(|| panic!("{} holds no recording — run call-pull.rs <its source> to fetch it", kept.display()));
 			let video = Command::new("ffprobe")
 				.args(["-v", "error", "-select_streams", "v", "-show_entries", "stream=index", "-of", "csv=p=0"])
 				.arg(&media)

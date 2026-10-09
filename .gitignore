@@ -83,3 +83,6 @@ graphify-out/
 **/.tb/
 **/.tb-client
 **/.pg/
+
+## Recordings: the host keeps them, we keep what they say
+ref/**/recording.*

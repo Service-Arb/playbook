@@ -103,10 +103,10 @@ fn repo_root() -> PathBuf {
 async fn watch(path: &Path, pick: Pick) -> Option<f64> {
 	let kept = path.with_extension("");
 	let media = std::fs::read_dir(&kept)
-		.unwrap_or_else(|e| panic!("{}: {e} — run call-pull.rs to fetch the recording", kept.display()))
+		.unwrap_or_else(|e| panic!("{}: {e} — run call-pull.rs <its source> to fetch the recording", kept.display()))
 		.map(|e| e.expect("a directory entry is readable").path())
 		.find(|p| p.file_stem().is_some_and(|s| s == "recording"))
-		.unwrap_or_else(|| panic!("{} holds no recording — run call-pull.rs to fetch it", kept.display()));
+		.unwrap_or_else(|| panic!("{} holds no recording — run call-pull.rs <its source> to fetch it", kept.display()));
 	let capture = read(path);
 	let footage = match capture.source.contains("drive.google.com") {
 		true => Footage::Filmed,
