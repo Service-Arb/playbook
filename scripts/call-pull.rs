@@ -456,8 +456,11 @@ fn heard(platform: Platform, listed: &Listed, media: &Path) -> Recording {
 }
 
 /// The recording as its host serves it, into `dir/recording.<ext>` — video at 720p where there is a
-/// choice, and audio where the host holds nothing else.
+/// choice, and audio where the host holds nothing else. One past what LFS takes is re-encoded to fit.
 fn fetch(url: &str, dir: &Path) -> PathBuf {
+	// GitHub's LFS refuses any single object past 2 GiB
+	const LFS_CAP: u64 = 2 << 30;
+	const AUDIO_KBPS: u64 = 96;
 	std::fs::create_dir_all(dir).unwrap_or_else(|e| panic!("creating {}: {e}", dir.display()));
 	let status = Command::new("yt-dlp")
 		.args(["-q", "--no-warnings", "--no-progress", "-N", "8", "-S", "res:720", "-o"])
@@ -466,7 +469,34 @@ fn fetch(url: &str, dir: &Path) -> PathBuf {
 		.status()
 		.expect("yt-dlp runs");
 	assert!(status.success(), "yt-dlp could not fetch {url}: {status}");
-	recording_in(dir).unwrap_or_else(|| panic!("yt-dlp fetched {url} and wrote no {}/recording.*", dir.display()))
+	let got = recording_in(dir).unwrap_or_else(|| panic!("yt-dlp fetched {url} and wrote no {}/recording.*", dir.display()));
+	let size = std::fs::metadata(&got).unwrap_or_else(|e| panic!("reading {}: {e}", got.display())).len();
+	if size <= LFS_CAP {
+		return got;
+	}
+
+	let out = Command::new("ffprobe").args(["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0"]).arg(&got).output().expect("ffprobe runs");
+	assert!(out.status.success(), "ffprobe could not read {}: {}", got.display(), String::from_utf8_lossy(&out.stderr));
+	let secs: f64 = String::from_utf8(out.stdout).expect("ffprobe prints ascii").trim().parse().expect("ffprobe prints the duration in seconds");
+	// 90% of the cap leaves room for the container and for the encoder overshooting its average
+	let video_kbps = (LFS_CAP as f64 * 0.9 * 8. / secs / 1000.) as u64 - AUDIO_KBPS;
+	eprintln!("  {} is {size} bytes, past LFS's cap — re-encoding at {video_kbps}k", got.display());
+	// not named `recording.*`, so a run killed midway leaves the original as the recording
+	let shrunk = dir.join("shrinking.mp4");
+	let status = Command::new("ffmpeg")
+		.args(["-v", "error", "-y", "-i"])
+		.arg(&got)
+		.args(["-c:v", "libx264", "-preset", "veryfast", "-b:v", &format!("{video_kbps}k"), "-c:a", "aac", "-b:a", &format!("{AUDIO_KBPS}k")])
+		.arg(&shrunk)
+		.status()
+		.expect("ffmpeg runs");
+	assert!(status.success(), "ffmpeg could not re-encode {}: {status}", got.display());
+	let shrunk_size = std::fs::metadata(&shrunk).expect("ffmpeg wrote its output").len();
+	assert!(shrunk_size <= LFS_CAP, "{} re-encoded to {shrunk_size} bytes, still past LFS's cap", got.display());
+	std::fs::remove_file(&got).unwrap_or_else(|e| panic!("removing {}: {e}", got.display()));
+	let kept = dir.join("recording.mp4");
+	std::fs::rename(&shrunk, &kept).unwrap_or_else(|e| panic!("moving {} to {}: {e}", shrunk.display(), kept.display()));
+	kept
 }
 
 fn recording_in(dir: &Path) -> Option<PathBuf> {

@@ -48,7 +48,7 @@ ref/
 ├── drive/<date>-<title>-<id>.md  # the same, for recordings in a shared drive folder
 ├── vimeo/ · vocaroo/             # the same, for hosts the registry line names and dates
 ├── <platform>/<capture>/         # beside every call capture: the recording, and what it shows
-│   ├── recording.<ext>           # as the host serves it, 720p where there is a choice — LFS
+│   ├── recording.<ext>           # as the host serves it, 720p where there is a choice — LFS, so re-encoded where past its 2 GiB
 │   ├── shown.md                  # what is on screen that the speech does not say, by `call-watch.rs`
 │   └── frames/<secs>.jpg         # the frame each line of `shown.md` was read off — LFS
 ├── docs/<title>.md               # google docs, exported as markdown
