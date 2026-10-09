@@ -11,8 +11,8 @@ tokio = { version = "1", features = ["rt"] }
 //! `./scripts/call-watch.rs [--legacy | --every <secs>] [<capture.md>...]` — write `<capture>/shown.md` for every call capture
 //! whose recording has a picture and nobody has watched yet: what is on screen that the speech does
 //! not say, each line at the frame it was read off, and that frame kept beside it. With no arguments
-//! it takes every capture under `ref/`. Frames are read only where the speech says something
-//! is shown, timed line by line by local whisper; `--legacy` reads them wherever the picture changes.
+//! it takes every capture under `ref/`. A screen's frames are read only where the speech says
+//! something is shown, timed line by line by local whisper; `--legacy` reads them wherever the picture changes.
 //!
 //! The reading is `ask_llm`'s `Client::watch`; this decides which recordings, and how `shown.md` reads.
 
@@ -111,6 +111,10 @@ async fn watch(path: &Path, pick: Pick) -> Option<f64> {
 	let footage = match capture.source.contains("drive.google.com") {
 		true => Footage::Filmed,
 		false => Footage::Screen,
+	};
+	let pick = match footage {
+		Footage::Filmed => Pick::Changes, // a phone clip is all shown, and often silent
+		Footage::Screen => pick,
 	};
 	let spec = Watch {
 		title: capture.title.clone(),
