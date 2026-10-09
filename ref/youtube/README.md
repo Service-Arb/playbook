@@ -1,11 +1,13 @@
 # YouTube, as the channels serve it
 
-- checked: 2026-09-24
+- checked: 2026-10-09
 - written by: `scripts/yt-pull.rs sync`, which lists every video; `transcribe` ticks each it captures
 
+- spent: $0.29 over 15 captures, as their `cost:` lines state
+
 A directory per person, named by the text of their channel's link in `../README.md`. In it,
-`<id>.md` is a video's capture — summary, chapters, description, then the captions in citable
-blocks — and `<id>/<secs>.jpg` are the frames its chapters show.
+`<id>.md` is a video's capture — summary, chapters, what is shown, description, then the captions
+in citable blocks — and `<id>/<secs>.jpg` the frames its `## shown` lines were read off.
 
 A line per video, newest first: the day youtube says it was uploaded, linked to the video, then
 its title — linked to the capture once there is one. `scripts/yt-pull.rs transcribe` captures
@@ -13,9 +15,20 @@ every unticked line.
 
 ## eric — <https://www.youtube.com/@ericvelch>
 
-- [ ] [2026-09-23](https://www.youtube.com/watch?v=Qt_i0SHQuDc) How to Build a Proper Relationship with your Contractor (Remote Service Arbitrage)
-- [ ] [2026-09-21](https://www.youtube.com/watch?v=4_FyKqhcFG0) How Joey Started a $12k/mo Remote Cleaning Business in 90 days with $0
-- [ ] [2026-09-20](https://www.youtube.com/watch?v=4hAhEBHgj_s) How to Scale Past Multi 6-Figures with Low Ticket Niches (Remote Service Arbitrage)
+- [x] [2026-10-08](https://www.youtube.com/watch?v=SVRvdCy6iyA) [How to get Unlimited Google Reviews in 2026 (that actually stick)](eric/SVRvdCy6iyA.md)
+- [x] [2026-10-07](https://www.youtube.com/watch?v=v9nnHybxfsU) [The Difference Between $0 and $100k/mo with Remote Service Arbitrage (why most people fail)](eric/v9nnHybxfsU.md)
+- [x] [2026-10-06](https://www.youtube.com/watch?v=e81n-o8aw_w) [How I Rank ANY Service Business #1 on Google Within 7 Days (3 Google Loopholes)](eric/e81n-o8aw_w.md)
+- [x] [2026-10-05](https://www.youtube.com/watch?v=47XX75oZuFI) [how i stopped being a p*ssy and went from $0 to $100k/mo in 6 months](eric/47XX75oZuFI.md)
+- [x] [2026-10-04](https://www.youtube.com/watch?v=p6TQlv7A8Qk) [How John Went from Bankrupt to $17k/mo with GMB Arbitrage (In 2.5 Months)](eric/p6TQlv7A8Qk.md)
+- [x] [2026-10-03](https://www.youtube.com/watch?v=jzvLmFJ_Y_M) [$0 to $10k/mo Speed Run - Remote Service Arbitrage Full Course](eric/jzvLmFJ_Y_M.md)
+- [x] [2026-10-01](https://www.youtube.com/watch?v=G_zkG_bofII) [How Keith Built a $216k/yr Remote Service Business While in College ($0 to $18k/mo in 4 months)](eric/G_zkG_bofII.md)
+- [x] [2026-09-30](https://www.youtube.com/watch?v=cK3zD62ABZY) [How To Get Unlimited Google Business Profiles Verified In 2026 (Step-By-Step)](eric/cK3zD62ABZY.md)
+- [x] [2026-09-28](https://www.youtube.com/watch?v=bcB-oTv0CRY) [How I Doubled My Drop-servicing Business Overnight (3 things to implement today)](eric/bcB-oTv0CRY.md)
+- [x] [2026-09-27](https://www.youtube.com/watch?v=Kd95NSP290E) [this boring ass video will be the reason you get rich ($151k/mo at 20)](eric/Kd95NSP290E.md)
+- [x] [2026-09-27](https://www.youtube.com/watch?v=tAOge-ogCXA) [This 0 Competition Niche made Noah $10,000 His First Week (GMB Arbitrage)](eric/tAOge-ogCXA.md)
+- [x] [2026-09-23](https://www.youtube.com/watch?v=Qt_i0SHQuDc) [How to Build a Proper Relationship with your Contractor (Remote Service Arbitrage)](eric/Qt_i0SHQuDc.md)
+- [x] [2026-09-21](https://www.youtube.com/watch?v=4_FyKqhcFG0) [How Joey Started a $12k/mo Remote Cleaning Business in 90 days with $0](eric/4_FyKqhcFG0.md)
+- [x] [2026-09-20](https://www.youtube.com/watch?v=4hAhEBHgj_s) [How to Scale Past Multi 6-Figures with Low Ticket Niches (Remote Service Arbitrage)](eric/4hAhEBHgj_s.md)
 - [ ] [2026-09-17](https://www.youtube.com/watch?v=GRONlIZpzpQ) The Most Profitable WINTER Niches for Remote Service Arbitrage
 - [ ] [2026-09-16](https://www.youtube.com/watch?v=5axxS9pHeOk) Speed-running $0 to $10k/mo with "Remote Cleaning" so you can copy me and hit it next month
 - [ ] [2026-09-14](https://www.youtube.com/watch?v=5RMRP22LrzI) after 4 years i finally escaped the matrix and now i'm depressed
@@ -244,6 +257,7 @@ every unticked line.
 
 ## marcus — <https://www.youtube.com/@marcusmilxn>
 
+- [ ] [2026-09-29](https://www.youtube.com/watch?v=o-7MWN2uLYs) my business Is boring, but makes me $30,000/mo
 - [ ] [2026-09-23](https://www.youtube.com/watch?v=IHEnUzGW9BY) Picking a service arbitrage niche used to be hard (until now)
 - [ ] [2026-09-15](https://www.youtube.com/watch?v=Nl1TWlzVBO4) how i’m scaling my $30k/mo plumbing company to $60k/mo
 - [ ] [2026-09-05](https://www.youtube.com/watch?v=4PeNJVVS_UY) i got 100+ calls in 7 days from ONE google profile
