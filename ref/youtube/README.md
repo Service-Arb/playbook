@@ -3,7 +3,7 @@
 - checked: 2026-10-09
 - written by: `scripts/yt-pull.rs sync`, which lists every video; `transcribe` ticks each it captures
 
-- spent: $0.29 over 15 captures, as their `cost:` lines state
+- spent: $0.57 over 26 captures, as their `cost:` lines state
 
 A directory per person, named by the text of their channel's link in `../README.md`. In it,
 `<id>.md` is a video's capture — summary, chapters, what is shown, description, then the captions
@@ -29,17 +29,17 @@ every unticked line.
 - [x] [2026-09-23](https://www.youtube.com/watch?v=Qt_i0SHQuDc) [How to Build a Proper Relationship with your Contractor (Remote Service Arbitrage)](eric/Qt_i0SHQuDc.md)
 - [x] [2026-09-21](https://www.youtube.com/watch?v=4_FyKqhcFG0) [How Joey Started a $12k/mo Remote Cleaning Business in 90 days with $0](eric/4_FyKqhcFG0.md)
 - [x] [2026-09-20](https://www.youtube.com/watch?v=4hAhEBHgj_s) [How to Scale Past Multi 6-Figures with Low Ticket Niches (Remote Service Arbitrage)](eric/4hAhEBHgj_s.md)
-- [ ] [2026-09-17](https://www.youtube.com/watch?v=GRONlIZpzpQ) The Most Profitable WINTER Niches for Remote Service Arbitrage
-- [ ] [2026-09-16](https://www.youtube.com/watch?v=5axxS9pHeOk) Speed-running $0 to $10k/mo with "Remote Cleaning" so you can copy me and hit it next month
-- [ ] [2026-09-14](https://www.youtube.com/watch?v=5RMRP22LrzI) after 4 years i finally escaped the matrix and now i'm depressed
-- [ ] [2026-09-13](https://www.youtube.com/watch?v=cXAKQeNQOd8) How to Rank #1 on Google as a Service Area Business (SAB)
-- [ ] [2026-09-11](https://www.youtube.com/watch?v=3MEgzC6Rzbc) How Bradley Grew a $2M Painting Company Using Google My Business
-- [ ] [2026-09-11](https://www.youtube.com/watch?v=9qYlL5lrddI) Why Your Google Business Profile Stopped Getting Calls (and how to fix it)
-- [ ] [2026-09-10](https://www.youtube.com/watch?v=Oq5cVF1j2ec) "GMB flipping" might be the easiest way to hit $100k/mo ($100,350 in 55 days)
-- [ ] [2026-09-09](https://www.youtube.com/watch?v=NRjlLjrpeRA) How to Turn Every Customer Into Monthly Recurring Revenue (Remote Service Arbitrage)
-- [ ] [2026-09-07](https://www.youtube.com/watch?v=1Cd_BV9YTOM) everyone said i'd fail, now i make $133k/mo at 20
-- [ ] [2026-09-07](https://www.youtube.com/watch?v=GWtDKaGeMJ4) How I Run a 7 Figure Local Service Business with 0 Liability
-- [ ] [2026-09-06](https://www.youtube.com/watch?v=3sIc277pa_k) Raw Reality - Going from $0 to $15k/mo in 90 days (Remote Service Arbitrage)
+- [x] [2026-09-17](https://www.youtube.com/watch?v=GRONlIZpzpQ) [The Most Profitable WINTER Niches for Remote Service Arbitrage](eric/GRONlIZpzpQ.md)
+- [x] [2026-09-16](https://www.youtube.com/watch?v=5axxS9pHeOk) [Speed-running $0 to $10k/mo with "Remote Cleaning" so you can copy me and hit it next month](eric/5axxS9pHeOk.md)
+- [x] [2026-09-14](https://www.youtube.com/watch?v=5RMRP22LrzI) [after 4 years i finally escaped the matrix and now i'm depressed](eric/5RMRP22LrzI.md)
+- [x] [2026-09-13](https://www.youtube.com/watch?v=cXAKQeNQOd8) [How to Rank #1 on Google as a Service Area Business (SAB)](eric/cXAKQeNQOd8.md)
+- [x] [2026-09-11](https://www.youtube.com/watch?v=3MEgzC6Rzbc) [How Bradley Grew a $2M Painting Company Using Google My Business](eric/3MEgzC6Rzbc.md)
+- [x] [2026-09-11](https://www.youtube.com/watch?v=9qYlL5lrddI) [Why Your Google Business Profile Stopped Getting Calls (and how to fix it)](eric/9qYlL5lrddI.md)
+- [x] [2026-09-10](https://www.youtube.com/watch?v=Oq5cVF1j2ec) ["GMB flipping" might be the easiest way to hit $100k/mo ($100,350 in 55 days)](eric/Oq5cVF1j2ec.md)
+- [x] [2026-09-09](https://www.youtube.com/watch?v=NRjlLjrpeRA) [How to Turn Every Customer Into Monthly Recurring Revenue (Remote Service Arbitrage)](eric/NRjlLjrpeRA.md)
+- [x] [2026-09-07](https://www.youtube.com/watch?v=1Cd_BV9YTOM) [everyone said i'd fail, now i make $133k/mo at 20](eric/1Cd_BV9YTOM.md)
+- [x] [2026-09-07](https://www.youtube.com/watch?v=GWtDKaGeMJ4) [How I Run a 7 Figure Local Service Business with 0 Liability](eric/GWtDKaGeMJ4.md)
+- [x] [2026-09-06](https://www.youtube.com/watch?v=3sIc277pa_k) [Raw Reality - Going from $0 to $15k/mo in 90 days (Remote Service Arbitrage)](eric/3sIc277pa_k.md)
 - [ ] [2026-09-05](https://www.youtube.com/watch?v=1cGiZpK5d18) i numbed myself emotionally and it made me $1.3m at 20
 - [ ] [2026-09-04](https://www.youtube.com/watch?v=LILe5Fxvcbk) How I Close 80% of my High-Ticket Leads (Dropservicing)
 - [ ] [2026-09-04](https://www.youtube.com/watch?v=ZE9sDxXY6gk) How I Get High Quality Contractors for my $80k/mo Drop-servicing Business (Live Calling Contractors)
