@@ -8,6 +8,7 @@ clap = { version = "4", features = ["derive"] }
 glass_pumpkin = "=2.0.0-rc0" # social_networks' lock; rc1 breaks grammers-crypto, which asks for `2.0.0-rc0`
 jiff = "0.2"
 serde = { version = "1", features = ["derive"] }
+serde_json = "1"
 social_networks_adapters = "=0.3.23"
 tokio = { version = "1", features = ["full"] }
 v_utils = { version = "=2.17.6", features = ["xdg", "cli"] }
@@ -34,6 +35,9 @@ v_utils_macros = "=2.12.5" # social_networks' lock; later ones call into a v_uti
 //! in its resources — is collected, and the ones missing from `ref/README.md` are printed at the end
 //! to go into it. A lesson skool hosts itself carries a mux URL that is signed and dies within the
 //! hour, so it is written down but is not a link anything can follow later.
+//!
+//! The calls feed `ref/README.md` links as `[calls]` is read too, and every recording posted there
+//! goes straight into the registry's group calls list, dated by its post.
 
 use std::{
 	collections::{BTreeMap, BTreeSet},
@@ -64,6 +68,7 @@ async fn main() {
 	let config = Config::try_build(SettingsFlags::default()).unwrap_or_else(|e| panic!("reading ~/.config/social_networks: {e}"));
 	let creds = config.skool.expect("a skool classroom is only readable by a member, so this needs a `[skool]` section in ~/.config/social_networks");
 	let mut skool = Skool::try_new(Some(creds)).unwrap_or_else(|e| panic!("{e:?}"));
+	register_calls(&mut skool, &root.join("ref/README.md")).await;
 	let mut links: BTreeSet<String> = BTreeSet::new();
 	for (group, out_root) in GROUPS {
 		let courses = skool.classroom(&VenueRef::new(VenueSource::Skool, *group)).await.unwrap_or_else(|e| panic!("reading {group}'s classroom: {e:?}"));
@@ -78,6 +83,63 @@ async fn main() {
 		for link in missing {
 			eprintln!("  {link}");
 		}
+	}
+}
+
+/// Every recording posted to the feed `ref/README.md` links as `[calls]`, dated by its post, written
+/// into the registry's group calls list. Unlike a lesson's links these are what that list is for, so
+/// they go in rather than being printed.
+async fn register_calls(skool: &mut Skool, registry_path: &Path) {
+	const LIST: &str = "- group calls, as they get shared:";
+	let registry = std::fs::read_to_string(registry_path).expect("ref/README.md is the registry");
+	let feed = registry
+		.lines()
+		.find_map(|l| l.strip_prefix("- [calls](")?.strip_suffix(')'))
+		.expect("ref/README.md links the calls feed as `- [calls](…)`");
+	let feed = feed.strip_prefix("https://www.skool.com").expect("the calls feed is a skool link");
+
+	let mut posts: Vec<serde_json::Value> = Vec::new();
+	//LOOP: bounded by the feed's own `total`
+	for p in 1.. {
+		let payload = skool.page(&format!("{feed}&p={p}")).await.unwrap_or_else(|e| panic!("reading the calls feed: {e:?}"));
+		let props = payload.pointer("/props/pageProps").expect("skool's SSR payload carries pageProps");
+		let total = props["total"].as_u64().unwrap_or_else(|| panic!("a feed page without `total`: {props}"));
+		let trees = props["postTrees"].as_array().unwrap_or_else(|| panic!("a feed page without `postTrees`: {props}"));
+		posts.extend(trees.iter().map(|tree| tree["post"].clone()));
+		if trees.is_empty() || posts.len() as u64 >= total {
+			break;
+		}
+	}
+
+	let mut added = Vec::new();
+	// the feed is newest first, and the list oldest first
+	for post in posts.iter().rev() {
+		let at: jiff::Timestamp = post["createdAt"].as_str().and_then(|s| s.parse().ok()).unwrap_or_else(|| panic!("a post without a readable `createdAt`: {post}"));
+		// a post that embeds no video lacks the key — a question asked in the feed
+		let Some(videos) = post.pointer("/metadata/videoLinksData") else { continue };
+		// skool stores the list JSON-encoded, as a string
+		let videos: Vec<serde_json::Value> = videos
+			.as_str()
+			.and_then(|s| serde_json::from_str(s).ok())
+			.unwrap_or_else(|| panic!("`videoLinksData` that is not a JSON-encoded list: {videos}"));
+		for video in &videos {
+			let url = video["url"].as_str().unwrap_or_else(|| panic!("an embedded video without a url: {video}"));
+			if !registry.contains(url) && !added.iter().any(|line: &String| line.contains(url)) {
+				added.push(format!("  - [{}]({url})", day(at)));
+			}
+		}
+	}
+	if added.is_empty() {
+		return;
+	}
+
+	let mut lines: Vec<&str> = registry.lines().collect();
+	let start = lines.iter().position(|l| *l == LIST).unwrap_or_else(|| panic!("ref/README.md has no `{LIST}` line"));
+	let end = start + 1 + lines[start + 1..].iter().take_while(|l| l.starts_with("  - ")).count();
+	lines.splice(end..end, added.iter().map(String::as_str));
+	std::fs::write(registry_path, lines.join("\n") + "\n").expect("ref/README.md is ours to write");
+	for line in &added {
+		eprintln!("registered {}", line.trim_start_matches("  - "));
 	}
 }
 

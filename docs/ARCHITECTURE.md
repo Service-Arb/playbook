@@ -198,7 +198,8 @@ list has unticked.
 transcript quotes every link that was said out loud, so a puller that scanned the tree
 would feed on its own output. A puller that *finds* a link — one lesson pointing at
 another platform's recording — prints it rather than following it, and the registry
-grows by hand.
+grows by hand. The one exception is the group's calls feed: what it posts is the list's own
+material, so `skool-pull.rs` writes each recording into the registry itself.
 
 ```
 scripts/
@@ -207,7 +208,7 @@ scripts/
 ├── doc-pull.rs        # google doc → its markdown export
 ├── chatgpt-pull.rs    # headless chromium → the DOM's turns
 ├── yt-pull.rs         # sync: channels → the dated list of their videos; transcribe: captions in citable blocks, summary and chapters through `ask_llm`, the video through `Client::watch`, frames only where the captions say something is shown (`--legacy`: wherever the picture changes) → `## shown`, description
-├── skool-pull.rs      # skool's classroom → the course tree, module by module and lesson by lesson
+├── skool-pull.rs      # skool's classroom → the course tree, module by module and lesson by lesson; the calls feed → the registry's group calls
 └── cite-check.rs      # not a puller: holds every citation in structured/ to its capture in ref/
 ```
 
