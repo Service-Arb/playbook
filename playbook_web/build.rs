@@ -1,11 +1,14 @@
-//! Bakes the corpus into the binary: the server reads nothing from disk per request, and the image
-//! carries only what is listed here (docs/ARCHITECTURE.md, Invariants).
+//! Bakes the corpus and the connect pages' stylesheet into the binary: the server reads nothing from
+//! disk per request, and the image carries only what is listed here (docs/ARCHITECTURE.md, Invariants).
 
 use std::{
 	fmt::Write,
 	fs,
 	path::{Path, PathBuf},
+	process::Command,
 };
+
+use sha2::{Digest, Sha256};
 
 const INSTRUCTIONS_MAX: usize = 2048; // Claude Code truncates server instructions past this
 
@@ -41,7 +44,36 @@ fn main() {
 	))
 	.unwrap();
 
-	fs::write(PathBuf::from(std::env::var("OUT_DIR").unwrap()).join("corpus.rs"), out).unwrap();
+	let out_dir = PathBuf::from(std::env::var("OUT_DIR").unwrap());
+	fs::write(out_dir.join("corpus.rs"), out).unwrap();
+	stylesheet(&root.join("playbook_web/src/pages.rs"), &out_dir);
+}
+
+/// Tailwind over the kit's class inventory and `pages.rs`, under a name that changes with it, so it is cached for good.
+/// The inventory and tokens are written out because tailwind can neither scan nor `@import` a crate unpacked from crates.io.
+fn stylesheet(pages: &Path, out: &Path) {
+	println!("cargo:rerun-if-changed={}", pages.display());
+	fs::write(out.join("uikit-classes.txt"), ev_lib_classes::CLASS_INVENTORY).unwrap();
+	fs::write(out.join("tokens.css"), ev_lib_classes::TOKENS_CSS).unwrap();
+	let entry = format!("@import \"tailwindcss\";\n@import \"./tokens.css\";\n@source \"./uikit-classes.txt\";\n@source {:?};\n", pages.display().to_string());
+	fs::write(out.join("entry.css"), entry).unwrap();
+	let css = out.join("connect.css");
+	let status = Command::new("tailwindcss")
+		.arg("-i")
+		.arg(out.join("entry.css"))
+		.arg("-o")
+		.arg(&css)
+		.arg("--minify")
+		.status()
+		.expect("tailwindcss (v4) is on PATH: the dev shell and the nix build carry it");
+	assert!(status.success(), "tailwindcss failed on {}", out.join("entry.css").display());
+	let hash = Sha256::digest(fs::read(&css).unwrap());
+	let hash: String = hash[..8].iter().map(|b| format!("{b:02x}")).collect();
+	fs::write(
+		out.join("stylesheet.rs"),
+		format!("pub(crate) const CSS: &str = include_str!({:?});\npub(crate) const CSS_FILE: &str = \"connect.{hash}.css\";\n", css.display().to_string()),
+	)
+	.unwrap();
 }
 
 /// The text under `header`, up to the next header.

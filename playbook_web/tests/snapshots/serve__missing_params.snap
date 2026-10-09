@@ -1,0 +1,28 @@
+---
+source: playbook_web/tests/serve.rs
+expression: redact(&page(http.get(unknown).send().await.unwrap()).await)
+---
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>This sign-in link doesn’t work · Service-Arb</title>
+<link rel="stylesheet" href="https://sa.evinvest.ltd/playbook_mcp/assets/connect.[hash].css">
+<body class="bg-background text-ink font-sans antialiased">
+<main class="flex min-h-dvh flex-col items-center justify-center gap-6 p-4 text-sm">
+<div class="bg-card text-ink flex flex-col gap-6 rounded-xl border border-border py-6 shadow-sm w-[440px] max-w-full items-center px-8 pt-8 pb-7">
+<div class="flex items-center"><span class="bg-brand flex size-12 items-center justify-center rounded-xl border border-border font-serif text-[22px] font-semibold">SA</span></div>
+<div class="flex w-full flex-col items-center gap-1.5 text-center">
+	<h1 class="text-xl font-semibold">This sign-in link doesn’t work</h1>
+	<p class="text-ink-soft text-[13px]">It isn’t one Claude Code would open, or it was changed on the way.</p>
+</div>
+<ol class="flex w-full flex-col gap-3.5">
+	<li class="flex w-full items-start gap-3"><span class="bg-popover text-primary-ink flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold">1</span><div class="flex flex-col gap-0.5"><span class="font-medium">Go back to Claude Code</span><span class="text-ink-soft text-[13px]">Type <code>/mcp</code>, pick service-arb.</span></div></li>
+	<li class="flex w-full items-start gap-3"><span class="bg-popover text-primary-ink flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold">2</span><div class="flex flex-col gap-0.5"><span class="font-medium">Choose Authenticate</span><span class="text-ink-soft text-[13px]">A fresh page opens here.</span></div></li>
+</ol>
+<p class="text-ink-soft text-center text-xs">Details: Failed to deserialize query string: missing field `response_type`</p>
+</div>
+<p class="text-ink-soft text-xs">Service-Arb · EV Invest</p>
+</main>
+</body>
+</html>

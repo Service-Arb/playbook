@@ -7,6 +7,7 @@ publish = false
 [dependencies]
 axum.workspace = true
 base64.workspace = true
+ev_lib_classes.workspace = true
 getrandom.workspace = true
 regex.workspace = true
 reqwest.workspace = true
@@ -16,7 +17,13 @@ sa_auth.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 sha2.workspace = true
+tailwind_fuse.workspace = true
 tokio.workspace = true
 
+[build-dependencies]
+ev_lib_classes.workspace = true
+sha2.workspace = true
+
 [dev-dependencies]
+insta.workspace = true
 rmcp = { workspace = true, features = ["client", "transport-streamable-http-client-reqwest", "reqwest"] }
