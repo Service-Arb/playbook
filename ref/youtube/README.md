@@ -3,7 +3,7 @@
 - checked: 2026-10-09
 - written by: `scripts/yt-pull.rs sync`, which lists every video; `transcribe` ticks each it captures
 
-- spent: $0.57 over 26 captures, as their `cost:` lines state
+- spent: $0.71 over 36 captures, as their `cost:` lines state
 
 A directory per person, named by the text of their channel's link in `../README.md`. In it,
 `<id>.md` is a video's capture — summary, chapters, what is shown, description, then the captions
@@ -40,16 +40,16 @@ every unticked line.
 - [x] [2026-09-07](https://www.youtube.com/watch?v=1Cd_BV9YTOM) [everyone said i'd fail, now i make $133k/mo at 20](eric/1Cd_BV9YTOM.md)
 - [x] [2026-09-07](https://www.youtube.com/watch?v=GWtDKaGeMJ4) [How I Run a 7 Figure Local Service Business with 0 Liability](eric/GWtDKaGeMJ4.md)
 - [x] [2026-09-06](https://www.youtube.com/watch?v=3sIc277pa_k) [Raw Reality - Going from $0 to $15k/mo in 90 days (Remote Service Arbitrage)](eric/3sIc277pa_k.md)
-- [ ] [2026-09-05](https://www.youtube.com/watch?v=1cGiZpK5d18) i numbed myself emotionally and it made me $1.3m at 20
-- [ ] [2026-09-04](https://www.youtube.com/watch?v=LILe5Fxvcbk) How I Close 80% of my High-Ticket Leads (Dropservicing)
-- [ ] [2026-09-04](https://www.youtube.com/watch?v=ZE9sDxXY6gk) How I Get High Quality Contractors for my $80k/mo Drop-servicing Business (Live Calling Contractors)
-- [ ] [2026-09-03](https://www.youtube.com/watch?v=NxgIEo1lFQo) local businesses pay me $9k for this and it took 43 mins
-- [ ] [2026-08-31](https://www.youtube.com/watch?v=6Js2xVz5wV0) This Untapped Google Review Method Gets us HUNDREDS of Reviews Daily (for dirt cheap)
-- [ ] [2026-08-30](https://www.youtube.com/watch?v=4cCS2Dv76xU) How Zach Started a 7 Figure Landscaping Business with $0 from his Computer (in 90 days)
-- [ ] [2026-08-28](https://www.youtube.com/watch?v=_SIkElD8yvo) I made $1.3m by 20 doing this, literally just copy me
-- [ ] [2026-08-27](https://www.youtube.com/watch?v=P-KlGCMNfCk) exactly how i made $1.3m at 20 years old
-- [ ] [2026-08-25](https://www.youtube.com/watch?v=VGaLCraVY00) How I get ANY Suspended Google Business Profile Re-instated
-- [ ] [2026-08-24](https://www.youtube.com/watch?v=KjGLHQ4HlJA) How to make ur first $ online if ur tired of course sellers and scams
+- [x] [2026-09-05](https://www.youtube.com/watch?v=1cGiZpK5d18) [i numbed myself emotionally and it made me $1.3m at 20](eric/1cGiZpK5d18.md)
+- [x] [2026-09-04](https://www.youtube.com/watch?v=LILe5Fxvcbk) [How I Close 80% of my High-Ticket Leads (Dropservicing)](eric/LILe5Fxvcbk.md)
+- [x] [2026-09-04](https://www.youtube.com/watch?v=ZE9sDxXY6gk) [How I Get High Quality Contractors for my $80k/mo Drop-servicing Business (Live Calling Contractors)](eric/ZE9sDxXY6gk.md)
+- [x] [2026-09-03](https://www.youtube.com/watch?v=NxgIEo1lFQo) [local businesses pay me $9k for this and it took 43 mins](eric/NxgIEo1lFQo.md)
+- [x] [2026-08-31](https://www.youtube.com/watch?v=6Js2xVz5wV0) [This Untapped Google Review Method Gets us HUNDREDS of Reviews Daily (for dirt cheap)](eric/6Js2xVz5wV0.md)
+- [x] [2026-08-30](https://www.youtube.com/watch?v=4cCS2Dv76xU) [How Zach Started a 7 Figure Landscaping Business with $0 from his Computer (in 90 days)](eric/4cCS2Dv76xU.md)
+- [x] [2026-08-28](https://www.youtube.com/watch?v=_SIkElD8yvo) [I made $1.3m by 20 doing this, literally just copy me](eric/_SIkElD8yvo.md)
+- [x] [2026-08-27](https://www.youtube.com/watch?v=P-KlGCMNfCk) [exactly how i made $1.3m at 20 years old](eric/P-KlGCMNfCk.md)
+- [x] [2026-08-25](https://www.youtube.com/watch?v=VGaLCraVY00) [How I get ANY Suspended Google Business Profile Re-instated](eric/VGaLCraVY00.md)
+- [x] [2026-08-24](https://www.youtube.com/watch?v=KjGLHQ4HlJA) [How to make ur first $ online if ur tired of course sellers and scams](eric/KjGLHQ4HlJA.md)
 - [ ] [2026-08-24](https://www.youtube.com/watch?v=nHJVmR7jdIs) after hitting $100k/mo at 20, I admit its all luck
 - [ ] [2026-08-23](https://www.youtube.com/watch?v=8ck24yhvMMo) Complete Market Research Guide to Hit $10k/mo with Remote Service Arbitrage
 - [ ] [2026-08-23](https://www.youtube.com/watch?v=98zTzKQiZL4) How I Consistently Close $5k+ jobs (High Ticket Drop-Servicing)
