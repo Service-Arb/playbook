@@ -70,7 +70,7 @@ fn main() {
 	let mut usd = 0.;
 	for c in &captures {
 		let rel = c.path.strip_prefix(&root).expect("captures are found under the root").display();
-		match plan(what, legacy, c) {
+		match plan(&root, what, legacy, c) {
 			Ok((cost, why)) => {
 				println!("{:>8} {rel} — {why}", format!("${cost:.3}"));
 				usd += cost;
@@ -116,7 +116,7 @@ fn main() {
 }
 
 /// `Ok((usd, what it is))` for a capture this would redo, `Err(why not)` for one it leaves.
-fn plan(what: What, legacy: bool, c: &Capture) -> Result<(f64, String), String> {
+fn plan(root: &Path, what: What, legacy: bool, c: &Capture) -> Result<(f64, String), String> {
 	match what {
 		What::Audio => {
 			if !c.transcribed_by.starts_with("whisper") {
@@ -128,12 +128,9 @@ fn plan(what: What, legacy: bool, c: &Capture) -> Result<(f64, String), String> 
 			Ok((0., format!("{:.0} min through local whisper", c.minutes)))
 		}
 		What::Picture => {
-			let kept = c.path.with_extension("");
-			let media = std::fs::read_dir(&kept)
-				.unwrap_or_else(|e| panic!("{}: {e} — run call-pull.rs <its source> to fetch the recording", kept.display()))
-				.map(|e| e.expect("a directory entry is readable").path())
-				.find(|p| p.file_stem().is_some_and(|s| s == "recording"))
-				.unwrap_or_else(|| panic!("{} holds no recording — run call-pull.rs <its source> to fetch it", kept.display()));
+			let out = Command::new(root.join("scripts/call-pull.rs")).arg("--recording").arg(&c.path).current_dir(root).output().expect("call-pull.rs runs");
+			assert!(out.status.success(), "call-pull.rs --recording failed: {}", String::from_utf8_lossy(&out.stderr));
+			let media = PathBuf::from(String::from_utf8(out.stdout).expect("paths here are utf-8").trim_end());
 			let video = Command::new("ffprobe")
 				.args(["-v", "error", "-select_streams", "v", "-show_entries", "stream=index", "-of", "csv=p=0"])
 				.arg(&media)

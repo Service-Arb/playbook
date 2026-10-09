@@ -20,9 +20,10 @@ ureq = "3"
 //! loom page carries a *signed* URL for its transcript CDN; the signature expires, which is why it is
 //! read out of the page on every run rather than kept.
 //!
-//! The recording is fetched beside its capture, as `<capture>/recording.<ext>`, and never committed:
-//! the host keeps it. Naming a captured recording's link fetches it again, for whatever reads its
-//! picture. A recording its platform never transcribed is transcribed here with whisper, from that file.
+//! `./scripts/call-pull.rs --recording <capture.md>...` prints the path of each capture's recording:
+//! the one at `<capture>/recording.<ext>` if there is one, else fetched there from its host first.
+//! Every reader of a recording goes through it. A recording its platform never transcribed is
+//! transcribed here with whisper, from that same file.
 
 use std::{
 	collections::BTreeMap,
@@ -140,6 +141,20 @@ fn main() {
 		eprintln!("{} call captures hold their shape", have.len());
 		return;
 	}
+	if args.first().is_some_and(|a| a == "--recording") {
+		// every reader of a recording comes through here, so whether it was committed or is fetched now is decided once
+		for arg in &args[1..] {
+			let path = std::fs::canonicalize(arg).unwrap_or_else(|e| panic!("{arg}: {e}"));
+			let ((platform, id), _) = have
+				.iter()
+				.find(|(_, p)| std::fs::canonicalize(p).is_ok_and(|p| p == path))
+				.unwrap_or_else(|| panic!("{arg} is not a call capture"));
+			let kept = path.with_extension("");
+			let media = recording_in(&kept).unwrap_or_else(|| fetch(&format!("{}{id}", platform.share()), &kept));
+			println!("{}", media.display());
+		}
+		return;
+	}
 	let wanted: BTreeMap<Rec, Option<Listed>> = match args.is_empty() {
 		true => links_in(&root.join("ref/README.md")),
 		false => args.iter().map(|a| (rec_of(a), None)).collect(),
@@ -154,17 +169,7 @@ fn main() {
 		let (platform, id) = rec;
 		let url = format!("{}{id}", platform.share());
 		if let Some(had) = have.get(rec) {
-			// a new file beside the capture, which is left as it is
-			let kept = had.with_extension("");
-			match recording_in(&kept) {
-				// a registry run is after new captures, and the recordings of old ones are the host's
-				_ if args.is_empty() => (),
-				Some(_) => eprintln!("have {id} — {}", had.display()),
-				None => {
-					eprintln!("fetching the recording of {}", had.display());
-					fetch(&url, &kept);
-				}
-			}
+			eprintln!("have {id} — {}", had.display());
 			continue;
 		}
 		eprintln!("pulling {} {id}", platform.name());

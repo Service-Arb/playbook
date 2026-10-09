@@ -65,8 +65,12 @@ fn main() {
 	};
 	let todo: Vec<PathBuf> = captures.into_iter().filter(|c| !c.with_extension("").join("shown.md").exists()).collect();
 	eprintln!("{} recordings to watch", todo.len());
+	let out = Command::new(root.join("scripts/call-pull.rs")).arg("--recording").args(&todo).current_dir(&root).output().expect("call-pull.rs runs");
+	assert!(out.status.success(), "call-pull.rs --recording failed: {}", String::from_utf8_lossy(&out.stderr));
+	let media: Vec<PathBuf> = String::from_utf8(out.stdout).expect("paths here are utf-8").lines().map(PathBuf::from).collect();
+	assert_eq!(media.len(), todo.len(), "call-pull.rs --recording prints one path per capture");
 
-	let queue = Mutex::new(todo.into_iter());
+	let queue = Mutex::new(todo.into_iter().zip(media));
 	let spent = Mutex::new(0f64);
 	std::thread::scope(|s| {
 		for _ in 0..WORKERS {
@@ -74,8 +78,8 @@ fn main() {
 				let rt = tokio::runtime::Builder::new_current_thread().enable_all().build().expect("a current-thread runtime builds");
 				//LOOP: bounded by the queue, which only drains
 				loop {
-					let Some(path) = queue.lock().expect("no worker panics holding it").next() else { break };
-					if let Some(cost) = rt.block_on(watch(&path, pick)) {
+					let Some((path, media)) = queue.lock().expect("no worker panics holding it").next() else { break };
+					if let Some(cost) = rt.block_on(watch(&path, &media, pick)) {
 						let mut spent = spent.lock().expect("no worker panics holding it");
 						*spent += cost;
 						eprintln!("${cost:.4} {} — ${:.4} this run", path.display(), *spent);
@@ -100,13 +104,8 @@ fn repo_root() -> PathBuf {
 }
 
 /// Watch one recording into its `shown.md`, returning what it cost; `None` for one with no picture.
-async fn watch(path: &Path, pick: Pick) -> Option<f64> {
+async fn watch(path: &Path, media: &Path, pick: Pick) -> Option<f64> {
 	let kept = path.with_extension("");
-	let media = std::fs::read_dir(&kept)
-		.unwrap_or_else(|e| panic!("{}: {e} — run call-pull.rs <its source> to fetch the recording", kept.display()))
-		.map(|e| e.expect("a directory entry is readable").path())
-		.find(|p| p.file_stem().is_some_and(|s| s == "recording"))
-		.unwrap_or_else(|| panic!("{} holds no recording — run call-pull.rs <its source> to fetch it", kept.display()));
 	let capture = read(path);
 	let footage = match capture.source.contains("drive.google.com") {
 		true => Footage::Filmed,
@@ -127,7 +126,7 @@ async fn watch(path: &Path, pick: Pick) -> Option<f64> {
 		about: capture.summary.clone(),
 		frames: kept.join("frames"),
 	};
-	let watched = Client::default().model(Model::Video).watch(&media, spec).await.unwrap_or_else(|e| panic!("{}: {e:?}", path.display()));
+	let watched = Client::default().model(Model::Video).watch(media, spec).await.unwrap_or_else(|e| panic!("{}: {e:?}", path.display()));
 	let watched_by = match (&watched.model, pick, &watched.picked_by) {
 		(None, _, None) => {
 			eprintln!("audio only, nothing shown — {}", path.display());

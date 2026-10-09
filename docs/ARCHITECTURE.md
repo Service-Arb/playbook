@@ -48,7 +48,7 @@ ref/
 ├── drive/<date>-<title>-<id>.md  # the same, for recordings in a shared drive folder
 ├── vimeo/ · vocaroo/             # the same, for hosts the registry line names and dates
 ├── <platform>/<capture>/         # beside a call capture: what its recording shows
-│   ├── recording.<ext>           # as the host serves it, 720p where there is a choice — gitignored, the host keeps it
+│   ├── recording.<ext>           # as the host serves it, 720p where there is a choice — gitignored; see LFS
 │   ├── shown.md                  # what is on screen that the speech does not say, by `call-watch.rs`
 │   └── frames/<secs>.jpg         # the frame each line of `shown.md` was read off — LFS
 ├── docs/<title>.md               # google docs, exported as markdown
@@ -102,8 +102,8 @@ plain prose, in paragraphs, no stamps in it
   `/call-digest` needs to place chapters. It titles the ones that open a chapter and deletes the rest
 - a recording nobody speaks in is captured all the same: `transcribed by:` ends `— nobody speaks`,
   and only then is `## transcript` empty
-- a recording is never committed: the host keeps it, and naming a capture's source to
-  `call-pull.rs` fetches it beside the capture again, which is left as it is
+- a recording is read through `call-pull.rs --recording <capture.md>`, which hands back the one
+  beside the capture, fetching it from its host first when there is none
 
 `scripts/call-pull.rs` checks every capture on disk against this on each run, and `--check` runs only
 that; a hook runs it after any agent edit under a call capture's platform dir.
@@ -203,8 +203,8 @@ material, so `skool-pull.rs` writes each recording into the registry itself.
 
 ```
 scripts/
-├── call-pull.rs       # loom / fathom share page, drive folder → summary, chapters, and the platform's transcript, or whisper's where there is none; the recording, for as long as something reads it
-├── call-watch.rs      # not a puller: a fetched recording, through `ask_llm`'s `Client::watch`, frames only where the speech says something is shown (`--legacy`: wherever the picture changes) → `shown.md`
+├── call-pull.rs       # loom / fathom share page, drive folder → summary, chapters, and the platform's transcript, or whisper's where there is none; `--recording`: the one way to a recording, kept or fetched
+├── call-watch.rs      # not a puller: a recording, through `ask_llm`'s `Client::watch`, frames only where the speech says something is shown (`--legacy`: wherever the picture changes) → `shown.md`
 ├── doc-pull.rs        # google doc → its markdown export
 ├── chatgpt-pull.rs    # headless chromium → the DOM's turns
 ├── yt-pull.rs         # sync: channels → the dated list of their videos; transcribe: captions in citable blocks, summary and chapters through `ask_llm`, the video through `Client::watch`, frames only where the captions say something is shown (`--legacy`: wherever the picture changes) → `## shown`, description
@@ -238,6 +238,24 @@ playbook_web/              the member surface over MCP: search · read · guide,
 
 Members use the knowledge on their own tokens and never get the repo. What the server does, and how,
 is in `playbook_web/README.md`.
+
+## LFS
+
+LFS is billed for every object still in history, every month, so a file goes in only if nothing
+else keeps it.
+
+| goes in LFS | stays out |
+|---|---|
+| frames `call-watch.rs` read a line off — small, and ours alone | recordings: the host keeps them |
+| photos and documents we made or were sent, with no other home | anything a puller can fetch again |
+
+A recording is committed only by the human, by hand (`git add -f`, past the gitignore) — say, when
+its host is about to drop it. An agent never commits one.
+
+Example, as of 2026-10-09 on the org's Free plan: 10 GiB-month of storage and 10 GiB of downloads
+included, then $0.07/GiB-month and $0.0875/GiB; one object at most 2 GiB. ~23 GiB stored, nearly
+all of it the recordings committed before this rule, is ~$0.90/month for as long as they stay in
+history, and an hour of call is ~300–400 MB.
 
 ## Invariants
 

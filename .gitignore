@@ -84,5 +84,5 @@ graphify-out/
 **/.tb-client
 **/.pg/
 
-## Recordings: the host keeps them, we keep what they say
+## Recordings: the host keeps them; only the human commits one, with `git add -f` (docs/ARCHITECTURE.md, LFS)
 ref/**/recording.*
