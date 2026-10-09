@@ -291,10 +291,11 @@ async fn video(id: &str, tmp: &Path, shots: &Path, pick: Pick) -> Option<String>
 	};
 	let watched = Client::default().model(Model::Video).watch(&media, spec).await.unwrap_or_else(|e| panic!("watching {id}: {e:?}"));
 	std::fs::remove_dir_all(tmp).unwrap_or_else(|e| panic!("removing {}: {e}", tmp.display()));
-	let watched_by = watched.model.as_deref().unwrap_or_else(|| panic!("{id} downloaded with no picture"));
-	let picked = match (pick, &watched.picked_by) {
-		(Pick::Changes, None) => "as `ask_llm`'s `Footage::Screen` picks them".to_string(),
-		(Pick::Likely { every }, Some(by)) => format!("`{by}` picking where, `Pick::Likely` every {every}s"),
+	let shown_by = match (&watched.model, pick, &watched.picked_by) {
+		(None, _, None) => panic!("{id} downloaded with no picture"),
+		(None, Pick::Likely { .. }, Some(by)) => format!("nothing shown: `{by}` named no span where something is"),
+		(Some(model), Pick::Changes, None) => format!("`{model}` what is shown, over {} frames, as `ask_llm`'s `Footage::Screen` picks them", watched.frames_read),
+		(Some(model), Pick::Likely { every }, Some(by)) => format!("`{model}` what is shown, over {} frames, `{by}` picking where, `Pick::Likely` every {every}s", watched.frames_read),
 		_ => unreachable!("`picked_by` is set by `Pick::Likely` alone"),
 	};
 
@@ -306,7 +307,7 @@ async fn video(id: &str, tmp: &Path, shots: &Path, pick: Pick) -> Option<String>
 		 - uploaded: {}\n\
 		 - duration: {}\n\
 		 - pulled by: `scripts/yt-pull.rs`\n\
-		 - read by: `{}` summary and chapters, `{watched_by}` what is shown, over {} frames, {picked}\n\
+		 - read by: `{}` summary and chapters, {shown_by}\n\
 		 - cost: ${:.4}\n\
 		 \n\
 		 ## summary\n\
@@ -316,7 +317,6 @@ async fn video(id: &str, tmp: &Path, shots: &Path, pick: Pick) -> Option<String>
 		video.uploaded,
 		hms(video.duration),
 		answer.model,
-		watched.frames_read,
 		(answer.cost_cents + watched.cost_cents) as f64 / 100.,
 	);
 	for line in marked(&answer.text, SUMMARY, id) {

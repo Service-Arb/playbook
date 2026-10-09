@@ -128,16 +128,17 @@ async fn watch(path: &Path, pick: Pick) -> Option<f64> {
 		frames: kept.join("frames"),
 	};
 	let watched = Client::default().model(Model::Video).watch(&media, spec).await.unwrap_or_else(|e| panic!("{}: {e:?}", path.display()));
-	let Some(model) = watched.model else {
-		eprintln!("audio only, nothing shown — {}", path.display());
-		return None;
-	};
-	let cost = watched.cost_cents as f64 / 100.;
-	let picked = match (pick, &watched.picked_by) {
-		(Pick::Changes, None) => format!("as `ask_llm`'s `Footage::{footage:?}` picks them"),
-		(Pick::Likely { every }, Some(by)) => format!("`{by}` picking where, `Pick::Likely` every {every}s"),
+	let watched_by = match (&watched.model, pick, &watched.picked_by) {
+		(None, _, None) => {
+			eprintln!("audio only, nothing shown — {}", path.display());
+			return None;
+		}
+		(None, Pick::Likely { .. }, Some(by)) => format!("nothing: `{by}` named no span where something is shown"),
+		(Some(model), Pick::Changes, None) => format!("`{model}`, over {} frames, as `ask_llm`'s `Footage::{footage:?}` picks them", watched.frames_read),
+		(Some(model), Pick::Likely { every }, Some(by)) => format!("`{model}`, over {} frames, `{by}` picking where, `Pick::Likely` every {every}s", watched.frames_read),
 		_ => unreachable!("`picked_by` is set by `Pick::Likely` alone"),
 	};
+	let cost = watched.cost_cents as f64 / 100.;
 
 	let seek = match capture.source.contains("vimeo.com") {
 		true => "#t=",
@@ -149,11 +150,10 @@ async fn watch(path: &Path, pick: Pick) -> Option<f64> {
 	let mut out = format!(
 		"# shown: {}\n\n\
 		 - capture: [{name}](../{name})\n\
-		 - watched by: `{model}`, over {} frames, {picked} · `scripts/call-watch.rs`\n\
+		 - watched by: {watched_by} · `scripts/call-watch.rs`\n\
 		 - watched: {}\n\
 		 - cost: ${cost:.4}\n",
 		capture.title,
-		watched.frames_read,
 		today.trim(),
 	);
 	for Shown { secs, shown, on_screen_text, .. } in &watched.shown {
