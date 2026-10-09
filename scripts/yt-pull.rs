@@ -6,7 +6,7 @@ edition = "2024"
 [dependencies]
 ask_llm = { version = "3.7", default-features = false }
 jiff = "0.2"
-social_networks_adapters = { git = "https://github.com/valeratrades/social_networks", tag = "v0.6.3", features = ["youtube-reads"] } # past 0.5 it is not on crates.io
+social_networks_adapters = { git = "https://github.com/valeratrades/social_networks", tag = "v0.6.4", features = ["youtube-reads"] } # past 0.5 it is not on crates.io
 tokio = { version = "1", features = ["full"] }
 ---
 
