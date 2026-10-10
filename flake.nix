@@ -43,6 +43,7 @@
               ./playbook_web
               ./skill
               ./structured
+              ./scripts/cite-check.rs # build.rs inlines its DECAY_DAYS
               (pkgs.lib.fileset.fileFilter (f: f.hasExt "md") ./ref)
             ];
           };
@@ -82,7 +83,7 @@
           program = "${pkgs.writeShellApplication {
             name = "check";
             runtimeInputs = [ rust pkgs.git ];
-            text = "./scripts/call-pull.rs --check && ./scripts/cite-check.rs";
+            text = "./scripts/call-pull.rs --check && ./scripts/cite-check.rs && nix build .#playbook_web --no-link";
           }}/bin/check";
         };
 

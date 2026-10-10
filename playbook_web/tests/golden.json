@@ -1,6 +1,6 @@
 {
  "built": "2026-09-24",
- "corpus_commit": "df47950",
+ "corpus_commit": "ded067c",
  "questions": [
   {
    "id": "A1",
@@ -423,7 +423,7 @@
     },
     {
      "path": "ref/loom/2026-07-17-group-call.md",
-     "quote": "the safe rule is one review per Gmail account total, spaced at least two weeks apart, max two reviews per account ever"
+     "quote": "you don't want to give more than one review per every two weeks, and no more than two reviews total on the whole entire account"
     }
    ],
    "calls": [
@@ -500,6 +500,26 @@
      "tool": "search",
      "args": {
       "pattern": "escrow"
+     }
+    }
+   ]
+  },
+  {
+   "id": "F2s",
+   "question": "Has anyone shown the escrow paperwork from selling a service business?",
+   "answerable": true,
+   "essential": [
+    {
+     "path": "ref/youtube/eric/Oq5cVF1j2ec.md",
+     "quote": "ESCROW INSTRUCTIONS / $100,350.00 are the Closing Funds required"
+    }
+   ],
+   "calls": [
+    {
+     "tool": "search",
+     "args": {
+      "pattern": "escrow",
+      "screen": true
      }
     }
    ]
