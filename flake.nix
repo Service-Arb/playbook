@@ -97,7 +97,13 @@
         };
 
         devShells.default = pkgs.mkShell {
-          shellHook = combined.shellHook;
+          shellHook = combined.shellHook + ''
+            hooks="$(git rev-parse --path-format=absolute --git-common-dir)/hooks"
+            for h in post-checkout post-merge post-commit; do
+              if [ ! -x "$hooks/$h" ]; then echo "no $hooks/$h: run \`git lfs install\`, then re-enter the shell" >&2
+              elif ! grep -q lfs-link.sh "$hooks/$h"; then echo "\"$hooks/../../scripts/lfs-link.sh\"" >> "$hooks/$h"; fi
+            done
+          '';
           packages = [ rust pkgs.sqlite pkgs.tailwindcss_4 pkgs.cargo-insta ] ++ combined.enabledPackages;
           env.PORT = port;
         };

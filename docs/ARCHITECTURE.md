@@ -252,6 +252,10 @@ else keeps it.
 A recording is committed only by the human, by hand (`git add -f`, past the gitignore) — say, when
 its host is about to drop it. An agent never commits one.
 
+On disk an object is one read-only inode, hardlinked into `.git/lfs` and every checkout by
+`scripts/lfs-link.sh`, which the dev shell hooks onto checkout, merge and commit. Anything that
+writes a tracked media file replaces it (write elsewhere, then rename) — an in-place write is refused.
+
 Example, as of 2026-10-09 on the org's Free plan: 10 GiB-month of storage and 10 GiB of downloads
 included, then $0.07/GiB-month and $0.0875/GiB; one object at most 2 GiB. ~23 GiB stored, nearly
 all of it the recordings committed before this rule, is ~$0.90/month for as long as they stay in
