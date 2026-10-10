@@ -18,7 +18,7 @@ use crate::{
 };
 
 /// claude.ai reportedly drops server `instructions`, so the rules that matter most ride here too
-const SEARCH_DESCRIPTION: &str = "Case-insensitive regex over the service-arb playbook: structured/approved notes, then structured/suggested, then ref/ captures (calls, course lessons, videos, chats), at most two hits per file, captures newest first. Each hit gives path:line, its header, the date and reliability, the source URL and the lines around it. Search the words a speaker would say, alternated: `review(s)? (a|per) day|reviews? daily`. Search `ref/skool_` course lessons first: they outrank any call. A member's failure story is an anecdote, not a rule. Newest wins only between equal sources. When nothing answers, say the corpus does not cover it.";
+const SEARCH_DESCRIPTION: &str = "Case-insensitive regex over the service-arb playbook. Each kind of source has its own slots, so none crowds out another: structured/approved and structured/suggested notes, the course (lessons and the recordings they link), calls, Eric's videos, texts. Within a kind, a passage holding the rarer of your alternatives ranks first. Each hit gives path:line, its header, the date and reliability, the source URL and the lines around it; the files past the slots follow as path:line, for `read`. Search the words a speaker would say, alternated: `review(s)? (a|per) day|reviews? daily`. The course outranks any call. A member's failure story is an anecdote, not a rule. Newest wins only between equal sources. When nothing answers, say the corpus does not cover it.";
 
 #[derive(Deserialize, Serialize, schemars::JsonSchema)]
 pub struct SearchArgs {
@@ -26,6 +26,8 @@ pub struct SearchArgs {
 	pattern: String,
 	/// a path prefix to search under, e.g. `ref/loom` or `structured/approved/profile`
 	scope: Option<String>,
+	/// search what recordings showed on screen instead of what was said
+	screen: Option<bool>,
 }
 
 #[derive(Deserialize, Serialize, schemars::JsonSchema)]
@@ -57,7 +59,7 @@ impl Playbook {
 
 	#[tool(description = SEARCH_DESCRIPTION, annotations(read_only_hint = true, open_world_hint = false))]
 	async fn search(&self, Parameters(args): Parameters<SearchArgs>, ctx: RequestContext<RoleServer>) -> Result<CallToolResult, McpError> {
-		Ok(self.answer(&ctx, "search", &args, CORPUS.search(&args.pattern, args.scope.as_deref())))
+		Ok(self.answer(&ctx, "search", &args, CORPUS.search(&args.pattern, args.scope.as_deref(), args.screen.unwrap_or(false))))
 	}
 
 	#[tool(

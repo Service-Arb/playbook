@@ -1948,6 +1948,7 @@ dependencies = [
  "getrandom 0.4.3",
  "insta",
  "regex",
+ "regex-syntax",
  "reqwest",
  "rmcp",
  "rusqlite",

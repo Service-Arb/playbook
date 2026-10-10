@@ -42,6 +42,7 @@ fn main() {
 		.lines()
 		.find_map(|l| l.strip_prefix("const DECAY_DAYS: f64 = ")?.strip_suffix(".;"))
 		.expect("cite-check.rs states `const DECAY_DAYS: f64 = <n>.;`");
+	writeln!(out, "const DECAY_DAYS: f64 = {decay_days}.;").unwrap();
 	let skill = fs::read_to_string(&skill).unwrap();
 	let instructions = format!("{}\n\n{}", section(&skill, "# service-arb"), section(&skill, "## Answering"));
 	let decay_link = "[`DECAY_DAYS`](../../scripts/cite-check.rs)";

@@ -13,7 +13,7 @@ claude mcp add --transport http service-arb https://sa.evinvest.ltd/playbook_mcp
 
 | tool | returns |
 |---|---|
-| `search(pattern, scope?)` | case-insensitive regex hits: `structured/approved`, then `suggested`, then `ref/` newest first; two per file, each with path:line, header, date, reliability and source URL. A pattern hitting 40% of the files in scope is refused |
+| `search(pattern, scope?, screen?)` | case-insensitive regex hits, each with path:line, header, date, reliability and source URL, two per file. Each kind (notes, course, calls, videos, texts) has its own slots and slots it leaves empty go to the others. Within a kind, chunks rank by which alternatives of the pattern they hold, rare ones weighing more (BM25's idf, each term present or not). The files past the slots are listed by path:line. `screen` searches what recordings showed instead of what was said. A pattern hitting 40% of the files in scope is refused |
 | `read(path, header, line?)` | one `###` chapter of a capture or one `##` section of a note, never a whole file |
 | `guide(section)` | one `skill/service-arb/sections/<section>.md` |
 
